@@ -1,0 +1,6 @@
+[submodule "communication"]
+	path = communication
+	url = https://github.com/Pierre-Emmanuel41/communication.git
+[submodule "messenger"]
+	path = messenger
+	url = https://github.com/Pierre-Emmanuel41/messenger.git
