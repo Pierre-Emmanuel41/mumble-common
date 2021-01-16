@@ -13,7 +13,7 @@ public enum ErrorCode {
 	PERMISSION_REFUSED(3, "Permission refused."),
 
 	// Code when an unexpected error attempt on the server.
-	UNEXPECTED_ERROR(4, "An unexpected error attempt."),
+	UNEXPECTED_ERROR(4, "An unexpected error occurs."),
 
 	// Code when incompatible idc and oid
 	INCOMPATIBLE_IDC_OID(5, "The idc and the oid are incompatibles."),
@@ -22,16 +22,16 @@ public enum ErrorCode {
 	IDC_UNKNOWN(6, "There is no treatment associated to the given idc."),
 
 	// Code when trying to add a channel whose name is already used.
-	CHANNEL_ALREADY_EXISTS(7, "The channel already exists"),
+	CHANNEL_ALREADY_EXISTS(7, "The channel already exists."),
 
 	// Code when trying to remove a not existing channel.
-	CHANNEL_DOES_NOT_EXISTS(8, "The channel does not exists"),
+	CHANNEL_DOES_NOT_EXISTS(8, "The channel does not exists."),
 
 	// Code when the player is not recognized.
-	PLAYER_NOT_RECOGNIZED(9, "The player is not recognized"),
+	PLAYER_NOT_RECOGNIZED(9, "The player is not recognized."),
 
 	// Code when trying to add an already registered player in a channel.
-	PLAYER_ALREADY_REGISTERED(10, "The player is already registered in a channel"),
+	PLAYER_ALREADY_REGISTERED(10, "The player is already registered in a channel."),
 
 	// Code when cannot be parsed.
 	UNKNOWN(-1, "Cannot parse the error code.");
