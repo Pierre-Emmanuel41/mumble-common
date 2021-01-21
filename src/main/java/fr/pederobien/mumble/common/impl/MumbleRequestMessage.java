@@ -3,10 +3,10 @@ package fr.pederobien.mumble.common.impl;
 import java.util.function.Consumer;
 
 import fr.pederobien.communication.ResponseCallbackArgs;
-import fr.pederobien.communication.impl.RequestMessage;
+import fr.pederobien.communication.impl.RequestCallbackMessage;
 import fr.pederobien.messenger.interfaces.IMessage;
 
-public class MumbleRequestMessage extends RequestMessage {
+public class MumbleRequestMessage extends RequestCallbackMessage {
 	private IMessage<Header> message;
 
 	public MumbleRequestMessage(IMessage<Header> message, Consumer<ResponseCallbackArgs> callback, int timeout) {
