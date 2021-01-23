@@ -9,6 +9,7 @@ import fr.pederobien.messenger.interfaces.InterpretersFactory;
 import fr.pederobien.mumble.common.impl.interpreters.ChannelsInterpreter;
 import fr.pederobien.mumble.common.impl.interpreters.ChannelsPlayerInterpreter;
 import fr.pederobien.mumble.common.impl.interpreters.PlayerAdminInterpreter;
+import fr.pederobien.mumble.common.impl.interpreters.PlayerSpeakInterpreter;
 import fr.pederobien.mumble.common.impl.interpreters.PlayerStatusInterpreter;
 import fr.pederobien.mumble.common.impl.interpreters.ServerConfigurationInterpreter;
 import fr.pederobien.mumble.common.impl.interpreters.UUIDInterpreter;
@@ -26,6 +27,7 @@ public class MumbleInterpretersFactory implements InterpretersFactory<Header> {
 		interpreters.put(Idc.CHANNELS, new ChannelsInterpreter());
 		interpreters.put(Idc.CHANNELS_PLAYER, new ChannelsPlayerInterpreter());
 		interpreters.put(Idc.SERVER_CONFIGURATION, new ServerConfigurationInterpreter());
+		interpreters.put(Idc.PLAYER_SPEAK, new PlayerSpeakInterpreter());
 	}
 
 	@Override
