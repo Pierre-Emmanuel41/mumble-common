@@ -6,15 +6,15 @@ import fr.pederobien.communication.ResponseCallbackArgs;
 import fr.pederobien.communication.impl.RequestCallbackMessage;
 import fr.pederobien.messenger.interfaces.IMessage;
 
-public class MumbleRequestMessage extends RequestCallbackMessage {
+public class MumbleCallbackMessage extends RequestCallbackMessage {
 	private IMessage<Header> message;
 
-	public MumbleRequestMessage(IMessage<Header> message, Consumer<ResponseCallbackArgs> callback, int timeout) {
+	public MumbleCallbackMessage(IMessage<Header> message, Consumer<ResponseCallbackArgs> callback, int timeout) {
 		super(message.getBytes(), message.getIdentifier(), callback, timeout);
 		this.message = message;
 	}
 
-	public MumbleRequestMessage(IMessage<Header> message, Consumer<ResponseCallbackArgs> callback) {
+	public MumbleCallbackMessage(IMessage<Header> message, Consumer<ResponseCallbackArgs> callback) {
 		super(message.getBytes(), message.getIdentifier(), callback);
 		this.message = message;
 	}
