@@ -21,8 +21,11 @@ public enum Idc {
 	// Idc to get the serveur configuration
 	SERVER_CONFIGURATION(6),
 
+	// Idc to get the udp port number.
+	UDP_PORT(7),
+
 	// Idc when a player speak.
-	PLAYER_SPEAK(7),
+	PLAYER_SPEAK(8),
 
 	// Idc when cannot be parsed.
 	UNKNOWN(-1);

@@ -13,6 +13,7 @@ import fr.pederobien.mumble.common.impl.interpreters.PlayerSpeakInterpreter;
 import fr.pederobien.mumble.common.impl.interpreters.PlayerStatusInterpreter;
 import fr.pederobien.mumble.common.impl.interpreters.ServerConfigurationInterpreter;
 import fr.pederobien.mumble.common.impl.interpreters.UUIDInterpreter;
+import fr.pederobien.mumble.common.impl.interpreters.UdpPortInterpreter;
 
 public class MumbleInterpretersFactory implements InterpretersFactory<Header> {
 	private static final IMessageInterpreter DEFAULT_INTERPRETER = new DefaultInterpreter();
@@ -27,6 +28,7 @@ public class MumbleInterpretersFactory implements InterpretersFactory<Header> {
 		interpreters.put(Idc.CHANNELS, new ChannelsInterpreter());
 		interpreters.put(Idc.CHANNELS_PLAYER, new ChannelsPlayerInterpreter());
 		interpreters.put(Idc.SERVER_CONFIGURATION, new ServerConfigurationInterpreter());
+		interpreters.put(Idc.UDP_PORT, new UdpPortInterpreter());
 		interpreters.put(Idc.PLAYER_SPEAK, new PlayerSpeakInterpreter());
 	}
 
