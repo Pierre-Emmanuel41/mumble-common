@@ -27,6 +27,12 @@ public enum Idc {
 	// Idc when a player speak.
 	PLAYER_SPEAK(8),
 
+	// Idc when a player is mute.
+	PLAYER_MUTE(9),
+
+	// Idc when a player is deafen.
+	PLAYER_DEAFEN(10),
+
 	// Idc when cannot be parsed.
 	UNKNOWN(-1);
 

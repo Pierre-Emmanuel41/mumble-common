@@ -9,6 +9,8 @@ import fr.pederobien.messenger.interfaces.InterpretersFactory;
 import fr.pederobien.mumble.common.impl.interpreters.ChannelsInterpreter;
 import fr.pederobien.mumble.common.impl.interpreters.ChannelsPlayerInterpreter;
 import fr.pederobien.mumble.common.impl.interpreters.PlayerAdminInterpreter;
+import fr.pederobien.mumble.common.impl.interpreters.PlayerDeafenInterpreter;
+import fr.pederobien.mumble.common.impl.interpreters.PlayerMuteInterpreter;
 import fr.pederobien.mumble.common.impl.interpreters.PlayerSpeakInterpreter;
 import fr.pederobien.mumble.common.impl.interpreters.PlayerStatusInterpreter;
 import fr.pederobien.mumble.common.impl.interpreters.ServerConfigurationInterpreter;
@@ -30,6 +32,8 @@ public class MumbleInterpretersFactory implements InterpretersFactory<Header> {
 		interpreters.put(Idc.SERVER_CONFIGURATION, new ServerConfigurationInterpreter());
 		interpreters.put(Idc.UDP_PORT, new UdpPortInterpreter());
 		interpreters.put(Idc.PLAYER_SPEAK, new PlayerSpeakInterpreter());
+		interpreters.put(Idc.PLAYER_MUTE, new PlayerMuteInterpreter());
+		interpreters.put(Idc.PLAYER_DEAFEN, new PlayerDeafenInterpreter());
 	}
 
 	@Override
