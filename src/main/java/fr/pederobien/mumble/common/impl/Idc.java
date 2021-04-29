@@ -18,7 +18,7 @@ public enum Idc {
 	// Idc to know if a player has been added, removed from a channel.
 	CHANNELS_PLAYER(5),
 
-	// Idc to get the serveur configuration
+	// Idc to get the server configuration
 	SERVER_CONFIGURATION(6),
 
 	// Idc to get the udp port number.
@@ -30,8 +30,11 @@ public enum Idc {
 	// Idc when a player is mute.
 	PLAYER_MUTE(9),
 
+	// Idc when a player mute another player.
+	PLAYER_MUTE_BY(10),
+
 	// Idc when a player is deafen.
-	PLAYER_DEAFEN(10),
+	PLAYER_DEAFEN(11),
 
 	// Idc when cannot be parsed.
 	UNKNOWN(-1);
