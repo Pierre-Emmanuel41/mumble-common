@@ -10,6 +10,7 @@ import fr.pederobien.mumble.common.impl.interpreters.ChannelsInterpreter;
 import fr.pederobien.mumble.common.impl.interpreters.ChannelsPlayerInterpreter;
 import fr.pederobien.mumble.common.impl.interpreters.PlayerAdminInterpreter;
 import fr.pederobien.mumble.common.impl.interpreters.PlayerDeafenInterpreter;
+import fr.pederobien.mumble.common.impl.interpreters.PlayerKickInterpreter;
 import fr.pederobien.mumble.common.impl.interpreters.PlayerMuteByInterpreter;
 import fr.pederobien.mumble.common.impl.interpreters.PlayerMuteInterpreter;
 import fr.pederobien.mumble.common.impl.interpreters.PlayerSpeakInterpreter;
@@ -36,6 +37,7 @@ public class MumbleInterpretersFactory implements InterpretersFactory<Header> {
 		interpreters.put(Idc.PLAYER_MUTE, new PlayerMuteInterpreter());
 		interpreters.put(Idc.PLAYER_DEAFEN, new PlayerDeafenInterpreter());
 		interpreters.put(Idc.PLAYER_MUTE_BY, new PlayerMuteByInterpreter());
+		interpreters.put(Idc.PLAYER_KICK, new PlayerKickInterpreter());
 	}
 
 	@Override

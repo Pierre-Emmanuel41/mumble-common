@@ -33,11 +33,11 @@ public enum ErrorCode {
 	// Code when trying to add an already registered player in a channel.
 	PLAYER_ALREADY_REGISTERED(10, "The player is already registered in a channel."),
 
-	// Code when trying to mute/unmute a player whereas the player name is wrong.
-	BAD_PLAYER_NAME(11, "The player name that mute or unmute another player should correspond to the player name on the client side"),
-
 	// Code when player tries to mute/unmute another player that is not in same channel.
 	PLAYERS_IN_DIFFERENT_CHANNELS(12, "A player can only mute or unmute another player that is in the same channel as him"),
+
+	// Code when player tries to kick another player that is not in a channel.
+	PLAYER_NOT_REGISTERED(13, "A player can be kicked from a channel if and only if it is registered in a channel"),
 
 	// Code when cannot be parsed.
 	UNKNOWN(-1, "Cannot parse the error code.");

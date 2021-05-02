@@ -36,6 +36,9 @@ public enum Idc {
 	// Idc when a player is deafen.
 	PLAYER_DEAFEN(11),
 
+	// Idc when a player is kick
+	PLAYER_KICK(12),
+
 	// Idc when cannot be parsed.
 	UNKNOWN(-1);
 
