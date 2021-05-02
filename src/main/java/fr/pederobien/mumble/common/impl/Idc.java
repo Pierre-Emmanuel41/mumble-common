@@ -18,9 +18,6 @@ public enum Idc {
 	// Idc to know if a player has been added, removed from a channel.
 	CHANNELS_PLAYER(5),
 
-	// Idc to get the server configuration
-	SERVER_CONFIGURATION(6),
-
 	// Idc to get the udp port number.
 	UDP_PORT(7),
 
