@@ -6,35 +6,41 @@ public enum Idc {
 	// Idc to get or create a unique identifier for the player.
 	UNIQUE_IDENTIFIER(1),
 
+	// Idc to join the server.
+	SERVER_JOIN(2),
+
+	// Idc to leave the server.
+	SERVER_LEAVE(3),
+
 	// Idc to know if a player is online or offline.
-	PLAYER_STATUS(2),
+	PLAYER_STATUS(4),
 
 	// Idc to know if player admin status has changed.
-	PLAYER_ADMIN(3),
+	PLAYER_ADMIN(5),
 
 	// Idc to know if channel has been renamed, added, removed.
-	CHANNELS(4),
+	CHANNELS(6),
 
 	// Idc to know if a player has been added, removed from a channel.
-	CHANNELS_PLAYER(5),
+	CHANNELS_PLAYER(7),
 
 	// Idc to get the udp port number.
-	UDP_PORT(7),
+	UDP_PORT(8),
 
 	// Idc when a player speak.
-	PLAYER_SPEAK(8),
+	PLAYER_SPEAK(9),
 
 	// Idc when a player is mute.
-	PLAYER_MUTE(9),
+	PLAYER_MUTE(10),
 
 	// Idc when a player mute another player.
-	PLAYER_MUTE_BY(10),
+	PLAYER_MUTE_BY(11),
 
 	// Idc when a player is deafen.
-	PLAYER_DEAFEN(11),
+	PLAYER_DEAFEN(12),
 
 	// Idc when a player is kick
-	PLAYER_KICK(12),
+	PLAYER_KICK(13),
 
 	// Idc when cannot be parsed.
 	UNKNOWN(-1);

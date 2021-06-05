@@ -26,6 +26,8 @@ public class MumbleInterpretersFactory implements InterpretersFactory<Header> {
 		interpreters = new HashMap<Idc, Function<Header, IMessageInterpreter>>();
 
 		interpreters.put(Idc.UNIQUE_IDENTIFIER, new UUIDInterpreter());
+		// SERVER_JOIN -> no interpreter needed = use of default interpreter
+		// SERVER_LEAVE -> no interpreter needed = use of default interpreter
 		interpreters.put(Idc.PLAYER_STATUS, new PlayerStatusInterpreter());
 		interpreters.put(Idc.PLAYER_ADMIN, new PlayerAdminInterpreter());
 		interpreters.put(Idc.CHANNELS, new ChannelsInterpreter());
@@ -33,8 +35,8 @@ public class MumbleInterpretersFactory implements InterpretersFactory<Header> {
 		interpreters.put(Idc.UDP_PORT, new UdpPortInterpreter());
 		interpreters.put(Idc.PLAYER_SPEAK, new PlayerSpeakInterpreter());
 		interpreters.put(Idc.PLAYER_MUTE, new PlayerMuteInterpreter());
-		interpreters.put(Idc.PLAYER_DEAFEN, new PlayerDeafenInterpreter());
 		interpreters.put(Idc.PLAYER_MUTE_BY, new PlayerMuteByInterpreter());
+		interpreters.put(Idc.PLAYER_DEAFEN, new PlayerDeafenInterpreter());
 		interpreters.put(Idc.PLAYER_KICK, new PlayerKickInterpreter());
 	}
 
