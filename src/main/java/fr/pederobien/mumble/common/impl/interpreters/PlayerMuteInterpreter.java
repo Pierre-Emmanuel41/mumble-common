@@ -14,10 +14,10 @@ public class PlayerMuteInterpreter extends AbstractInterpreter {
 
 		switch (getHeader().getOid()) {
 		case GET:
-			return wrapper.put((byte) ((boolean) payload[currentIndex] ? 1 : 0)).get();
+			return wrapper.putInt((boolean) payload[currentIndex] ? 1 : 0).get();
 		case SET:
 			wrapper.putString((String) payload[currentIndex++], true);
-			wrapper.put((byte) ((boolean) payload[currentIndex] ? 1 : 0));
+			wrapper.putInt((boolean) payload[currentIndex] ? 1 : 0);
 			return wrapper.get();
 		default:
 			return new byte[0];
@@ -32,14 +32,14 @@ public class PlayerMuteInterpreter extends AbstractInterpreter {
 
 		switch (getHeader().getOid()) {
 		case GET:
-			informations.add(wrapper.get(first) == 1 ? true : false);
+			informations.add(wrapper.getInt(first) == 1 ? true : false);
 			return informations.toArray();
 		case SET:
 			int playerNameLength = wrapper.getInt(first);
 			first += 4;
 			informations.add(new String(wrapper.getString(first, playerNameLength)));
 			first += playerNameLength;
-			informations.add(wrapper.get(first) == 1 ? true : false);
+			informations.add(wrapper.getInt(first) == 1 ? true : false);
 			return informations.toArray();
 		default:
 			return informations.toArray();

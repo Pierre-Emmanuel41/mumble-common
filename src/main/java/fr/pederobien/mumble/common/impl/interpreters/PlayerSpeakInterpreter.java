@@ -1,6 +1,5 @@
 package fr.pederobien.mumble.common.impl.interpreters;
 
-import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,11 +14,22 @@ public class PlayerSpeakInterpreter extends AbstractInterpreter {
 			return (byte[]) payload[0];
 		case SET:
 			ByteWrapper wrapper = ByteWrapper.create();
+
+			// Player's name
 			wrapper.putString((String) payload[0], true);
+
+			// Player data
 			wrapper.put((byte[]) payload[1], true);
-			wrapper.put(ByteBuffer.allocate(Double.BYTES).putDouble((double) payload[2]).array());
-			wrapper.put(ByteBuffer.allocate(Double.BYTES).putDouble((double) payload[3]).array());
-			wrapper.put(ByteBuffer.allocate(Double.BYTES).putDouble((double) payload[4]).array());
+
+			// Global volume
+			wrapper.putDouble((double) payload[2]);
+
+			// Left volume
+			wrapper.putDouble((double) payload[3]);
+
+			// Right volume
+			wrapper.putDouble((double) payload[4]);
+
 			return wrapper.get();
 		default:
 			return new byte[0];
@@ -52,11 +62,11 @@ public class PlayerSpeakInterpreter extends AbstractInterpreter {
 
 			// Global volume
 			informations.add(wrapper.getDouble(first));
-			first += Double.BYTES;
+			first += 8;
 
 			// Left volume
 			informations.add(wrapper.getDouble(first));
-			first += Double.BYTES;
+			first += 8;
 
 			// Right volume
 			informations.add(wrapper.getDouble(first));

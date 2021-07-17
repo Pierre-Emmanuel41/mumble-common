@@ -27,9 +27,16 @@ public class ChannelsInterpreter extends AbstractInterpreter {
 				int numberOfPlayers = (int) payload[currentIndex++];
 				wrapper.putInt(numberOfPlayers);
 
-				for (int j = 0; j < numberOfPlayers; j++)
+				for (int j = 0; j < numberOfPlayers; j++) {
 					// Player's name
 					wrapper.putString((String) payload[currentIndex++], true);
+
+					// Player's mute status
+					wrapper.putInt(((boolean) payload[currentIndex++] ? 1 : 0));
+
+					// Player's deafen status
+					wrapper.putInt(((boolean) payload[currentIndex++] ? 1 : 0));
+				}
 			}
 			return wrapper.get();
 		case ADD:
@@ -75,6 +82,14 @@ public class ChannelsInterpreter extends AbstractInterpreter {
 					// Player's name
 					informations.add(wrapper.getString(first, playerNameLength));
 					first += playerNameLength;
+
+					// Player's mute status
+					informations.add(wrapper.getInt(first) == 1);
+					first += 4;
+
+					// Player's deafen status
+					informations.add(wrapper.getInt(first) == 1);
+					first += 4;
 				}
 			}
 			return informations.toArray();

@@ -3,17 +3,18 @@ package fr.pederobien.mumble.common.impl;
 import java.nio.ByteBuffer;
 
 public enum Idc {
-	// Idc to get or create a unique identifier for the player.
-	UNIQUE_IDENTIFIER(1),
 
 	// Idc to join the server.
-	SERVER_JOIN(2),
+	SERVER_JOIN(1),
 
 	// Idc to leave the server.
-	SERVER_LEAVE(3),
+	SERVER_LEAVE(2),
+
+	// Idc to get or create a unique identifier for the player.
+	UNIQUE_IDENTIFIER(3),
 
 	// Idc to know if a player is online or offline.
-	PLAYER_STATUS(4),
+	PLAYER_INFO(4),
 
 	// Idc to know if player admin status has changed.
 	PLAYER_ADMIN(5),

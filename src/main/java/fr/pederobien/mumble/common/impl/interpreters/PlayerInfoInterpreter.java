@@ -5,7 +5,7 @@ import java.util.List;
 
 import fr.pederobien.utils.ByteWrapper;
 
-public class PlayerStatusInterpreter extends AbstractInterpreter {
+public class PlayerInfoInterpreter extends AbstractInterpreter {
 
 	@Override
 	public byte[] internalGenerate(Object[] payload) {
@@ -14,13 +14,16 @@ public class PlayerStatusInterpreter extends AbstractInterpreter {
 
 		// Player connected
 		if ((boolean) payload[currentIndex++]) {
-			wrapper.put((byte) 1);
+			// Player online
+			wrapper.putInt(1);
+
+			// Player name
 			wrapper.putString((String) payload[currentIndex++], true);
 
 			// Player admin
-			wrapper.put((byte) ((boolean) payload[currentIndex] ? 1 : 0));
+			wrapper.putInt((boolean) payload[currentIndex] ? 1 : 0);
 		} else
-			wrapper.put((byte) 0);
+			wrapper.putInt(0);
 
 		return wrapper.get();
 	}
@@ -32,8 +35,8 @@ public class PlayerStatusInterpreter extends AbstractInterpreter {
 		List<Object> informations = new ArrayList<Object>();
 
 		// Player connected
-		byte connected = wrapper.get(first);
-		first += 1;
+		int connected = wrapper.getInt(first);
+		first += 4;
 		if (connected == 1) {
 			informations.add(true);
 			int playerNameLength = wrapper.getInt(first);
