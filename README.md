@@ -442,6 +442,8 @@ IMessage<Header> response = MumbleMessageFactory.parse(bytes);
 
 * <code>SET</code>
 
+This request can only be sent byte an admin.
+
 Payload structure when sent and received:
 
 ![plot](./src/main/java/resources/SoundModifier_set.png)
