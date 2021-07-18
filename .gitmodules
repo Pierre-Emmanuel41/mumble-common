@@ -1,6 +1,10 @@
 [submodule "communication"]
 	path = communication
 	url = https://github.com/Pierre-Emmanuel41/communication.git
+	update = rebase
+	branch = master
 [submodule "messenger"]
 	path = messenger
 	url = https://github.com/Pierre-Emmanuel41/messenger.git
+	update = rebase
+	branch = master
