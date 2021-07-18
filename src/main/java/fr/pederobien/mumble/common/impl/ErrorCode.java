@@ -39,6 +39,9 @@ public enum ErrorCode {
 	// Code when player is not registered in a channel.
 	PLAYER_NOT_REGISTERED(12, "The player is not registered in a channel"),
 
+	// Code when the sound modifier does not exist.
+	SOUND_MODIFIER_DOES_NOT_EXIST(13, "The sound modifier does not exist"),
+
 	// Code when cannot be parsed.
 	UNKNOWN(-1, "Cannot parse the error code.");
 

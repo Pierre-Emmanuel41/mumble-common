@@ -1,16 +1,16 @@
 package fr.pederobien.mumble.common.impl;
 
-import java.nio.ByteBuffer;
+import fr.pederobien.utils.ByteWrapper;
 
 public enum Oid {
-	GET(1), SET(2), ADD(3), REMOVE(4), UNKNOWN(-1);
+	GET(1), SET(2), ADD(3), REMOVE(4), INFO(5), UNKNOWN(-1);
 
 	private int code;
 	private byte[] bytes;
 
 	private Oid(int code) {
 		this.code = code;
-		bytes = ByteBuffer.allocate(4).putInt(code).array();
+		bytes = ByteWrapper.create().putInt(code).get();
 	}
 
 	@Override

@@ -40,8 +40,11 @@ public enum Idc {
 	// Idc when a player is deafen.
 	PLAYER_DEAFEN(12),
 
-	// Idc when a player is kick
+	// Idc when a player is kick.
 	PLAYER_KICK(13),
+
+	// Idc to set the sound modifier of a channel.
+	SOUND_MODIFIER(14),
 
 	// Idc when cannot be parsed.
 	UNKNOWN(-1);

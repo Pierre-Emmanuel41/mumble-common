@@ -10,11 +10,12 @@ import fr.pederobien.mumble.common.impl.interpreters.ChannelsInterpreter;
 import fr.pederobien.mumble.common.impl.interpreters.ChannelsPlayerInterpreter;
 import fr.pederobien.mumble.common.impl.interpreters.PlayerAdminInterpreter;
 import fr.pederobien.mumble.common.impl.interpreters.PlayerDeafenInterpreter;
+import fr.pederobien.mumble.common.impl.interpreters.PlayerInfoInterpreter;
 import fr.pederobien.mumble.common.impl.interpreters.PlayerKickInterpreter;
 import fr.pederobien.mumble.common.impl.interpreters.PlayerMuteByInterpreter;
 import fr.pederobien.mumble.common.impl.interpreters.PlayerMuteInterpreter;
 import fr.pederobien.mumble.common.impl.interpreters.PlayerSpeakInterpreter;
-import fr.pederobien.mumble.common.impl.interpreters.PlayerInfoInterpreter;
+import fr.pederobien.mumble.common.impl.interpreters.SoundModifierInterpreter;
 import fr.pederobien.mumble.common.impl.interpreters.UUIDInterpreter;
 import fr.pederobien.mumble.common.impl.interpreters.UdpPortInterpreter;
 
@@ -38,6 +39,7 @@ public class MumbleInterpretersFactory implements InterpretersFactory<Header> {
 		interpreters.put(Idc.PLAYER_MUTE_BY, new PlayerMuteByInterpreter());
 		interpreters.put(Idc.PLAYER_DEAFEN, new PlayerDeafenInterpreter());
 		interpreters.put(Idc.PLAYER_KICK, new PlayerKickInterpreter());
+		interpreters.put(Idc.SOUND_MODIFIER, new SoundModifierInterpreter());
 	}
 
 	@Override

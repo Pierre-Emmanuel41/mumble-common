@@ -400,3 +400,77 @@ If the sent Oid is not <code>SET</code> then the server returns no payload but t
 ```java
 IMessage<Header> message = MumbleMessageFactory.create(Idc.PLAYER_KICK, "Player 1", "Player 2");
 ```
+
+### 4.14) Sound modifier
+
+It is the request to send to the server in order to get informations about sound modifiers.
+
+Idc: <code>SOUND_MODIFIER</code> (value = 14).  
+Supported Oid: <code>GET</code> (value = 1), <code>SET</code> (value = 2), <code>INFO</code> (value = 5).  
+
+The payload structure is different according to the Idc:
+
+* <code>GET</code>
+
+Payload structure when sent:
+
+![plot](./src/main/java/resources/SoundModifier_get1.png)
+
+The combination of the channel name length and channel name correspond to the channel whose the sound modifier should be returned.  
+
+It may be possible that the channel involved is not registered on the server. In that case, the server returns no payload but the header contains the error code <code>CHANNEL_DOES_NOT_EXISTS</code> (value = 8).  
+
+```java
+IMessage<Header> message = MumbleMessageFactory.create(Idc.SOUND_MODIFIER, "Channel 1");
+```
+
+Payload structure when received:
+
+![plot](./src/main/java/resources/SoundModifier_get2.png)
+
+The combination of the channel name length and channel name correspond to the channel whose the sound modifier is returned.  
+The combination of the sound modifier name length and sound modifier name correspond to the sound modifier associated to the channel.  
+
+It may be possible that the channel involved is not registered on the server. In that case, the server returns no payload but the header contains the error code <code>CHANNEL_DOES_NOT_EXISTS</code> (value = 8).  
+It may be possible that the sound modifier involved is not registered on the server. In that case, the server returns no payload but the header contains the error code <code>SOUND_MODIFIER_DOES_NOT_EXIST</code> (value = 13).  
+
+```java
+// Received from the server
+byte[] bytes = new byte[1024];
+IMessage<Header> response = MumbleMessageFactory.parse(bytes);
+```
+
+* <code>SET</code>
+
+Payload structure when sent and received:
+
+![plot](./src/main/java/resources/SoundModifier_set.png)
+
+The combination of the channel name length and channel name correspond to the channel whose the sound modifier is returned.  
+The combination of the sound modifier name length and sound modifier name correspond to the sound modifier associated to the channel.  
+
+It may be possible that the channel involved is not registered on the server. In that case, the server returns no payload but the header contains the error code <code>CHANNEL_DOES_NOT_EXISTS</code> (value = 8).  
+It may be possible that the sound modifier involved is not registered on the server. In that case, the server returns no payload but the header contains the error code <code>SOUND_MODIFIER_DOES_NOT_EXIST</code> (value = 13).  
+
+```java
+IMessage<Header> message = MumbleMessageFactory.create(Idc.SOUND_MODIFIER, Oid.SET, "Channel 1", "Sound modifier 1");
+```
+
+* <code>INFO</code>
+
+Payload structure when sent: no payload to furnish.
+
+Payload structure when received:
+
+![plot](./src/main/java/resources/SoundModifier_info.png)
+
+The response is composed of blocks on each the developer has to iterate. The first four bytes indicate the number of sound modifier the Mumble server contains.  
+Then comes informations about each modifier: The sound modifier name length and the sound modifier name.  
+
+If the sent Oid is neither <code>GET</code> nor <code>SET</code> nor <code>INFO</code> then the server returns no payload but the header contains the error code <code>INCOMPATIBLE_IDC_OID</code> (value = 5).  
+
+```java
+// Received from the server
+byte[] bytes = new byte[1024];
+IMessage<Header> response = MumbleMessageFactory.parse(bytes);
+```
