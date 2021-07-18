@@ -56,14 +56,45 @@ public class MumbleMessageFactory {
 		return FACTORY.parse(new Header(), buffer);
 	}
 
+	/**
+	 * Answer to the given request. It creates a new message based on the given request properties. It creates a new header base on
+	 * the given idc and oid. The identifier is not modified.
+	 * 
+	 * @param request The request to answer.
+	 * @param idc     The idc of the response.
+	 * @param oid     The oid of the response.
+	 * @param payload The payload of the response.
+	 * 
+	 * @return The message associated to the answer.
+	 */
 	public static IMessage<Header> answer(IMessage<Header> request, Idc idc, Oid oid, Object... payload) {
 		return request.answer(new Header(idc, oid), payload);
 	}
 
+	/**
+	 * Answer to the given request. It creates a new message based on the given request properties. It creates a new header with idc
+	 * equals the specified idc, oid equals {@link Oid#GET}. The identifier is not modified.
+	 * 
+	 * @param request The request to answer.
+	 * @param idc     The Idc of the response.
+	 * @param payload The payload of the response.
+	 * 
+	 * @return The message associated to the answer.
+	 */
 	public static IMessage<Header> answer(IMessage<Header> request, Idc idc, Object... payload) {
 		return request.answer(new Header(idc), payload);
 	}
 
+	/**
+	 * Answer to the given request. It creates a new message based on the given request properties. It creates a new header with idc
+	 * equals current message header idc, oid equals current message header oid, but the error code is the specified error code. The
+	 * identifier is not modified.
+	 * 
+	 * @param request   The request to answer.
+	 * @param errorCode The error code of the response.
+	 * 
+	 * @return The message associated to the answer.
+	 */
 	public static IMessage<Header> answer(IMessage<Header> request, ErrorCode errorCode) {
 		return request.answer(new Header(request.getHeader().getIdc(), request.getHeader().getOid(), errorCode));
 	}
