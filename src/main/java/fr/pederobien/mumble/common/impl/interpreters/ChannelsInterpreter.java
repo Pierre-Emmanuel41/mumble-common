@@ -43,6 +43,7 @@ public class ChannelsInterpreter extends AbstractInterpreter {
 			}
 			return wrapper.get();
 		case ADD:
+			return ByteWrapper.create().putString((String) payload[0], true).putString((String) payload[1], true).get();
 		case REMOVE:
 			return ByteWrapper.create().putString((String) payload[0]).get();
 		case SET:
@@ -102,6 +103,18 @@ public class ChannelsInterpreter extends AbstractInterpreter {
 			return informations.toArray();
 
 		case ADD:
+			// Channel's name
+			int channelNameLength = wrapper.getInt(first);
+			first += 4;
+			informations.add(wrapper.getString(first, channelNameLength));
+			first += channelNameLength;
+
+			// Sound modifier's name
+			int soundModifierNameLength = wrapper.getInt(first);
+			first += 4;
+			informations.add(wrapper.getString(first, soundModifierNameLength));
+			first += soundModifierNameLength;
+			return informations.toArray();
 		case REMOVE:
 			return Arrays.asList(wrapper.getString()).toArray();
 		case SET:

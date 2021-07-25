@@ -155,19 +155,32 @@ Then comes informations about each player: The player name length and the player
 IMessage<Header> message = MumbleMessageFactory.create(Idc.CHANNELS);
 ```
 
-* <code>ADD</code> and <code>REMOVE</code>
+* <code>ADD</code>
 
 Payload structure when sent and when received:
 
-![plot](./src/main/java/resources/Channels_add_remove.png)
+![plot](./src/main/java/resources/Channels_add.png)
 
-In contrast to before, there is no indication about the channel name length. Indeed, the payload contains only the channel name. The action to do with that name is provided by the oid.  
+The combination of channel name length and channel name correspond to the channel to add to the server. The combination of sound modifier name length and sound modifier name correspond to the sound modifier associated to the channel.  
 
 It may be possible that the channel to add is already registered on the server. In that case, the server return no payload but the header contains the error code <code>CHANNEL_ALREADY_EXISTS</code> (value = 7).  
+It may be possible that the sound modifier to attach does not correspond to a registered modifier. In that case, the server return no payload but the header contains the error code <code>SOUND_MODIFIER_DOES_NOT_EXIST</code> (value = 13).  
+
+```java
+IMessage<Header> message = MumbleMessageFactory.create(Idc.CHANNELS, Oid.ADD, "Channel 1", "Sound modifier 1");
+```
+
+* <code>REMOVE</code>
+
+Payload structure when sent and when received:
+
+![plot](./src/main/java/resources/Channels_remove.png)
+
+In contrast to before, there is no indication about the channel name length. Indeed, the payload contains only the channel name.
+
 It may be possible that the channel to remove is not registered on the server. In that case, the server return no payload but the header contains the error code <code>CHANNEL_DOES_NOT_EXISTS</code> (value = 8).  
 
 ```java
-IMessage<Header> message = MumbleMessageFactory.create(Idc.CHANNELS, Oid.ADD, "Channel 1");
 IMessage<Header> message = MumbleMessageFactory.create(Idc.CHANNELS, Oid.REMOVE, "Channel 1");
 ```
 
