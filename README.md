@@ -148,7 +148,7 @@ Payload structure when received:
 ![plot](./src/main/java/resources/Channels_get.png)
 
 The response is composed of blocks on each the developer has to iterate. The first four bytes indicate the number of channels the Mumble server contains.  
-Then comes informations about each channel: The channel name length and the channel name, the number of player currently registered on the channel.  
+Then comes informations about each channel: The channel name length and the channel name, the sound modifier name length and the sound modifier name, the number of player currently registered on the channel.  
 Then comes informations about each player: The player name length and the player name, the mute status (0 = false, 1 = true) and the deafen status (0 = false, 1 = true).  
 
 ```java

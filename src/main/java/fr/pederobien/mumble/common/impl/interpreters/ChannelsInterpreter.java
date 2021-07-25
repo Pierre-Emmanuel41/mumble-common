@@ -23,6 +23,9 @@ public class ChannelsInterpreter extends AbstractInterpreter {
 				// Channel's name
 				wrapper.putString((String) payload[currentIndex++], true);
 
+				// Channel's sound modifier name
+				wrapper.putString((String) payload[currentIndex++], true);
+
 				// Number of players
 				int numberOfPlayers = (int) payload[currentIndex++];
 				wrapper.putInt(numberOfPlayers);
@@ -63,12 +66,17 @@ public class ChannelsInterpreter extends AbstractInterpreter {
 			first += 4;
 
 			for (int i = 0; i < numberOfChannels; i++) {
+				// Channel's name
 				int channelNameLength = wrapper.getInt(first);
 				first += 4;
-
-				// Channel's name
 				informations.add(wrapper.getString(first, channelNameLength));
 				first += channelNameLength;
+
+				// Channel's sound modifier name
+				int soundModifierNameLength = wrapper.getInt(first);
+				first += 4;
+				informations.add(wrapper.getString(first, soundModifierNameLength));
+				first += soundModifierNameLength;
 
 				// Number of players
 				int numberOfPlayers = wrapper.getInt(first);
@@ -76,10 +84,9 @@ public class ChannelsInterpreter extends AbstractInterpreter {
 				first += 4;
 
 				for (int j = 0; j < numberOfPlayers; j++) {
+					// Player's name
 					int playerNameLength = wrapper.getInt(first);
 					first += 4;
-
-					// Player's name
 					informations.add(wrapper.getString(first, playerNameLength));
 					first += playerNameLength;
 
