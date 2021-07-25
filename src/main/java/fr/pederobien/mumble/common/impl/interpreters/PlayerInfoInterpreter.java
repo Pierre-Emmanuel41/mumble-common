@@ -45,7 +45,7 @@ public class PlayerInfoInterpreter extends AbstractInterpreter {
 			first += playerNameLength;
 
 			// Player admin
-			informations.add(wrapper.get(first) == 1 ? true : false);
+			informations.add(wrapper.getInt(first) == 1 ? true : false);
 		} else
 			informations.add(false);
 
