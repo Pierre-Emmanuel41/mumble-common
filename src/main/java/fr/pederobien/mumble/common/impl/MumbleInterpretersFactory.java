@@ -15,6 +15,7 @@ import fr.pederobien.mumble.common.impl.interpreters.PlayerKickInterpreter;
 import fr.pederobien.mumble.common.impl.interpreters.PlayerMuteByInterpreter;
 import fr.pederobien.mumble.common.impl.interpreters.PlayerMuteInterpreter;
 import fr.pederobien.mumble.common.impl.interpreters.PlayerSpeakInterpreter;
+import fr.pederobien.mumble.common.impl.interpreters.ServerJoinInterpreter;
 import fr.pederobien.mumble.common.impl.interpreters.SoundModifierInterpreter;
 import fr.pederobien.mumble.common.impl.interpreters.UUIDInterpreter;
 import fr.pederobien.mumble.common.impl.interpreters.UdpPortInterpreter;
@@ -27,7 +28,7 @@ public class MumbleInterpretersFactory implements InterpretersFactory<Header> {
 		interpreters = new HashMap<Idc, Function<Header, IMessageInterpreter>>();
 
 		interpreters.put(Idc.UNIQUE_IDENTIFIER, new UUIDInterpreter());
-		// SERVER_JOIN -> no interpreter needed = use of default interpreter
+		interpreters.put(Idc.SERVER_JOIN, new ServerJoinInterpreter());
 		// SERVER_LEAVE -> no interpreter needed = use of default interpreter
 		interpreters.put(Idc.PLAYER_INFO, new PlayerInfoInterpreter());
 		interpreters.put(Idc.PLAYER_ADMIN, new PlayerAdminInterpreter());

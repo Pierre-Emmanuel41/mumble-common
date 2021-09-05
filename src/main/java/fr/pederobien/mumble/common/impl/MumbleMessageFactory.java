@@ -87,6 +87,20 @@ public class MumbleMessageFactory {
 
 	/**
 	 * Answer to the given request. It creates a new message based on the given request properties. It creates a new header with idc
+	 * equals current message header idc, oid equals the specified oid. The identifier is not modified.
+	 * 
+	 * @param request The request to answer.
+	 * @param idc     The Idc of the response.
+	 * @param payload The payload of the response.
+	 * 
+	 * @return The message associated to the answer.
+	 */
+	public static IMessage<Header> answer(IMessage<Header> request, Oid oid, Object... payload) {
+		return request.answer(new Header(request.getHeader().getIdc(), oid), payload);
+	}
+
+	/**
+	 * Answer to the given request. It creates a new message based on the given request properties. It creates a new header with idc
 	 * equals current message header idc, oid equals current message header oid, but the error code is the specified error code. The
 	 * identifier is not modified.
 	 * 
