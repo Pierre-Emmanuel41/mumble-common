@@ -43,15 +43,18 @@ Please check out the three files [Idc](https://github.com/Pierre-Emmanuel41/mumb
 
 # 4) Request protocol
 
-### 4.1) Player Join
+### 4.1) Server Join
 
 It is the first request to send to the server. While this request is not sent, all other requests will return nothing but the error code <code>PERMISSION_REFUSED</code> (value = 3).
 
-Idc: <code>PLAYER_JOIN</code> (value = 1).  
+Idc: <code>SERVER_JOIN</code> (value = 1).  
 Supported Oid: <code>SET</code> (value = 2).  
 
 Payload structure when sent: No payload to furnish.  
-Payload structure when received: No payload furnished.  
+
+Payload structure when received:
+
+![plot](./src/main/java/resources/ServerJoin_Info.png)
 
 ```java
 IMessage<Header> message = MumbleMessageFactory.create(Idc.PLAYER_JOIN, Oid.SET);
@@ -71,25 +74,7 @@ Payload structure when received: No payload furnished.
 IMessage<Header> message = MumbleMessageFactory.create(Idc.PLAYER_LEAVE, Oid.SET);
 ```
 
-### 4.3) Unique Identifier
-
-Idc: <code>UNIQUE_IDENTIFIER</code> (value = 3).  
-Supported Oid: <code>GET</code> (value = 1).  
-
-Payload structure when sent: No payload to furnish.
-
-Payload structure when receiving:  
-
-![plot](./src/main/java/resources/UniqueIdentifier.png)
-
-The unique identifier returned to the client correspond to the string representation of the [UUID](https://docs.oracle.com/javase/7/docs/api/java/util/UUID.html) managed by java.  
-If the sent Oid is not <code>GET</code> then the server returns no payload but the header contains the error code <code>INCOMPATIBLE_IDC_OID</code> (value = 5).
-
-```java
-IMessage<Header> message = MumbleMessageFactory.create(Idc.UNIQUE_IDENTIFIER);
-```
-
-### 4.4) Player Info
+### 4.3) Player Info
 
 It is the request to send to the server in order to get information about the associated player in game.
 
@@ -113,9 +98,9 @@ If the sent Oid is not <code>GET</code> then the server returns no payload but t
 IMessage<Header> message = MumbleMessageFactory.create(Idc.PLAYER_INFO);
 ```
 
-### 4.5) Player Admin
+### 4.4) Player Admin
 
-It is the request received only from the server when the player's admin status in the game has changed.
+It is the request that can ONLY be received from the server when the player's admin status in the game has changed.
 
 Idc: <code>PLAYER_ADMIN</code> (value = 5).  
 Supported Oid: <code>SET</code> (value = 1).  
@@ -130,7 +115,7 @@ byte[] bytes = new byte[1024];
 IMessage<Header> response = MumbleMessageFactory.parse(bytes);
 ```
 
-### 4.6) Channels
+### 4.5) Channels
 
 It is the request to send to the server in order to get the channels list, to add, remove and rename a channel.
 
@@ -201,7 +186,7 @@ If the sent Oid is not <code>GET</code> nor <code>SET</code> nor <code>ADD</code
 IMessage<Header> message = MumbleMessageFactory.create(Idc.CHANNELS, Oid.SET, "Channel 1", "Channel 2");
 ```
 
-### 4.7) Channels player
+### 4.6) Channels player
 
 It is the request to send to the server in order to add or remove a player from a channel.
 
@@ -225,26 +210,7 @@ IMessage<Header> message = MumbleMessageFactory.create(Idc.CHANNELS_PLAYER, Oid.
 IMessage<Header> message = MumbleMessageFactory.create(Idc.CHANNELS_PLAYER, Oid.REMOVE, "Channel 1", "Player 1");
 ```
 
-### 4.8) UDP port
-
-It is the request to send to the server in order to get udp port on which there is the vocal communication.
-
-Idc: <code>UDP_PORT</code> (value = 8).  
-Supported Oid: <code>GET</code> (value = 1).  
-
-Payload structure when sent: No payload to furnish.
-
-Payload structure when received:
-
-![plot](./src/main/java/resources/UdpPort.png)
-
-If the sent Oid is not <code>GET</code> then the server returns no payload but the header contains the error code <code>INCOMPATIBLE_IDC_OID</code> (value = 5).
-
-```java
-IMessage<Header> message = MumbleMessageFactory.create(Idc.UDP_PORT);
-```
-
-### 4.9) Player speak
+### 4.7) Player speak
 
 It is the request to send to the server when a player is speaking. This request should be send through the UDP connection, not through the TCP connection.
 
@@ -287,7 +253,7 @@ byte[] bytes = new byte[1024];
 IMessage<Header> response = MumbleMessageFactory.parse(bytes);
 ```
 
-### 4.10) Player mute
+### 4.8) Player mute
 
 It is the request to send to the server when a player mutes itself.
 
@@ -326,7 +292,7 @@ byte[] bytes = new byte[1024];
 IMessage<Header> response = MumbleMessageFactory.parse(bytes);
 ```
 
-### 4.11) Player mute by
+### 4.9) Player mute by
 
 It is the request to send to the server when a player mute another player but only for itself.
 
@@ -351,7 +317,7 @@ If the sent Oid is not <code>SET</code> then the server returns no payload but t
 IMessage<Header> message = MumbleMessageFactory.create(Idc.PLAYER_MUTE_BY, Oid.SET, "Player 1", "Player 2", true);
 ```
 
-### 4.12) Player deafen
+### 4.10) Player deafen
 
 It is the request to send to the server when a player deafen itself.
 
@@ -390,7 +356,7 @@ byte[] bytes = new byte[1024];
 IMessage<Header> response = MumbleMessageFactory.parse(bytes);
 ```
 
-### 4.13) Player kick
+### 4.11) Player kick
 
 It is the request to send to the server when a player wants to kick another player from a channel. This request can only be sent by an admin.
 
@@ -414,7 +380,7 @@ If the sent Oid is not <code>SET</code> then the server returns no payload but t
 IMessage<Header> message = MumbleMessageFactory.create(Idc.PLAYER_KICK, "Player 1", "Player 2");
 ```
 
-### 4.14) Sound modifier
+### 4.12) Sound modifier
 
 It is the request to send to the server in order to get informations about sound modifiers.
 
