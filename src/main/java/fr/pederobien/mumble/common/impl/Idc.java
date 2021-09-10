@@ -5,52 +5,51 @@ import java.nio.ByteBuffer;
 public enum Idc {
 
 	// Idc to join the server.
-	SERVER_JOIN(1),
+	SERVER_JOIN,
 
 	// Idc to leave the server.
-	SERVER_LEAVE(2),
-
-	// Idc to get or create a unique identifier for the player.
-	UNIQUE_IDENTIFIER(3),
+	SERVER_LEAVE,
 
 	// Idc to know if a player is online or offline.
-	PLAYER_INFO(4),
+	PLAYER_INFO,
 
 	// Idc to know if player admin status has changed.
-	PLAYER_ADMIN(5),
+	PLAYER_ADMIN,
 
 	// Idc to know if channel has been renamed, added, removed.
-	CHANNELS(6),
+	CHANNELS,
 
 	// Idc to know if a player has been added, removed from a channel.
-	CHANNELS_PLAYER(7),
-
-	// Idc to get the udp port number.
-	UDP_PORT(8),
+	CHANNELS_PLAYER,
 
 	// Idc when a player speak.
-	PLAYER_SPEAK(9),
+	PLAYER_SPEAK,
 
 	// Idc when a player is mute.
-	PLAYER_MUTE(10),
+	PLAYER_MUTE,
 
 	// Idc when a player mute another player.
-	PLAYER_MUTE_BY(11),
+	PLAYER_MUTE_BY,
 
 	// Idc when a player is deafen.
-	PLAYER_DEAFEN(12),
+	PLAYER_DEAFEN,
 
 	// Idc when a player is kick.
-	PLAYER_KICK(13),
+	PLAYER_KICK,
 
 	// Idc to set the sound modifier of a channel.
-	SOUND_MODIFIER(14),
+	SOUND_MODIFIER,
 
 	// Idc when cannot be parsed.
 	UNKNOWN(-1);
 
+	private static int codeGenerator;
 	private int code;
 	private byte[] bytes;
+
+	private Idc() {
+		this(generateCode());
+	}
 
 	private Idc(int code) {
 		this.code = code;
@@ -82,5 +81,9 @@ public enum Idc {
 			if (idc.getCode() == code)
 				return idc;
 		return UNKNOWN;
+	}
+
+	private static int generateCode() {
+		return codeGenerator++;
 	}
 }

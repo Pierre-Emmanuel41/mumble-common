@@ -3,10 +3,15 @@ package fr.pederobien.mumble.common.impl;
 import fr.pederobien.utils.ByteWrapper;
 
 public enum Oid {
-	GET(1), SET(2), ADD(3), REMOVE(4), INFO(5), UNKNOWN(-1);
+	GET, SET, ADD, REMOVE, INFO, UNKNOWN(-1);
 
+	private static int codeGenerator;
 	private int code;
 	private byte[] bytes;
+
+	private Oid() {
+		this(generateCode());
+	}
 
 	private Oid(int code) {
 		this.code = code;
@@ -39,5 +44,9 @@ public enum Oid {
 			if (oid.getCode() == code)
 				return oid;
 		return UNKNOWN;
+	}
+
+	private static int generateCode() {
+		return codeGenerator++;
 	}
 }
