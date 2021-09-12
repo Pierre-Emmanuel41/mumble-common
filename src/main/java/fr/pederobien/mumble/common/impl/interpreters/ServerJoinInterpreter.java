@@ -11,7 +11,7 @@ public class ServerJoinInterpreter extends AbstractInterpreter {
 	@Override
 	protected byte[] internalGenerate(Object[] payload) {
 		switch (getHeader().getOid()) {
-		case INFO:
+		case SET:
 			int currentIndex = 0;
 			ByteWrapper wrapper = ByteWrapper.create();
 
@@ -79,7 +79,7 @@ public class ServerJoinInterpreter extends AbstractInterpreter {
 	@Override
 	protected Object[] internalInterprete(byte[] payload) {
 		switch (getHeader().getOid()) {
-		case INFO:
+		case SET:
 			ByteWrapper wrapper = ByteWrapper.wrap(payload);
 			List<Object> informations = new ArrayList<Object>();
 			int first = 0;
