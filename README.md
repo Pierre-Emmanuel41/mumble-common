@@ -78,7 +78,7 @@ IMessage<Header> message = MumbleMessageFactory.create(Idc.PLAYER_LEAVE, Oid.SET
 
 It is the request to send to the server in order to get information about the associated player in game.
 
-Idc: <code>PLAYER_INFO</code> (value = 4).  
+Idc: <code>PLAYER_INFO</code> (value = 3).  
 Supported Oid: <code>GET</code> (value = 1).  
 
 Payload structure when sent: No payload to furnish.  
@@ -102,7 +102,7 @@ IMessage<Header> message = MumbleMessageFactory.create(Idc.PLAYER_INFO);
 
 It is the request that can ONLY be received from the server when the player's admin status in the game has changed.
 
-Idc: <code>PLAYER_ADMIN</code> (value = 5).  
+Idc: <code>PLAYER_ADMIN</code> (value = 4).  
 Supported Oid: <code>SET</code> (value = 1).  
 
 Payload structure when received:  
@@ -119,7 +119,7 @@ IMessage<Header> response = MumbleMessageFactory.parse(bytes);
 
 It is the request to send to the server in order to get the channels list, to add, remove and rename a channel.
 
-Idc: <code>CHANNELS</code> (value = 6).  
+Idc: <code>CHANNELS</code> (value = 5).  
 Supported Oid: <code>GET</code> (value = 1), <code>SET</code> (value = 2), <code>ADD</code> (value = 3), <code>REMOVE</code> (value = 4).  
 
 The payload structure is different according to the Idc:
@@ -190,7 +190,7 @@ IMessage<Header> message = MumbleMessageFactory.create(Idc.CHANNELS, Oid.SET, "C
 
 It is the request to send to the server in order to add or remove a player from a channel.
 
-Idc: <code>CHANNELS_PLAYER</code> (value = 7).  
+Idc: <code>CHANNELS_PLAYER</code> (value = 6).  
 Supported Oid: <code>ADD</code> (value = 3), <code>REMOVE</code> (value = 4).  
 
 The payload structure when sent and received:
@@ -214,7 +214,7 @@ IMessage<Header> message = MumbleMessageFactory.create(Idc.CHANNELS_PLAYER, Oid.
 
 It is the request to send to the server when a player is speaking. This request should be send through the UDP connection, not through the TCP connection.
 
-Idc: <code>PLAYER_SPEAK</code> (value = 9).  
+Idc: <code>PLAYER_SPEAK</code> (value = 7).  
 Supported Oid: <code>GET</code> (value = 1), <code>SET</code> (value = 2).  
 
 The payload structure is different according to the Idc:
@@ -257,7 +257,7 @@ IMessage<Header> response = MumbleMessageFactory.parse(bytes);
 
 It is the request to send to the server when a player mutes itself.
 
-Idc: <code>PLAYER_MUTE</code> (value = 10).  
+Idc: <code>PLAYER_MUTE</code> (value = 8).  
 Supported Oid: <code>GET</code> (value = 1), <code>SET</code> (value = 2).  
 
 The payload structure is different according to the Idc:
@@ -296,7 +296,7 @@ IMessage<Header> response = MumbleMessageFactory.parse(bytes);
 
 It is the request to send to the server when a player mute another player but only for itself.
 
-Idc: <code>PLAYER_MUTE_BY</code> (value = 11).  
+Idc: <code>PLAYER_MUTE_BY</code> (value = 9).  
 Supported Oid: <code>SET</code> (value = 2).  
 
 Payload structure when sent and received:
@@ -321,8 +321,8 @@ IMessage<Header> message = MumbleMessageFactory.create(Idc.PLAYER_MUTE_BY, Oid.S
 
 It is the request to send to the server when a player deafen itself.
 
-Idc: <code>PLAYER_DEAFEN</code> (value = 12).  
-Supported Oid: <code>GET</code> (value = 1), <code>SET</code> (value = 2).  
+Idc: <code>PLAYER_DEAFEN</code> (value = 10).  
+Supported Oid: <code>SET</code> (value = 2).  
 
 The payload structure is different according to the Idc:
 
@@ -360,7 +360,7 @@ IMessage<Header> response = MumbleMessageFactory.parse(bytes);
 
 It is the request to send to the server when a player wants to kick another player from a channel. This request can only be sent by an admin.
 
-Idc: <code>PLAYER_KICK</code> (value = 13).  
+Idc: <code>PLAYER_KICK</code> (value = 11).  
 Supported Oid: <code>SET</code> (value = 2).  
 
 Payload structure when sent and received:
@@ -384,7 +384,7 @@ IMessage<Header> message = MumbleMessageFactory.create(Idc.PLAYER_KICK, "Player 
 
 It is the request to send to the server in order to get informations about sound modifiers.
 
-Idc: <code>SOUND_MODIFIER</code> (value = 14).  
+Idc: <code>SOUND_MODIFIER</code> (value = 12).  
 Supported Oid: <code>GET</code> (value = 1), <code>SET</code> (value = 2), <code>INFO</code> (value = 5).  
 
 The payload structure is different according to the Idc:
