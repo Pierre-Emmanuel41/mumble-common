@@ -324,13 +324,9 @@ It is the request to send to the server when a player deafen itself.
 Idc: <code>PLAYER_DEAFEN</code> (value = 10).  
 Supported Oid: <code>SET</code> (value = 2).  
 
-The payload structure is different according to the Idc:
-
-* <code>GET</code>
-
 Payload structure when sent and received:
 
-![plot](./src/main/java/resources/PlayerDeafen_get.png)
+![plot](./src/main/java/resources/PlayerDeafen.png)
 
 The deafen status can only be 0 (false) or 1 (true).  
 It may be possible that the player is not registered in a channel. In that case, the server returns no payload but the header contains the error code <code>PLAYER_NOT_REGISTERED</code> (value = 8).  
@@ -338,19 +334,8 @@ It may be possible that the player is not known by the server. In that case, the
 If the sent Oid is not <code>GET</code> then the server returns no payload but the header contains the error code <code>INCOMPATIBLE_IDC_OID</code> (value = 5).  
 
 ```java
-IMessage<Header> message = MumbleMessageFactory.create(Idc.PLAYER_DEAFEN, true);
-```
+IMessage<Header> message = MumbleMessageFactory.create(Idc.PLAYER_DEAFEN, Oid.SET, "Player 1", true);
 
-* <code>SET</code>
-
-Payload structure when received:
-
-![plot](./src/main/java/resources/PlayerDeafen_set.png)
-
-The combination of the player name length and player name correspond to the player whose deafen status has changed.  
-The deafen status can only be 0 (false) or 1 (true).  
-
-```java
 // Received from the remote
 byte[] bytes = new byte[1024];
 IMessage<Header> response = MumbleMessageFactory.parse(bytes);

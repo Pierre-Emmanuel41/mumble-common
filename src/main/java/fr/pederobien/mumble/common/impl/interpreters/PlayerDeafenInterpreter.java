@@ -13,8 +13,6 @@ public class PlayerDeafenInterpreter extends AbstractInterpreter {
 		ByteWrapper wrapper = ByteWrapper.create();
 
 		switch (getHeader().getOid()) {
-		case GET:
-			return wrapper.put((byte) ((boolean) payload[currentIndex] ? 1 : 0)).get();
 		case SET:
 			wrapper.putString((String) payload[currentIndex++], true);
 			wrapper.put((byte) ((boolean) payload[currentIndex] ? 1 : 0));
@@ -31,9 +29,6 @@ public class PlayerDeafenInterpreter extends AbstractInterpreter {
 		List<Object> informations = new ArrayList<Object>();
 
 		switch (getHeader().getOid()) {
-		case GET:
-			informations.add(wrapper.get(first) == 1 ? true : false);
-			return informations.toArray();
 		case SET:
 			int playerNameLength = wrapper.getInt(first);
 			first += 4;
