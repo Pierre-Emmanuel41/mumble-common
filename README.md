@@ -258,15 +258,11 @@ IMessage<Header> response = MumbleMessageFactory.parse(bytes);
 It is the request to send to the server when a player mutes itself.
 
 Idc: <code>PLAYER_MUTE</code> (value = 8).  
-Supported Oid: <code>GET</code> (value = 1), <code>SET</code> (value = 2).  
-
-The payload structure is different according to the Idc:
-
-* <code>GET</code>
+Supported Oid: <code>SET</code> (value = 2).  
 
 Payload structure when sent and received:
 
-![plot](./src/main/java/resources/PlayerMute_get.png)
+![plot](./src/main/java/resources/PlayerMute.png)
 
 The mute status can only be 0 (false) or 1 (true).  
 It may be possible that the player is not registered in a channel. In that case, the server returns no payload but the header contains the error code <code>PLAYER_NOT_REGISTERED</code> (value = 8).  
@@ -274,19 +270,8 @@ It may be possible that the player is not known by the server. In that case, the
 If the sent Oid is not <code>GET</code> then the server returns no payload but the header contains the error code <code>INCOMPATIBLE_IDC_OID</code> (value = 5).  
 
 ```java
-IMessage<Header> message = MumbleMessageFactory.create(Idc.PLAYER_MUTE, true);
-```
+IMessage<Header> message = MumbleMessageFactory.create(Idc.PLAYER_MUTE, Oid.SET, "Player 1", true);
 
-* <code>SET</code>
-
-Payload structure when received:
-
-![plot](./src/main/java/resources/PlayerMute_set.png)
-
-The combination of the player name length and player name correspond to the player whose mute status has changed.  
-The mute status can only be 0 (false) or 1 (true).  
-
-```java
 // Received from the remote
 byte[] bytes = new byte[1024];
 IMessage<Header> response = MumbleMessageFactory.parse(bytes);
