@@ -40,6 +40,9 @@ public enum Idc {
 	// Idc to set the sound modifier of a channel.
 	SOUND_MODIFIER,
 
+	// Idc to set the player position.
+	PLAYER_POSITION,
+
 	// Idc when cannot be parsed.
 	UNKNOWN(-1);
 

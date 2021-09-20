@@ -60,11 +60,11 @@ Payload structure when received:
 IMessage<Header> message = MumbleMessageFactory.create(Idc.PLAYER_JOIN, Oid.SET);
 ```
 
-### 4.2) Player Leave
+### 4.2) Server Leave
 
 It is the request to send to the server when the player is leaving the Mumble server.
 
-Idc: <code>PLAYER_LEAVE</code> (value = 2).  
+Idc: <code>SERVER_LEAVE</code> (value = 2).  
 Supported Oid: <code>SET</code> (value = 2).  
 
 Payload structure when sent: No payload to furnish.  
@@ -79,20 +79,33 @@ IMessage<Header> message = MumbleMessageFactory.create(Idc.PLAYER_LEAVE, Oid.SET
 It is the request to send to the server in order to get information about the associated player in game.
 
 Idc: <code>PLAYER_INFO</code> (value = 3).  
-Supported Oid: <code>GET</code> (value = 1).  
+Supported Oid: <code>GET</code> (value = 1), <code>SET</code> (value = 2).  
+
+The payload structure is different according to the Oid:
+
+* <code>GET</code>
 
 Payload structure when sent: No payload to furnish.  
 
 Payload structure when received:  
 
-![plot](./src/main/java/resources/PlayerInfo.png)
+![plot](./src/main/java/resources/PlayerInfo_get.png)
 
-Remarques:  
-* The value of both Online and Admin Status can only be 0 (false) or 1 (true).
-* If the Online Status equals 0 then the player is not connected in game. In that case, the rest of the payload is not furnished.
-* The index "+12" for the Admin Status is an indicative value because it depends on the player name length.
+  
+The value of both Online and Admin Status can only be 0 (false) or 1 (true).  
+If the Online Status equals 0 then the player is not connected in game. In that case, the rest of the payload is not furnished.  
+The index "+12" for the Admin Status is an indicative value because it depends on the player name length.  
 
-If the sent Oid is not <code>GET</code> then the server returns no payload but the header contains the error code <code>INCOMPATIBLE_IDC_OID</code> (value = 5).
+* <code>SET</code>
+
+Payload structure when sent and received :
+
+![plot](./src/main/java/resources/PlayerInfo_set.png)
+
+The value of both Online and Admin Status can only be 0 (false) or 1 (true).  
+If the Online Status equals 0 then the player is not connected in game. In that case, the rest of the payload is not furnished.  
+
+If the sent Oid is neither <code>GET</code> nor <code>SET</code> then the server returns no payload but the header contains the error code <code>INCOMPATIBLE_IDC_OID</code> (value = 5).
 
 ```java
 IMessage<Header> message = MumbleMessageFactory.create(Idc.PLAYER_INFO);
@@ -122,7 +135,7 @@ It is the request to send to the server in order to get the channels list, to ad
 Idc: <code>CHANNELS</code> (value = 5).  
 Supported Oid: <code>GET</code> (value = 1), <code>SET</code> (value = 2), <code>ADD</code> (value = 3), <code>REMOVE</code> (value = 4).  
 
-The payload structure is different according to the Idc:
+The payload structure is different according to the Oid:
 
 * <code>GET</code>
 
@@ -217,7 +230,7 @@ It is the request to send to the server when a player is speaking. This request 
 Idc: <code>PLAYER_SPEAK</code> (value = 7).  
 Supported Oid: <code>GET</code> (value = 1), <code>SET</code> (value = 2).  
 
-The payload structure is different according to the Idc:
+The payload structure is different according to the Oid:
 
 * <code>GET</code>
 
@@ -357,7 +370,7 @@ It is the request to send to the server in order to get informations about sound
 Idc: <code>SOUND_MODIFIER</code> (value = 12).  
 Supported Oid: <code>GET</code> (value = 1), <code>SET</code> (value = 2), <code>INFO</code> (value = 5).  
 
-The payload structure is different according to the Idc:
+The payload structure is different according to the Oid:
 
 * <code>GET</code>
 
