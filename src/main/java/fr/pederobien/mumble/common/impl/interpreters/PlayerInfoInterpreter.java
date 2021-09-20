@@ -12,20 +12,46 @@ public class PlayerInfoInterpreter extends AbstractInterpreter {
 		int currentIndex = 0;
 		ByteWrapper wrapper = ByteWrapper.create();
 
-		// Player connected
-		if ((boolean) payload[currentIndex++]) {
-			// Player online
-			wrapper.putInt(1);
+		switch (getHeader().getOid()) {
+		case GET:
+			// Player connected
+			if ((boolean) payload[currentIndex++]) {
+				// Player online
+				wrapper.putInt(1);
 
+				// Player name
+				wrapper.putString((String) payload[currentIndex++], true);
+
+				// Player admin
+				wrapper.putInt((boolean) payload[currentIndex] ? 1 : 0);
+			} else
+				wrapper.putInt(0);
+
+			return wrapper.get();
+		case SET:
 			// Player name
 			wrapper.putString((String) payload[currentIndex++], true);
 
-			// Player admin
-			wrapper.putInt((boolean) payload[currentIndex] ? 1 : 0);
-		} else
-			wrapper.putInt(0);
+			// Player connected
+			if ((boolean) payload[currentIndex++]) {
+				// Player online
+				wrapper.putInt(1);
 
-		return wrapper.get();
+				// Player IP address
+				wrapper.putString((String) payload[currentIndex++], true);
+
+				// Player game port number
+				wrapper.putInt((int) payload[currentIndex++]);
+
+				// Player admin
+				wrapper.putInt((boolean) payload[currentIndex] ? 1 : 0);
+			} else
+				wrapper.putInt(0);
+
+			return wrapper.get();
+		default:
+			return new byte[0];
+		}
 	}
 
 	@Override
@@ -33,22 +59,61 @@ public class PlayerInfoInterpreter extends AbstractInterpreter {
 		int first = 0;
 		ByteWrapper wrapper = ByteWrapper.wrap(payload);
 		List<Object> informations = new ArrayList<Object>();
+		int connected;
 
-		// Player connected
-		int connected = wrapper.getInt(first);
-		first += 4;
-		if (connected == 1) {
-			informations.add(true);
+		switch (getHeader().getOid()) {
+		case GET:
+			// Player connected
+			connected = wrapper.getInt(first);
+			first += 4;
+			if (connected == 1) {
+				// Player connected
+				informations.add(true);
+
+				// Player name
+				int playerNameLength = wrapper.getInt(first);
+				first += 4;
+				informations.add(new String(wrapper.getString(first, playerNameLength)));
+				first += playerNameLength;
+
+				// Player admin
+				informations.add(wrapper.getInt(first) == 1 ? true : false);
+			} else
+				informations.add(false);
+
+			return informations.toArray();
+		case SET:
+			// Player name
 			int playerNameLength = wrapper.getInt(first);
 			first += 4;
 			informations.add(new String(wrapper.getString(first, playerNameLength)));
 			first += playerNameLength;
 
-			// Player admin
-			informations.add(wrapper.getInt(first) == 1 ? true : false);
-		} else
-			informations.add(false);
+			// Player connected
+			connected = wrapper.getInt(first);
+			first += 4;
+			if (connected == 1) {
+				// Player connected
+				informations.add(true);
 
-		return informations.toArray();
+				// Player IP address
+				int addressLength = wrapper.getInt(first);
+				first += 4;
+				informations.add(wrapper.getString(first, addressLength));
+				first += addressLength;
+
+				// Player game port number
+				informations.add(wrapper.getInt(first));
+				first += 4;
+
+				// Player admin
+				informations.add(wrapper.getInt(first) == 1 ? true : false);
+			} else
+				informations.add(false);
+
+			return informations.toArray();
+		default:
+			return new Object[0];
+		}
 	}
 }
