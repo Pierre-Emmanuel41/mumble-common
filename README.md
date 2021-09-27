@@ -438,3 +438,54 @@ If the sent Oid is neither <code>GET</code> nor <code>SET</code> nor <code>INFO<
 byte[] bytes = new byte[1024];
 IMessage<Header> response = MumbleMessageFactory.parse(bytes);
 ```
+
+### 4.13) Player position
+
+It is the request to send to the server in order to get or set the player position.
+
+Idc: <code>PLAYER_POSITION</code> (value = 13).  
+Supported Oid: <code>GET</code> (value = 1), <code>SET</code> (value = 2).  
+
+The payload structure is different according to the Oid:
+
+* <code>GET</code>
+
+Payload structure when sent:
+
+![plot](./src/main/java/resources/PlayerPosition_get.png)
+
+The combination of the player name length and player name correspond to the player whose the position should be returned.  
+
+It may be possible that the player involved is not registered on the server. In that case, the server returns no payload but the header contains the error code <code>PLAYER_DOES_NOT_EXISTS</code> (value = 8).  
+
+```java
+IMessage<Header> message = MumbleMessageFactory.create(Idc.PLAYER_POSITION, "Player 1");
+```
+
+Payload structure when received:
+
+![plot](./src/main/java/resources/PlayerPosition.png)
+
+The combination of the player name length and player name correspond to the player whose the position is returned.  
+The value of the yaw and pitch angle are in radian.
+
+```java
+// Received from the server
+byte[] bytes = new byte[1024];
+IMessage<Header> response = MumbleMessageFactory.parse(bytes);
+```
+
+* <code>SET</code>
+
+Payload structure when sent and received:
+
+![plot](./src/main/java/resources/PlayerPosition.png)
+
+The combination of the player name length and player name correspond to the player whose the position is set.  
+The value of the yaw and pitch angle are in radian.
+
+It may be possible that the player involved is not registered on the server. In that case, the server returns no payload but the header contains the error code <code>PLAYER_DOES_NOT_EXISTS</code> (value = 8).  
+
+```java
+IMessage<Header> message = MumbleMessageFactory.create(Idc.PLAYER_POSITION, Oid.SET, "Player 1", 0.0, 1.0, 2.0, 3.0, 4.0);
+```
