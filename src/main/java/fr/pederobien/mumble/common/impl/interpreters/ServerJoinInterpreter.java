@@ -18,6 +18,14 @@ public class ServerJoinInterpreter extends AbstractInterpreter {
 			// UDP port number
 			wrapper.putInt((int) payload[currentIndex++]);
 
+			// Number of sound modifier
+			int numberOfModifiers = (int) payload[currentIndex++];
+			wrapper.putInt(numberOfModifiers);
+
+			for (int i = 0; i < numberOfModifiers; i++)
+				// Modifier's name
+				wrapper.putString((String) payload[currentIndex++], true);
+
 			// Number of channels
 			int numberOfChannels = (int) payload[currentIndex++];
 			wrapper.putInt(numberOfChannels);
@@ -44,14 +52,6 @@ public class ServerJoinInterpreter extends AbstractInterpreter {
 					wrapper.putInt(((boolean) payload[currentIndex++] ? 1 : 0));
 				}
 			}
-
-			// Number of sound modifier
-			int numberOfModifiers = (int) payload[currentIndex++];
-			wrapper.putInt(numberOfModifiers);
-
-			for (int i = 0; i < numberOfModifiers; i++)
-				// Modifier's name
-				wrapper.putString((String) payload[currentIndex++], true);
 
 			// Player identifier
 			wrapper.putString(payload[currentIndex++].toString(), true);
@@ -87,6 +87,19 @@ public class ServerJoinInterpreter extends AbstractInterpreter {
 			// UDP port number
 			informations.add(wrapper.getInt(first));
 			first += 4;
+
+			// Number of modifiers
+			int numberOfModifiers = wrapper.getInt(first);
+			informations.add(numberOfModifiers);
+			first += 4;
+
+			// Modifier name
+			for (int i = 0; i < numberOfModifiers; i++) {
+				int modifierNameLength = wrapper.getInt(first);
+				first += 4;
+				informations.add(wrapper.getString(first, modifierNameLength));
+				first += modifierNameLength;
+			}
 
 			// Number of channels
 			int numberOfChannels = wrapper.getInt(first);
@@ -126,19 +139,6 @@ public class ServerJoinInterpreter extends AbstractInterpreter {
 					informations.add(wrapper.getInt(first) == 1);
 					first += 4;
 				}
-			}
-
-			// Number of modifiers
-			int numberOfModifiers = wrapper.getInt(first);
-			informations.add(numberOfModifiers);
-			first += 4;
-
-			// Modifier name
-			for (int i = 0; i < numberOfModifiers; i++) {
-				int modifierNameLength = wrapper.getInt(first);
-				first += 4;
-				informations.add(wrapper.getString(first, modifierNameLength));
-				first += modifierNameLength;
 			}
 
 			// Player identifier
