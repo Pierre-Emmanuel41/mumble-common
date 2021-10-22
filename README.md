@@ -238,7 +238,7 @@ Payload structure when sent:
 
 ![plot](./src/main/java/resources/PlayerSpeak_get.png)
 
-It is recommended to the developer to read this [file](https://github.com/Pierre-Emmanuel41/mumble-client/blob/master/README.md) in order to know the properties of the audio signal.  
+It is recommended to the developer to read this [file](https://github.com/Pierre-Emmanuel41/sound/blob/master/src/main/java/fr/pederobien/sound/impl/SoundConstants.java) in order to know the properties of the audio signal.  
 If the sent oid is not <code>GET</code> then the request is ignored by the server.
 
 Payload structure when received: No such request with oid GET can be received from the server.
@@ -452,7 +452,7 @@ The payload structure is different according to the Oid:
 
 Payload structure when sent:
 
-![plot](./src/main/java/resources/PlayerPosition_get.png)
+![plot](./src/main/java/resources/PlayerPosition_get1.png)
 
 The combination of the player name length and player name correspond to the player whose the position should be returned.  
 
@@ -464,7 +464,7 @@ IMessage<Header> message = MumbleMessageFactory.create(Idc.PLAYER_POSITION, "Pla
 
 Payload structure when received:
 
-![plot](./src/main/java/resources/PlayerPosition.png)
+![plot](./src/main/java/resources/PlayerPosition_get2.png)
 
 The combination of the player name length and player name correspond to the player whose the position is returned.  
 The value of the yaw and pitch angle are in radian.
@@ -479,7 +479,7 @@ IMessage<Header> response = MumbleMessageFactory.parse(bytes);
 
 Payload structure when sent and received:
 
-![plot](./src/main/java/resources/PlayerPosition.png)
+![plot](./src/main/java/resources/PlayerPosition_set.png)
 
 The combination of the player name length and player name correspond to the player whose the position is set.  
 The value of the yaw and pitch angle are in radian.

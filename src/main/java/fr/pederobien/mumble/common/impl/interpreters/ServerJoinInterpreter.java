@@ -15,9 +15,6 @@ public class ServerJoinInterpreter extends AbstractInterpreter {
 			int currentIndex = 0;
 			ByteWrapper wrapper = ByteWrapper.create();
 
-			// UDP port number
-			wrapper.putInt((int) payload[currentIndex++]);
-
 			// Number of sound modifier
 			int numberOfModifiers = (int) payload[currentIndex++];
 			wrapper.putInt(numberOfModifiers);
@@ -83,10 +80,6 @@ public class ServerJoinInterpreter extends AbstractInterpreter {
 			ByteWrapper wrapper = ByteWrapper.wrap(payload);
 			List<Object> informations = new ArrayList<Object>();
 			int first = 0;
-
-			// UDP port number
-			informations.add(wrapper.getInt(first));
-			first += 4;
 
 			// Number of modifiers
 			int numberOfModifiers = wrapper.getInt(first);
