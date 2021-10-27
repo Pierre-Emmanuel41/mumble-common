@@ -43,6 +43,9 @@ public enum Idc {
 	// Idc for the player position.
 	PLAYER_POSITION,
 
+	// Idc to check if a port is used on client side.
+	GAME_PORT,
+
 	// Idc when cannot be parsed.
 	UNKNOWN(-1);
 

@@ -8,6 +8,7 @@ import fr.pederobien.messenger.interfaces.IMessageInterpreter;
 import fr.pederobien.messenger.interfaces.InterpretersFactory;
 import fr.pederobien.mumble.common.impl.interpreters.ChannelsInterpreter;
 import fr.pederobien.mumble.common.impl.interpreters.ChannelsPlayerInterpreter;
+import fr.pederobien.mumble.common.impl.interpreters.GamePortInterpreter;
 import fr.pederobien.mumble.common.impl.interpreters.PlayerAdminInterpreter;
 import fr.pederobien.mumble.common.impl.interpreters.PlayerDeafenInterpreter;
 import fr.pederobien.mumble.common.impl.interpreters.PlayerInfoInterpreter;
@@ -39,6 +40,7 @@ public class MumbleInterpretersFactory implements InterpretersFactory<Header> {
 		interpreters.put(Idc.PLAYER_KICK, new PlayerKickInterpreter());
 		interpreters.put(Idc.SOUND_MODIFIER, new SoundModifierInterpreter());
 		interpreters.put(Idc.PLAYER_POSITION, new PlayerPositionInterpreter());
+		interpreters.put(Idc.GAME_PORT, new GamePortInterpreter());
 	}
 
 	@Override
