@@ -9,26 +9,32 @@ public class PlayerSpeakInterpreter extends AbstractInterpreter {
 
 	@Override
 	protected byte[] internalGenerate(Object[] payload) {
+		ByteWrapper wrapper = ByteWrapper.create();
+		int currentIndex = 0;
 		switch (getHeader().getOid()) {
 		case GET:
-			return (byte[]) payload[0];
-		case SET:
-			ByteWrapper wrapper = ByteWrapper.create();
-
 			// Player's name
-			wrapper.putString((String) payload[0], true);
+			wrapper.putString((String) payload[currentIndex++], true);
 
 			// Player data
-			wrapper.put((byte[]) payload[1], true);
+			wrapper.put((byte[]) payload[currentIndex++], true);
+
+			return wrapper.get();
+		case SET:
+			// Player's name
+			wrapper.putString((String) payload[currentIndex++], true);
+
+			// Player data
+			wrapper.put((byte[]) payload[currentIndex++], true);
 
 			// Global volume
-			wrapper.putDouble((double) payload[2]);
+			wrapper.putDouble((double) payload[currentIndex++]);
 
 			// Left volume
-			wrapper.putDouble((double) payload[3]);
+			wrapper.putDouble((double) payload[currentIndex++]);
 
 			// Right volume
-			wrapper.putDouble((double) payload[4]);
+			wrapper.putDouble((double) payload[currentIndex++]);
 
 			return wrapper.get();
 		default:
@@ -38,26 +44,36 @@ public class PlayerSpeakInterpreter extends AbstractInterpreter {
 
 	@Override
 	protected Object[] internalInterprete(byte[] payload) {
+		ByteWrapper wrapper = ByteWrapper.wrap(payload);
+		List<Object> informations = new ArrayList<Object>();
+		int first = 0, playerNameLength, playerDataLength;
+
 		switch (getHeader().getOid()) {
 		case GET:
-			return new Object[] { payload };
-		case SET:
-			ByteWrapper wrapper = ByteWrapper.wrap(payload);
-			List<Object> informations = new ArrayList<Object>();
-			int first = 0;
-
 			// Player name
-			int playerNameLength = wrapper.getInt(first);
+			playerNameLength = wrapper.getInt(first);
 			first += 4;
-			String playerName = wrapper.getString(first, playerNameLength);
-			informations.add(playerName);
+			informations.add(wrapper.getString(first, playerNameLength));
 			first += playerNameLength;
 
 			// Player data
-			int playerDataLength = wrapper.getInt(first);
+			playerDataLength = wrapper.getInt(first);
 			first += 4;
-			byte[] playerData = wrapper.extract(first, playerDataLength);
-			informations.add(playerData);
+			informations.add(wrapper.extract(first, playerDataLength));
+			first += playerDataLength;
+
+			return informations.toArray();
+		case SET:
+			// Player name
+			playerNameLength = wrapper.getInt(first);
+			first += 4;
+			informations.add(wrapper.getString(first, playerNameLength));
+			first += playerNameLength;
+
+			// Player data
+			playerDataLength = wrapper.getInt(first);
+			first += 4;
+			informations.add(wrapper.extract(first, playerDataLength));
 			first += playerDataLength;
 
 			// Global volume
