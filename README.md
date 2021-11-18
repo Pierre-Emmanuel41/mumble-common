@@ -54,7 +54,8 @@ Payload structure when sent: No payload to furnish.
 
 Payload structure when received:
 
-![plot](./src/main/java/resources/ServerJoin_Info.png)
+![plot](./src/main/java/resources/ServerJoin_Info_part1.png)
+![plot](./src/main/java/resources/ServerJoin_Info_part2.png)
 
 ```java
 IMessage<Header> message = MumbleMessageFactory.create(Idc.PLAYER_JOIN, Oid.SET);

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import fr.pederobien.mumble.common.impl.ParameterType;
 import fr.pederobien.utils.ByteWrapper;
 
 public class ServerJoinInterpreter extends AbstractInterpreter {
@@ -19,9 +20,41 @@ public class ServerJoinInterpreter extends AbstractInterpreter {
 			int numberOfModifiers = (int) payload[currentIndex++];
 			wrapper.putInt(numberOfModifiers);
 
-			for (int i = 0; i < numberOfModifiers; i++)
+			for (int i = 0; i < numberOfModifiers; i++) {
 				// Modifier's name
 				wrapper.putString((String) payload[currentIndex++], true);
+
+				// Number of parameter
+				int numberOfParameters = (int) payload[currentIndex++];
+				wrapper.putInt(numberOfParameters);
+
+				for (int j = 0; j < numberOfParameters; j++) {
+					// Parameter's name
+					wrapper.putString((String) payload[currentIndex++], true);
+
+					// Parameter's type
+					ParameterType<?> type = (ParameterType<?>) payload[currentIndex++];
+					wrapper.putInt(type.getCode());
+
+					// isRangeParameter
+					boolean isRangeParameter = (boolean) payload[currentIndex++];
+					wrapper.putInt(isRangeParameter ? 1 : 0);
+
+					// Parameter's default value
+					wrapper.put(type.getBytes(payload[currentIndex++]));
+
+					// Parameter's value
+					wrapper.put(type.getBytes(payload[currentIndex++]));
+
+					if (isRangeParameter) {
+						// Parameter's minimum value
+						wrapper.put(type.getBytes(payload[currentIndex++]));
+
+						// Parameter's maximum value
+						wrapper.put(type.getBytes(payload[currentIndex++]));
+					}
+				}
+			}
 
 			// Number of channels
 			int numberOfChannels = (int) payload[currentIndex++];
@@ -33,6 +66,22 @@ public class ServerJoinInterpreter extends AbstractInterpreter {
 
 				// Channel's sound modifier name
 				wrapper.putString((String) payload[currentIndex++], true);
+
+				// Number of parameter
+				int numberOfParameters = (int) payload[currentIndex++];
+				wrapper.putInt(numberOfParameters);
+
+				for (int j = 0; j < numberOfParameters; j++) {
+					// Parameter's name
+					wrapper.putString((String) payload[currentIndex++], true);
+
+					// Parameter's type
+					ParameterType<?> type = (ParameterType<?>) payload[currentIndex++];
+					wrapper.putInt(type.getCode());
+
+					// Parameter's value
+					wrapper.put(type.getBytes(payload[currentIndex++]));
+				}
 
 				// Number of players
 				int numberOfPlayers = (int) payload[currentIndex++];
@@ -86,12 +135,53 @@ public class ServerJoinInterpreter extends AbstractInterpreter {
 			informations.add(numberOfModifiers);
 			first += 4;
 
-			// Modifier name
 			for (int i = 0; i < numberOfModifiers; i++) {
+				// Modifier name
 				int modifierNameLength = wrapper.getInt(first);
 				first += 4;
 				informations.add(wrapper.getString(first, modifierNameLength));
 				first += modifierNameLength;
+
+				// Number of parameters
+				int numberOfParameters = wrapper.getInt(first);
+				first += 4;
+				informations.add(numberOfParameters);
+
+				for (int j = 0; j < numberOfParameters; j++) {
+					// Parameter's name
+					int parameterNameLength = wrapper.getInt(first);
+					first += 4;
+					informations.add(wrapper.getString(first, parameterNameLength));
+					first += parameterNameLength;
+
+					// Parameter's type
+					int code = wrapper.getInt(first);
+					first += 4;
+					ParameterType<?> type = ParameterType.fromCode(code);
+					informations.add(type);
+
+					int isRangeParameter = wrapper.getInt(first);
+					first += 4;
+					informations.add(isRangeParameter == 1);
+
+					// Parameter's default value
+					informations.add(type.getValue(wrapper.extract(first, type.size())));
+					first += type.size();
+
+					// Parameter's value
+					informations.add(type.getValue(wrapper.extract(first, type.size())));
+					first += type.size();
+
+					if (isRangeParameter == 1) {
+						// Parameter's minimum value
+						informations.add(type.getValue(wrapper.extract(first, type.size())));
+						first += type.size();
+
+						// Parameter's maximum value
+						informations.add(type.getValue(wrapper.extract(first, type.size())));
+						first += type.size();
+					}
+				}
 			}
 
 			// Number of channels
@@ -111,6 +201,29 @@ public class ServerJoinInterpreter extends AbstractInterpreter {
 				first += 4;
 				informations.add(wrapper.getString(first, soundModifierNameLength));
 				first += soundModifierNameLength;
+
+				// Number of parameter
+				int numberOfParameters = wrapper.getInt(first);
+				informations.add(numberOfParameters);
+				first += 4;
+
+				for (int j = 0; j < numberOfParameters; j++) {
+					// Parameter's name
+					int parameterNameLength = wrapper.getInt(first);
+					first += 4;
+					informations.add(wrapper.getString(first, parameterNameLength));
+					first += parameterNameLength;
+
+					// Parameter's type
+					int code = wrapper.getInt(first);
+					first += 4;
+					ParameterType<?> type = ParameterType.fromCode(code);
+					informations.add(type);
+
+					// Parameter's value
+					informations.add(type.getValue(wrapper.extract(first, type.size())));
+					first += type.size();
+				}
 
 				// Number of players
 				int numberOfPlayers = wrapper.getInt(first);

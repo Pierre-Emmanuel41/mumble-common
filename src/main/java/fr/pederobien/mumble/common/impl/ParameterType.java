@@ -15,38 +15,46 @@ public class ParameterType<T> {
 	public static final int DOUBLE_CODE = 7;
 
 	// Parameter of type boolean
-	public static final ParameterType<Boolean> BOOLEAN = new ParameterType<Boolean>(BOOLEAN_CODE, Boolean.class, Parser.BOOLEAN);
+	public static final ParameterType<Boolean> BOOLEAN = new ParameterType<Boolean>(BOOLEAN_CODE, 4, Boolean.class, Parser.BOOLEAN);
 
 	// Parameter of type character
-	public static final ParameterType<Character> CHAR = new ParameterType<Character>(CHAR_CODE, Character.class, Parser.CHARACTER);
+	public static final ParameterType<Character> CHAR = new ParameterType<Character>(CHAR_CODE, 1, Character.class, Parser.CHARACTER);
 
 	// Parameter of type byte
-	public static final ParameterType<Byte> BYTE = new ParameterType<Byte>(BYTE_CODE, Byte.class, Parser.BYTE);
+	public static final ParameterType<Byte> BYTE = new ParameterType<Byte>(BYTE_CODE, 1, Byte.class, Parser.BYTE);
 
 	// Parameter of type short
-	public static final ParameterType<Short> SHORT = new ParameterType<Short>(SHORT_CODE, Short.class, Parser.SHORT);
+	public static final ParameterType<Short> SHORT = new ParameterType<Short>(SHORT_CODE, 2, Short.class, Parser.SHORT);
 
 	// Parameter of type integer
-	public static final ParameterType<Integer> INT = new ParameterType<Integer>(INT_CODE, Integer.class, Parser.INT);
+	public static final ParameterType<Integer> INT = new ParameterType<Integer>(INT_CODE, 4, Integer.class, Parser.INT);
 
 	// Parameter of type long
-	public static final ParameterType<Long> LONG = new ParameterType<Long>(LONG_CODE, Long.class, Parser.LONG);
+	public static final ParameterType<Long> LONG = new ParameterType<Long>(LONG_CODE, 8, Long.class, Parser.LONG);
 
 	// Parameter of type float
-	public static final ParameterType<Float> FLOAT = new ParameterType<Float>(FLOAT_CODE, Float.class, Parser.FLOAT);
+	public static final ParameterType<Float> FLOAT = new ParameterType<Float>(FLOAT_CODE, 2, Float.class, Parser.FLOAT);
 
 	// Parameter of type double
-	public static final ParameterType<Double> DOUBLE = new ParameterType<Double>(DOUBLE_CODE, Double.class, Parser.DOUBLE);
+	public static final ParameterType<Double> DOUBLE = new ParameterType<Double>(DOUBLE_CODE, 8, Double.class, Parser.DOUBLE);
 
 	// Unknown parameter type
-	public static final ParameterType<Object> UNKNOWN = new ParameterType<Object>(-1, Object.class, null);
+	public static final ParameterType<Object> UNKNOWN = new ParameterType<Object>(-1, 0, Object.class, null);
 
-	private int code;
+	private int code, size;
 	private Class<T> clazz;
 	private Parser<T> parser;
 
-	private ParameterType(int code, Class<T> clazz, Parser<T> parser) {
+	/**
+	 * 
+	 * @param code
+	 * @param size
+	 * @param clazz
+	 * @param parser
+	 */
+	private ParameterType(int code, int size, Class<T> clazz, Parser<T> parser) {
 		this.code = code;
+		this.size = size;
 		this.clazz = clazz;
 		this.parser = parser;
 	}
@@ -90,6 +98,13 @@ public class ParameterType<T> {
 	}
 
 	/**
+	 * @return The number of bytes associated to this type.
+	 */
+	public int size() {
+		return size;
+	}
+
+	/**
 	 * Casts an object to the class or represented by this {@code ParameterType} object.
 	 *
 	 * @param value The value to be cast.
@@ -109,8 +124,8 @@ public class ParameterType<T> {
 	 * 
 	 * @return The bytes array corresponding to the specified value.
 	 */
-	public byte[] getBytes(T value) {
-		return parser == null ? null : parser.getBytes(value);
+	public byte[] getBytes(Object value) {
+		return parser == null ? null : parser.getBytes(cast(value));
 	}
 
 	/**
