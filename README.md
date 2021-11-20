@@ -54,11 +54,25 @@ Payload structure when sent: No payload to furnish.
 
 Payload structure when received:
 
-![plot](./src/main/java/resources/ServerJoin_Info_part1.png)
+![plot](./src/main/java/resources/ServerJoin_Info_part1.png)  
 ![plot](./src/main/java/resources/ServerJoin_Info_part2.png)
+
+The returned payload contains a complete description of the server configuration, divided in blocks on each the developer has to iterate.  
+From byte +0 to +44 describe each supported sound modifier. A sound modifiers is an object attached to a channel and dispatch player voice among the other player registered in the same channel. A sound modifier is charactarized by a name, a certain number of parameter. Each parameter is charactarized by a name, a type, a default value, a current value and potentially a range (ie a minimum value and a maximum value).  
+
+From byte +48 to +104 describe each registered channel. A channel is charactarized by a name, a sound modifier and a list of player.  
+The sound modifier is charatarized by a certain number of parameter. Each parameter is charactarized by a name, a type and a value. Contrary to the previous sound modifier description, there is no default value and range indication. Each player registered in a channel is describe by a name, a mute status (0 not mute, 1 mute) and a deafen status (0 not deafen, 1 deafen).
+
+Finally from byte +108 to +128 describe the player in game associated to this mumble client. The player is charactarized by an identifier, an online status (0 offline, 1 online), a name and an admin status (0 not admin, 1 admin).
+
+Nota Bene: The indexes are just indicative values, depending on the number of blocks and the name size.
 
 ```java
 IMessage<Header> message = MumbleMessageFactory.create(Idc.PLAYER_JOIN, Oid.SET);
+
+// Received from the remote
+byte[] bytes = new byte[1024];
+IMessage<Header> response = MumbleMessageFactory.parse(bytes);
 ```
 
 ### 4.2) Server Leave
@@ -80,7 +94,7 @@ IMessage<Header> message = MumbleMessageFactory.create(Idc.PLAYER_LEAVE, Oid.SET
 It is the request to send to the server in order to get information about the associated player in game.
 
 Idc: <code>PLAYER_INFO</code> (value = 3).  
-Supported Oid: <code>GET</code> (value = 1), <code>SET</code> (value = 2).  
+Supported Oid: <code>GET</code> (value = 1).  
 
 The payload structure is different according to the Oid:
 
@@ -93,8 +107,8 @@ Payload structure when received:
 ![plot](./src/main/java/resources/PlayerInfo_get.png)
 
   
-The value of both Online and Admin Status can only be 0 (false) or 1 (true).  
-If the Online Status equals 0 then the player is not connected in game. In that case, the rest of the payload is not furnished.  
+The value of both Online and Admin Status can only be 0 (offline/not admin) or 1 (online/admin).  
+If the Online status equals 0 the rest of the payload is not furnished.  
 The index "+12" for the Admin Status is an indicative value because it depends on the player name length.  
 
 * <code>SET</code>
@@ -110,6 +124,10 @@ If the sent Oid is neither <code>GET</code> nor <code>SET</code> then the server
 
 ```java
 IMessage<Header> message = MumbleMessageFactory.create(Idc.PLAYER_INFO);
+
+// Received from the remote
+byte[] bytes = new byte[1024];
+IMessage<Header> response = MumbleMessageFactory.parse(bytes);
 ```
 
 ### 4.4) Player Admin
@@ -122,6 +140,8 @@ Supported Oid: <code>SET</code> (value = 1).
 Payload structure when received:  
 
 ![plot](./src/main/java/resources/PlayerAdmin.png)
+
+First comes the player's name whose the status has changed and then the player's admin status (0 not admin, 1 admin).
 
 ```java
 // Received from the remote
@@ -148,7 +168,8 @@ Payload structure when received:
 
 The response is composed of blocks on each the developer has to iterate. The first four bytes indicate the number of channels the Mumble server contains.  
 Then comes informations about each channel: The channel name length and the channel name, the sound modifier name length and the sound modifier name, the number of player currently registered on the channel.  
-Then comes informations about each player: The player name length and the player name, the mute status (0 = false, 1 = true) and the deafen status (0 = false, 1 = true).  
+Then comes informations about each parameter associated to the sound modifier: the parameter name length, the parameter name, the parameter type and the parameter value.  
+Then comes informations about each player: The player name length and the player name, the mute status (0 = not mute, 1 = mute) and the deafen status (0 = not deafen, 1 = deafen).  
 
 ```java
 IMessage<Header> message = MumbleMessageFactory.create(Idc.CHANNELS);
@@ -161,12 +182,13 @@ Payload structure when sent and when received:
 ![plot](./src/main/java/resources/Channels_add.png)
 
 The combination of channel name length and channel name correspond to the channel to add to the server. The combination of sound modifier name length and sound modifier name correspond to the sound modifier associated to the channel.  
+Then the request contains informations about each parameter new value : The parameter name length and the parameter name correspond to the parameter to find in order to update its value, the parameter type is useful to transform the value into bytes array or to transform the bytes array into the value, the parameter value.
 
 It may be possible that the channel to add is already registered on the server. In that case, the server return no payload but the header contains the error code <code>CHANNEL_ALREADY_EXISTS</code> (value = 7).  
 It may be possible that the sound modifier to attach does not correspond to a registered modifier. In that case, the server return no payload but the header contains the error code <code>SOUND_MODIFIER_DOES_NOT_EXIST</code> (value = 13).  
 
 ```java
-IMessage<Header> message = MumbleMessageFactory.create(Idc.CHANNELS, Oid.ADD, "Channel 1", "Sound modifier 1");
+IMessage<Header> message = MumbleMessageFactory.create(Idc.CHANNELS, Oid.ADD, "Channel 1", "Sound modifier 1", 2, "Parameter 1", ParameterType.INTEGER, 40, "Parameter 2", ParameterType.BOOLEAN, false);
 ```
 
 * <code>REMOVE</code>
@@ -247,7 +269,7 @@ Payload structure when received: No such request with oid GET can be received fr
 ```java
 // Received from the microphone
 byte[] bytes = new byte[1024];
-IMessage<Header> message = MumbleMessageFactory.create(Idc.PLAYER_SPEAK, bytes);
+IMessage<Header> message = MumbleMessageFactory.create(Idc.PLAYER_SPEAK, "Player 1", bytes);
 ```
 
 * <code>SET</code>
@@ -278,7 +300,8 @@ Payload structure when sent and received:
 
 ![plot](./src/main/java/resources/PlayerMute.png)
 
-The mute status can only be 0 (false) or 1 (true).  
+The combination of the player ame length and player ame correspond to the player that will be muted.  
+The mute status can only be 0 (not mute) or 1 (mute).  
 It may be possible that the player is not registered in a channel. In that case, the server returns no payload but the header contains the error code <code>PLAYER_NOT_REGISTERED</code> (value = 8).  
 It may be possible that the player is not known by the server. In that case, the server returns no payload but the header contains the error code <code>PLAYER_NOT_RECOGNIZED</code> (value = 9).  
 If the sent Oid is not <code>GET</code> then the server returns no payload but the header contains the error code <code>INCOMPATIBLE_IDC_OID</code> (value = 5).  
@@ -304,7 +327,7 @@ Payload structure when sent and received:
 
 The combination of the player name length and player name correspond to the player that is muting another player for itself.  
 The combination of the player muted name length and player muted name correspond to the player that will be muted.  
-The mute status can only be 0 (false) or 1 (true).  
+The mute status can only be 0 (not mute) or 1 (mute).  
 
 It may be possible that the muting player name and the associated player name in game are different. In that case, the server returns no payload but the header contains the error code <code>UNEXPECTED_ERROR</code> (value = 4).  
 It may be possible that the player muted name does not correspond to a known player. In that case, the server returns no payload but the header contains the error code <code>PLAYER_NOT_RECOGNIZED</code> (value = 9).  
@@ -327,7 +350,7 @@ Payload structure when sent and received:
 
 ![plot](./src/main/java/resources/PlayerDeafen.png)
 
-The deafen status can only be 0 (false) or 1 (true).  
+The deafen status can only be 0 (not deafen) or 1 (deafen).  
 It may be possible that the player is not registered in a channel. In that case, the server returns no payload but the header contains the error code <code>PLAYER_NOT_REGISTERED</code> (value = 8).  
 It may be possible that the player is not known by the server. In that case, the server returns no payload but the header contains the error code <code>PLAYER_NOT_RECOGNIZED</code> (value = 9).  
 If the sent Oid is not <code>GET</code> then the server returns no payload but the header contains the error code <code>INCOMPATIBLE_IDC_OID</code> (value = 5).  
