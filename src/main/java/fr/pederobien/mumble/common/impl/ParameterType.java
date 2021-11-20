@@ -21,22 +21,22 @@ public class ParameterType<T> {
 	public static final ParameterType<Character> CHAR = new ParameterType<Character>(CHAR_CODE, 1, Character.class, Parser.CHARACTER);
 
 	// Parameter of type byte
-	public static final ParameterType<Byte> BYTE = new ParameterType<Byte>(BYTE_CODE, 1, Byte.class, Parser.BYTE);
+	public static final ParameterType<Byte> BYTE = new ParameterType<Byte>(BYTE_CODE, Byte.BYTES, Byte.class, Parser.BYTE);
 
 	// Parameter of type short
-	public static final ParameterType<Short> SHORT = new ParameterType<Short>(SHORT_CODE, 2, Short.class, Parser.SHORT);
+	public static final ParameterType<Short> SHORT = new ParameterType<Short>(SHORT_CODE, Short.BYTES, Short.class, Parser.SHORT);
 
 	// Parameter of type integer
-	public static final ParameterType<Integer> INT = new ParameterType<Integer>(INT_CODE, 4, Integer.class, Parser.INT);
+	public static final ParameterType<Integer> INT = new ParameterType<Integer>(INT_CODE, Integer.BYTES, Integer.class, Parser.INT);
 
 	// Parameter of type long
-	public static final ParameterType<Long> LONG = new ParameterType<Long>(LONG_CODE, 8, Long.class, Parser.LONG);
+	public static final ParameterType<Long> LONG = new ParameterType<Long>(LONG_CODE, Long.BYTES, Long.class, Parser.LONG);
 
 	// Parameter of type float
-	public static final ParameterType<Float> FLOAT = new ParameterType<Float>(FLOAT_CODE, 2, Float.class, Parser.FLOAT);
+	public static final ParameterType<Float> FLOAT = new ParameterType<Float>(FLOAT_CODE, Float.BYTES, Float.class, Parser.FLOAT);
 
 	// Parameter of type double
-	public static final ParameterType<Double> DOUBLE = new ParameterType<Double>(DOUBLE_CODE, 8, Double.class, Parser.DOUBLE);
+	public static final ParameterType<Double> DOUBLE = new ParameterType<Double>(DOUBLE_CODE, Double.BYTES, Double.class, Parser.DOUBLE);
 
 	// Unknown parameter type
 	public static final ParameterType<Object> UNKNOWN = new ParameterType<Object>(-1, 0, Object.class, null);
