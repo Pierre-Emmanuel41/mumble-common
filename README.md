@@ -414,8 +414,10 @@ Payload structure when received:
 
 ![plot](./src/main/java/resources/SoundModifier_get2.png)
 
+The returned payload contains a complete description of the sound modifier, divided in blocks on each the developer has to iterate.  
 The combination of the channel name length and channel name correspond to the channel whose the sound modifier is returned.  
 The combination of the sound modifier name length and sound modifier name correspond to the sound modifier associated to the channel.  
+Then comes sound modifier information : The number of parameter, the name of a parameter, the type of a parameter and the value of the parameter.
 
 It may be possible that the channel involved is not registered on the server. In that case, the server returns no payload but the header contains the error code <code>CHANNEL_DOES_NOT_EXISTS</code> (value = 8).  
 It may be possible that the sound modifier involved is not registered on the server. In that case, the server returns no payload but the header contains the error code <code>SOUND_MODIFIER_DOES_NOT_EXIST</code> (value = 13).  
@@ -436,6 +438,7 @@ Payload structure when sent and received:
 
 The combination of the channel name length and channel name correspond to the channel whose the sound modifier is returned.  
 The combination of the sound modifier name length and sound modifier name correspond to the sound modifier associated to the channel.  
+Then comes sound modifier information : The number of parameter, the parameter name , the parameter type and the  parameter value.  
 
 It may be possible that the channel involved is not registered on the server. In that case, the server returns no payload but the header contains the error code <code>CHANNEL_DOES_NOT_EXISTS</code> (value = 8).  
 It may be possible that the sound modifier involved is not registered on the server. In that case, the server returns no payload but the header contains the error code <code>SOUND_MODIFIER_DOES_NOT_EXIST</code> (value = 13).  
@@ -452,8 +455,10 @@ Payload structure when received:
 
 ![plot](./src/main/java/resources/SoundModifier_info.png)
 
-The response is composed of blocks on each the developer has to iterate. The first four bytes indicate the number of sound modifier the Mumble server contains.  
-Then comes informations about each modifier: The sound modifier name length and the sound modifier name.  
+The response is composed of blocks on each the developer has to iterate.  
+The first four bytes indicate the number of sound modifier the Mumble server contains.  
+Then comes informations about each modifier: the sound modifier name, the number of parameters.
+Then comes informations about each parameter: The parameter name, the parameter type, the parameter range status (0 has no range, 1 has a range), the default parameter value, the actual parameter value and finally, if the parameter has a range, the minimum and the maximum value the parameter can have.
 
 If the sent Oid is neither <code>GET</code> nor <code>SET</code> nor <code>INFO</code> then the server returns no payload but the header contains the error code <code>INCOMPATIBLE_IDC_OID</code> (value = 5).  
 
