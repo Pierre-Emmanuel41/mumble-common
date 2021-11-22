@@ -381,7 +381,7 @@ public class ParameterType<T> {
 		/**
 		 * Converter that converts a byte value into a bytes array.
 		 */
-		public static final StringToValueConverter<Byte> BYTE = new StringToValueConverter<Byte>(value -> (byte) value.charAt(0));
+		public static final StringToValueConverter<Byte> BYTE = new StringToValueConverter<Byte>(value -> (byte) Byte.parseByte(value));
 
 		/**
 		 * Converter that converts a short value into a bytes array.
