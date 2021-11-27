@@ -32,17 +32,6 @@ public class MumbleCallbackMessage extends RequestCallbackMessage {
 		this.message = message;
 	}
 
-	/**
-	 * Create a request message to be send to a remote.
-	 * 
-	 * @param message  The message that contains the bytes to send to the remote and the identifier.
-	 * @param callback The callback to run when a response has been received before the timeout.
-	 */
-	public MumbleCallbackMessage(IMessage<Header> message) {
-		super(message.getBytes(), message.getIdentifier());
-		this.message = message;
-	}
-
 	@Override
 	public String toString() {
 		return message.toString();
