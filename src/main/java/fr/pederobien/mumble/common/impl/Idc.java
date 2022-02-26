@@ -1,8 +1,11 @@
 package fr.pederobien.mumble.common.impl;
 
-import java.nio.ByteBuffer;
+import fr.pederobien.utils.ByteWrapper;
 
 public enum Idc {
+
+	// Idc to get the server configuration.
+	SERVER_INFO,
 
 	// Idc to join the server.
 	SERVER_JOIN,
@@ -59,7 +62,7 @@ public enum Idc {
 
 	private Idc(int code) {
 		this.code = code;
-		bytes = ByteBuffer.allocate(4).putInt(code).array();
+		bytes = ByteWrapper.create().putInt(code).get();
 	}
 
 	@Override

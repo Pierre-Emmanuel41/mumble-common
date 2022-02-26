@@ -1,10 +1,27 @@
 package fr.pederobien.mumble.common.impl;
 
-import fr.pederobien.messenger.impl.MessageFactory;
-import fr.pederobien.messenger.interfaces.IMessage;
+import fr.pederobien.mumble.common.interfaces.IMumbleMessage;
 
 public class MumbleMessageFactory {
-	private static final MessageFactory<Header> FACTORY = new MessageFactory<Header>(new MumbleInterpretersFactory());
+	private MumbleProtocolManager manager;
+
+	/**
+	 * Creates a message factory associated to the mumble communication protocol.
+	 * 
+	 * @param beginIdentifier The first identifier from which next messages identifier are incremented by 1.
+	 */
+	private MumbleMessageFactory(int beginIdentifier) {
+		manager = new MumbleProtocolManager(beginIdentifier);
+	}
+
+	/**
+	 * Creates a message factory associated to the mumble communication protocol.
+	 * 
+	 * @param beginIdentifier The first identifier from which next messages identifier are incremented by 1.
+	 */
+	public static MumbleMessageFactory getInstance(int beginIdentifier) {
+		return new MumbleMessageFactory(beginIdentifier);
+	}
 
 	/**
 	 * Create a message based on the given parameters.
@@ -16,8 +33,8 @@ public class MumbleMessageFactory {
 	 * 
 	 * @return The created message.
 	 */
-	public static IMessage<Header> create(Idc idc, Oid oid, ErrorCode errorCode, Object... payload) {
-		return FACTORY.create(new Header(idc, oid, errorCode), payload);
+	public IMumbleMessage create(Idc idc, Oid oid, ErrorCode errorCode, Object... payload) {
+		return (IMumbleMessage) manager.create(idc, oid, errorCode, payload);
 	}
 
 	/**
@@ -29,8 +46,8 @@ public class MumbleMessageFactory {
 	 * 
 	 * @return The created message.
 	 */
-	public static IMessage<Header> create(Idc idc, Oid oid, Object... payload) {
-		return FACTORY.create(new Header(idc, oid), payload);
+	public IMumbleMessage create(Idc idc, Oid oid, Object... payload) {
+		return create(idc, oid, ErrorCode.NONE, payload);
 	}
 
 	/**
@@ -41,8 +58,8 @@ public class MumbleMessageFactory {
 	 * 
 	 * @return The created message.
 	 */
-	public static IMessage<Header> create(Idc idc, Object... payload) {
-		return FACTORY.create(new Header(idc), payload);
+	public IMumbleMessage create(Idc idc, Object... payload) {
+		return create(idc, Oid.GET, payload);
 	}
 
 	/**
@@ -52,28 +69,40 @@ public class MumbleMessageFactory {
 	 * 
 	 * @return A new message.
 	 */
-	public static IMessage<Header> parse(byte[] buffer) {
-		return FACTORY.parse(new Header(), buffer);
+	public IMumbleMessage parse(byte[] buffer) {
+		return (IMumbleMessage) manager.getManager().parse(buffer);
 	}
 
 	/**
-	 * Answer to the given request. It creates a new message based on the given request properties. It creates a new header base on
-	 * the given idc and oid. The identifier is not modified.
+	 * Creates a new message corresponding to the answer of the <code>message</code>. Neither the identifier nor the header are
+	 * modified.
 	 * 
-	 * @param request The request to answer.
-	 * @param idc     The idc of the response.
-	 * @param oid     The oid of the response.
-	 * @param payload The payload of the response.
+	 * @param message    The message to answer.
+	 * @param properties The response properties.
+	 * 
+	 * @return A new message.
+	 */
+	public IMumbleMessage answer(IMumbleMessage message, Object... properties) {
+		return (IMumbleMessage) manager.answer(message, properties);
+	}
+
+	/**
+	 * Creates a new message corresponding to the answer of the <code>message</code>. The identifier is not incremented.
+	 * 
+	 * @param message    The message to answer.
+	 * @param idc        The response IDC.
+	 * @param oid        The response OID.
+	 * @param errorCode  The response ErrorCode.
+	 * @param properties The response properties.
 	 * 
 	 * @return The message associated to the answer.
 	 */
-	public static IMessage<Header> answer(IMessage<Header> request, Idc idc, Oid oid, Object... payload) {
-		return request.answer(new Header(idc, oid), payload);
+	public IMumbleMessage answer(IMumbleMessage message, Idc idc, Oid oid, ErrorCode errorCode, Object... properties) {
+		return (IMumbleMessage) manager.answer(message.getHeader().getIdentifier(), idc, oid, errorCode, properties);
 	}
 
 	/**
-	 * Answer to the given request. It creates a new message based on the given request properties. It creates a new header with idc
-	 * equals the specified idc, oid equals {@link Oid#GET}. The identifier is not modified.
+	 * Creates a new message corresponding to the answer of the <code>message</code>. The identifier is not incremented.
 	 * 
 	 * @param request The request to answer.
 	 * @param idc     The Idc of the response.
@@ -81,21 +110,32 @@ public class MumbleMessageFactory {
 	 * 
 	 * @return The message associated to the answer.
 	 */
-	public static IMessage<Header> answer(IMessage<Header> request, Idc idc, Object... payload) {
-		return request.answer(new Header(idc), payload);
+	public IMumbleMessage answer(IMumbleMessage message, Idc idc, Oid oid, Object... properties) {
+		return answer(message, idc, oid, ErrorCode.NONE, properties);
 	}
 
 	/**
-	 * Answer to the given request. It creates a new message based on the given request properties. It creates a new header with idc
-	 * equals current message header idc, oid equals current message header oid, but the error code is the specified error code. The
-	 * identifier is not modified.
+	 * Creates a new message corresponding to the answer of the <code>message</code>. The identifier is not incremented.
+	 * 
+	 * @param request The request to answer.
+	 * @param idc     The Idc of the response.
+	 * @param payload The payload of the response.
+	 * 
+	 * @return The message associated to the answer.
+	 */
+	public IMumbleMessage answer(IMumbleMessage message, Idc idc, Object... properties) {
+		return answer(message, idc, Oid.GET, properties);
+	}
+
+	/**
+	 * Creates a new message corresponding to the answer of the <code>message</code>. The identifier is not incremented.
 	 * 
 	 * @param request   The request to answer.
 	 * @param errorCode The error code of the response.
 	 * 
 	 * @return The message associated to the answer.
 	 */
-	public static IMessage<Header> answer(IMessage<Header> request, ErrorCode errorCode) {
-		return request.answer(new Header(request.getHeader().getIdc(), request.getHeader().getOid(), errorCode));
+	public IMumbleMessage answer(IMumbleMessage message, ErrorCode errorCode) {
+		return answer(message, message.getHeader().getIdc(), message.getHeader().getOid(), errorCode);
 	}
 }

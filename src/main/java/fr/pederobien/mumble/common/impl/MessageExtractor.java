@@ -9,8 +9,8 @@ import java.util.Map;
 import fr.pederobien.communication.interfaces.IAnswersExtractor;
 
 public class MessageExtractor implements IAnswersExtractor {
-	private static final int IDENTIFIER_INDEX = 4;
-	private static final int LENGTH_INDEX = 20;
+	private static final int IDENTIFIER_INDEX = 8;
+	private static final int LENGTH_INDEX = 24;
 	private static final int HEADER_LENGTH = 12;
 
 	private byte[] remaining = new byte[0];
@@ -71,8 +71,8 @@ public class MessageExtractor implements IAnswersExtractor {
 	}
 
 	private int getLength(byte[] bytes) {
-		// SYNC_WORD + identifier + header length + payload length + payload
-		return 8 + HEADER_LENGTH + 4 + toInt(bytes, LENGTH_INDEX);
+		// SYNC_WORD + version + + identifier + header length + payload length + payload
+		return 4 + 4 + 4 + HEADER_LENGTH + 4 + toInt(bytes, LENGTH_INDEX);
 	}
 
 	private int toInt(byte[] bytes, int first) {

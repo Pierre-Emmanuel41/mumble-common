@@ -1,58 +1,66 @@
 package fr.pederobien.mumble.common.impl;
 
-import java.nio.ByteBuffer;
+import fr.pederobien.utils.ByteWrapper;
 
 public enum ErrorCode {
 	// Code when no errors happened.
-	NONE(1, "No error."),
+	NONE("No error."),
 
 	// Code when a timeout occurs.
-	TIMEOUT(2, "Request times out"),
+	TIMEOUT("Request times out"),
 
 	// Code when player has not the permission to send the request
-	PERMISSION_REFUSED(3, "Permission refused."),
+	PERMISSION_REFUSED("Permission refused."),
 
 	// Code when an unexpected error attempt on the server.
-	UNEXPECTED_ERROR(4, "An unexpected error occurs."),
+	UNEXPECTED_ERROR("An unexpected error occurs."),
 
 	// Code when incompatible idc and oid
-	INCOMPATIBLE_IDC_OID(5, "The idc and the oid are incompatibles."),
+	INCOMPATIBLE_IDC_OID("The idc and the oid are incompatibles."),
+
+	// Code when the version is not supported.
+	INCOMPATIBLE_VERSION("The protocol version is not supported"),
 
 	// Code when there are no treatment associated to the given idc.
-	IDC_UNKNOWN(6, "There is no treatment associated to the given idc."),
+	IDC_UNKNOWN("There is no treatment associated to the given idc."),
 
 	// Code when trying to add a channel whose name is already used.
-	CHANNEL_ALREADY_EXISTS(7, "The channel already exists."),
+	CHANNEL_ALREADY_EXISTS("The channel already exists."),
 
 	// Code when trying to remove a not existing channel.
-	CHANNEL_DOES_NOT_EXISTS(8, "The channel does not exists."),
+	CHANNEL_DOES_NOT_EXISTS("The channel does not exists."),
 
 	// Code when the player is not recognized.
-	PLAYER_NOT_RECOGNIZED(9, "The player is not recognized."),
+	PLAYER_NOT_RECOGNIZED("The player is not recognized."),
 
 	// Code when trying to add an already registered player in a channel.
-	PLAYER_ALREADY_REGISTERED(10, "The player is already registered in a channel."),
+	PLAYER_ALREADY_REGISTERED("The player is already registered in a channel."),
 
 	// Code when player tries to mute/unmute another player that is not in same channel.
-	PLAYERS_IN_DIFFERENT_CHANNELS(11, "A player can only mute or unmute another player that is in the same channel as him"),
+	PLAYERS_IN_DIFFERENT_CHANNELS("A player can only mute or unmute another player that is in the same channel as him"),
 
 	// Code when player is not registered in a channel.
-	PLAYER_NOT_REGISTERED(12, "The player is not registered in a channel"),
+	PLAYER_NOT_REGISTERED("The player is not registered in a channel"),
 
 	// Code when the sound modifier does not exist.
-	SOUND_MODIFIER_DOES_NOT_EXIST(13, "The sound modifier does not exist"),
+	SOUND_MODIFIER_DOES_NOT_EXIST("The sound modifier does not exist"),
 
 	// Code when cannot be parsed.
 	UNKNOWN(-1, "Cannot parse the error code.");
 
+	private static int codeGenerator;
 	private int code;
 	private String message;
 	private byte[] bytes;
 
+	private ErrorCode(String message) {
+		this(generateCode(), message);
+	}
+
 	private ErrorCode(int code, String message) {
 		this.code = code;
 		this.message = message;
-		bytes = ByteBuffer.allocate(4).putInt(code).array();
+		bytes = ByteWrapper.create().putInt(code).get();
 	}
 
 	@Override
@@ -84,5 +92,9 @@ public enum ErrorCode {
 			if (errorCode.getCode() == code)
 				return errorCode;
 		return UNKNOWN;
+	}
+
+	private static int generateCode() {
+		return codeGenerator++;
 	}
 }

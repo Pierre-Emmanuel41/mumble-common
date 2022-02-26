@@ -6,7 +6,7 @@ import fr.pederobien.communication.impl.AddressMessage;
 import fr.pederobien.messenger.interfaces.IMessage;
 
 public class MumbleAddressMessage extends AddressMessage {
-	private IMessage<Header> message;
+	private IMessage message;
 
 	/**
 	 * Create a request message to be send to a remote.
@@ -14,8 +14,8 @@ public class MumbleAddressMessage extends AddressMessage {
 	 * @param message The message that contains the bytes to send to the remote and the identifier.
 	 * @param address The address at which the message should be sent.
 	 */
-	public MumbleAddressMessage(IMessage<Header> message, InetSocketAddress address) {
-		super(message.getBytes(), message.getIdentifier(), address);
+	public MumbleAddressMessage(IMessage message, InetSocketAddress address) {
+		super(message.generate(), message.getHeader().getIdentifier(), address);
 		this.message = message;
 	}
 
@@ -24,7 +24,7 @@ public class MumbleAddressMessage extends AddressMessage {
 	 * 
 	 * @param message The message that contains the bytes to send to the remote and the identifier.
 	 */
-	public MumbleAddressMessage(IMessage<Header> message) {
+	public MumbleAddressMessage(IMessage message) {
 		this(message, null);
 	}
 
