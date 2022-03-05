@@ -31,47 +31,52 @@ public class MumbleProtocolManager {
 	/**
 	 * The name of the message to get information about a player.
 	 */
-	public static final String PLAYER_INFO_GET = "PlayerInfoGet";
+	public static final String PLAYER_GET = "PlayerGet";
 
 	/**
 	 * The name of the message to set the information about a player.
 	 */
-	public static final String PLAYER_INFO_SET = "PlayerInfoSet";
+	public static final String PLAYER_SET = "PlayerSet";
+
+	/**
+	 * The name of the message to add a player.
+	 */
+	public static final String PLAYER_ADD = "PlayerAdd";
+
+	/**
+	 * The name of the message to remove a player.
+	 */
+	public static final String PLAYER_REMOVE = "PlayerRemove";
+
+	/**
+	 * The name of the message to change the online status of a player.
+	 */
+	public static final String PLAYER_ONLINE_GET = "PlayerOnlineGet";
+
+	/**
+	 * The name of the message to change the online status of a player.
+	 */
+	public static final String PLAYER_ONLINE_SET = "PlayerOnlineSet";
+
+	/**
+	 * The name of the message to set the name of a player.
+	 */
+	public static final String PLAYER_NAME_SET = "PlayerNameSet";
+
+	/**
+	 * The name of the message to get the game address of a player.
+	 */
+	public static final String PLAYER_GAME_ADDRESS_GET = "PlayerGameAddressGet";
+
+	/**
+	 * The name of the message to get the game address of a player.
+	 */
+	public static final String PLAYER_GAME_ADDRESS_SET = "PlayerGameAddressSet";
 
 	/**
 	 * The name of the message to change the admin status of a player.
 	 */
 	public static final String PLAYER_ADMIN_SET = "PlayerAdminSet";
-
-	/**
-	 * The name of the message to get information about each channels.
-	 */
-	public static final String CHANNELS_GET = "ChannelsGet";
-
-	/**
-	 * The name of the message to add a channel on the mumble server.
-	 */
-	public static final String CHANNELS_ADD = "ChannelsAdd";
-
-	/**
-	 * The name of the message to remove a channel from the mumble server.
-	 */
-	public static final String CHANNELS_REMOVE = "ChannelsRemove";
-
-	/**
-	 * The name of the message to change the name of a channel.
-	 */
-	public static final String CHANNELS_SET = "ChannelsSet";
-
-	/**
-	 * The name of the message to add a player to a channel.
-	 */
-	public static final String CHANNELS_PLAYER_ADD = "ChannelsPlayerAdd";
-
-	/**
-	 * The name of the message to add a player to a channel.
-	 */
-	public static final String CHANNELS_PLAYER_REMOVE = "ChannelsPlayerRemove";
 
 	/**
 	 * The name of the message to dispatch an audio sample.
@@ -104,6 +109,46 @@ public class MumbleProtocolManager {
 	public static final String PLAYER_KICK_SET = "KickPlayerSet";
 
 	/**
+	 * The name of the message to get the position of a player.
+	 */
+	public static final String PLAYER_POSITION_GET = "PlayerPositionGet";
+
+	/**
+	 * The name of the message to set the position of a player.
+	 */
+	public static final String PLAYER_POSITION_SET = "PlayerPositionSet";
+
+	/**
+	 * The name of the message to get information about each channels.
+	 */
+	public static final String CHANNELS_GET = "ChannelsGet";
+
+	/**
+	 * The name of the message to add a channel on the mumble server.
+	 */
+	public static final String CHANNELS_ADD = "ChannelsAdd";
+
+	/**
+	 * The name of the message to remove a channel from the mumble server.
+	 */
+	public static final String CHANNELS_REMOVE = "ChannelsRemove";
+
+	/**
+	 * The name of the message to change the name of a channel.
+	 */
+	public static final String CHANNELS_SET = "ChannelsSet";
+
+	/**
+	 * The name of the message to add a player to a channel.
+	 */
+	public static final String CHANNELS_PLAYER_ADD = "ChannelsPlayerAdd";
+
+	/**
+	 * The name of the message to add a player to a channel.
+	 */
+	public static final String CHANNELS_PLAYER_REMOVE = "ChannelsPlayerRemove";
+
+	/**
 	 * The name of the message to get the sound modifier associated to a channel.
 	 */
 	public static final String SOUND_MODIFIER_GET = "SoundModifierGet";
@@ -117,16 +162,6 @@ public class MumbleProtocolManager {
 	 * The name of the message to get a description of all sound modifiers registered.
 	 */
 	public static final String SOUND_MODIFIER_INFO = "SoundModifierInfo";
-
-	/**
-	 * The name of the message to get the position of a player.
-	 */
-	public static final String PLAYER_POSITION_GET = "PlayerPositionGet";
-
-	/**
-	 * The name of the message to set the position of a player.
-	 */
-	public static final String PLAYER_POSITION_SET = "PlayerPositionSet";
 
 	/**
 	 * The name of the message to check a specific game port on client side.
@@ -250,11 +285,29 @@ public class MumbleProtocolManager {
 		serverLeaveMap.put(Oid.INFO, SERVER_LEAVE_INFO);
 		associations.put(Idc.SERVER_LEAVE, serverLeaveMap);
 
-		// Player info map
+		// Player map
 		Map<Oid, String> playerInfoMap = new HashMap<Oid, String>();
-		playerInfoMap.put(Oid.GET, PLAYER_INFO_GET);
-		playerInfoMap.put(Oid.SET, PLAYER_INFO_SET);
-		associations.put(Idc.PLAYER_INFO, playerInfoMap);
+		playerInfoMap.put(Oid.GET, PLAYER_GET);
+		playerInfoMap.put(Oid.SET, PLAYER_SET);
+		playerInfoMap.put(Oid.ADD, PLAYER_ADD);
+		associations.put(Idc.PLAYER, playerInfoMap);
+
+		// Player online map
+		Map<Oid, String> playerOnlineMap = new HashMap<Oid, String>();
+		playerOnlineMap.put(Oid.GET, PLAYER_ONLINE_GET);
+		playerOnlineMap.put(Oid.SET, PLAYER_ONLINE_SET);
+		associations.put(Idc.PLAYER_ONLINE, playerOnlineMap);
+
+		// Player name map
+		Map<Oid, String> playerNameMap = new HashMap<Oid, String>();
+		playerNameMap.put(Oid.SET, PLAYER_NAME_SET);
+		associations.put(Idc.PLAYER_NAME, playerNameMap);
+
+		// Player game address map
+		Map<Oid, String> playerGameAddressMap = new HashMap<Oid, String>();
+		playerGameAddressMap.put(Oid.GET, PLAYER_GAME_ADDRESS_GET);
+		playerGameAddressMap.put(Oid.SET, PLAYER_GAME_ADDRESS_SET);
+		associations.put(Idc.PLAYER_ONLINE, playerGameAddressMap);
 
 		// Player admin map
 		Map<Oid, String> playerAdminMap = new HashMap<Oid, String>();

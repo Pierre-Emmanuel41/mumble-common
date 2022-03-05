@@ -523,4 +523,11 @@ public class ServerInfoGetMessageV10 extends MumbleMessage {
 
 		return wrapper.get();
 	}
+
+	/**
+	 * @return A description that contains a mumble server configuration.
+	 */
+	public ServerInfo getServerInfo() {
+		return serverInfo;
+	}
 }

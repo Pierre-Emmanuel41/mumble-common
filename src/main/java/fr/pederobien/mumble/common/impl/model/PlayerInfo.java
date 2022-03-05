@@ -1,5 +1,7 @@
 package fr.pederobien.mumble.common.impl.model;
 
+import java.util.UUID;
+
 public class PlayerInfo {
 
 	public static class SimplePlayerInfo {
@@ -105,6 +107,135 @@ public class PlayerInfo {
 
 		/**
 		 * @return The player pitch.
+		 */
+		public double getPitch() {
+			return pitch;
+		}
+	}
+
+	public static class FullPlayerInfo extends SimplePlayerInfo {
+		private boolean isOnline;
+		private UUID identifier;
+		private String gameAddress;
+		private int gamePort;
+		private boolean isAdmin;
+		private boolean isMute;
+		private boolean isDeafen;
+		private double x, y, z, yaw, pitch;
+
+		/**
+		 * Creates a player description.
+		 * 
+		 * @param name        The player's name.
+		 * @param isOnline    The player's online status.
+		 * @param identifier  The player's identifier.
+		 * @param gameAddress The player's address used to play to the game.
+		 * @param gamePort    The player's port used to play to the game.
+		 * @param isAdmin     The player's administrator status.
+		 * @param isMute      The player's mute status.
+		 * @param isDeafen    The player's deafen status.
+		 * @param x           The player's x coordinate.
+		 * @param y           The player's y coordinate.
+		 * @param z           The player's z coordinate.
+		 * @param yaw         The player's yaw angle.
+		 * @param pitch       The player's pitch angle.
+		 */
+		public FullPlayerInfo(String name, boolean isOnline, UUID identifier, String gameAddress, int gamePort, boolean isAdmin, boolean isMute, boolean isDeafen,
+				double x, double y, double z, double yaw, double pitch) {
+			super(name);
+			this.isOnline = isOnline;
+			this.identifier = identifier;
+			this.gameAddress = gameAddress;
+			this.gamePort = gamePort;
+			this.isAdmin = isAdmin;
+			this.isMute = isMute;
+			this.isDeafen = isDeafen;
+			this.x = x;
+			this.y = y;
+			this.z = z;
+			this.yaw = yaw;
+			this.pitch = pitch;
+		}
+
+		/**
+		 * @return The player's online status.
+		 */
+		public boolean isOnline() {
+			return isOnline;
+		}
+
+		/**
+		 * @return The player's identifier.
+		 */
+		public UUID getIdentifier() {
+			return identifier;
+		}
+
+		/**
+		 * @return The player's address used to play to the game.
+		 */
+		public String getGameAddress() {
+			return gameAddress;
+		}
+
+		/**
+		 * @return The player's port used to play to the game.
+		 */
+		public int getGamePort() {
+			return gamePort;
+		}
+
+		/**
+		 * @return The player's administrator status.
+		 */
+		public boolean isAdmin() {
+			return isAdmin;
+		}
+
+		/**
+		 * @return The player's mute status.
+		 */
+		public boolean isMute() {
+			return isMute;
+		}
+
+		/**
+		 * @return The player's deafen status.
+		 */
+		public boolean isDeafen() {
+			return isDeafen;
+		}
+
+		/**
+		 * @return The player's x coordinate.
+		 */
+		public double getX() {
+			return x;
+		}
+
+		/**
+		 * @return The player's y coordinate.
+		 */
+		public double getY() {
+			return y;
+		}
+
+		/**
+		 * @return The player's z coordinate.
+		 */
+		public double getZ() {
+			return z;
+		}
+
+		/**
+		 * @return The player's yaw angle.
+		 */
+		public double getYaw() {
+			return yaw;
+		}
+
+		/**
+		 * @return The player's pitch angle.
 		 */
 		public double getPitch() {
 			return pitch;

@@ -13,17 +13,20 @@ public enum Idc {
 	// Idc to leave the server.
 	SERVER_LEAVE,
 
-	// Idc to know if a player is online or offline.
-	PLAYER_INFO,
+	// Idc to get access to all information about a player.
+	PLAYER,
+
+	// Idc to get access to the online status of a player.
+	PLAYER_ONLINE,
+
+	// Idc to get access to the name of a player.
+	PLAYER_NAME,
+
+	// Idc to get access to the address used by a player to play to a game.
+	PLAYER_GAME_ADDRESS,
 
 	// Idc to know if player admin status has changed.
 	PLAYER_ADMIN,
-
-	// Idc to know if channel has been renamed, added, removed.
-	CHANNELS,
-
-	// Idc to know if a player has been added, removed from a channel.
-	CHANNELS_PLAYER,
 
 	// Idc when a player speak.
 	PLAYER_SPEAK,
@@ -40,11 +43,17 @@ public enum Idc {
 	// Idc when a player is kick.
 	PLAYER_KICK,
 
-	// Idc to set the sound modifier of a channel.
-	SOUND_MODIFIER,
-
 	// Idc for the player position.
 	PLAYER_POSITION,
+
+	// Idc to know if channel has been renamed, added, removed.
+	CHANNELS,
+
+	// Idc to know if a player has been added, removed from a channel.
+	CHANNELS_PLAYER,
+
+	// Idc to set the sound modifier of a channel.
+	SOUND_MODIFIER,
 
 	// Idc to check if a port is used on client side.
 	GAME_PORT,
