@@ -8,10 +8,10 @@ import fr.pederobien.messenger.interfaces.IMessage;
 import fr.pederobien.mumble.common.impl.MumbleProtocolManager;
 import fr.pederobien.mumble.common.impl.messages.MumbleMessage;
 import fr.pederobien.mumble.common.impl.model.ChannelInfo.SimpleChannelInfo;
-import fr.pederobien.mumble.common.impl.model.ClientInfo.FullClientInfo;
 import fr.pederobien.mumble.common.impl.model.ParameterInfo.FullParameterInfo;
 import fr.pederobien.mumble.common.impl.model.ParameterInfo.LazyParameterInfo;
 import fr.pederobien.mumble.common.impl.model.ParameterType;
+import fr.pederobien.mumble.common.impl.model.PlayerInfo.FullPlayerInfo;
 import fr.pederobien.mumble.common.impl.model.PlayerInfo.SimplePlayerInfo;
 import fr.pederobien.mumble.common.impl.model.ServerInfo;
 import fr.pederobien.mumble.common.impl.model.SoundModifierInfo.FullSoundModifierInfo;
@@ -42,115 +42,79 @@ public class ServerInfoGetMessageV10 extends MumbleMessage {
 
 		serverInfo = new ServerInfo();
 
-		// Number of clients
-		int numberOfClients = (int) wrapper.getInt(first);
-		properties.add(numberOfClients);
+		// Number of players
+		int numberOfPlayers = (int) wrapper.getInt(first);
+		properties.add(numberOfPlayers);
 		first += 4;
 
-		for (int i = 0; i < numberOfClients; i++) {
-			// Client identifier
+		for (int i = 0; i < numberOfPlayers; i++) {
+			// Player name
+			int playerNameLength = wrapper.getInt(first);
+			first += 4;
+			String playerName = wrapper.getString(first, playerNameLength);
+			properties.add(playerName);
+			first += playerNameLength;
+
+			// Player's identifier
 			int identifierLength = wrapper.getInt(first);
 			first += 4;
 			UUID identifier = UUID.fromString(wrapper.getString(first, identifierLength));
 			properties.add(identifier);
 			first += identifierLength;
 
-			// Player's mumble connected status
-			boolean isMumbleConnected = wrapper.getInt(first) == 1;
-			properties.add(isMumbleConnected);
+			// Player's game address
+			int addressLength = wrapper.getInt(first);
+			first += 4;
+			String gameAddress = wrapper.getString(first, addressLength);
+			properties.add(gameAddress);
+			first += addressLength;
+
+			// Player's game port
+			int gamePort = wrapper.getInt(first);
+			properties.add(gamePort);
 			first += 4;
 
-			String mumbleAddress = null;
-			int mumblePort = 0;
-
-			if (isMumbleConnected) {
-				// Client's mumble address
-				int addressLength = wrapper.getInt(first);
-				first += 4;
-				mumbleAddress = wrapper.getString(first, addressLength);
-				properties.add(mumbleAddress);
-				first += addressLength;
-
-				// Client's mumble port
-				mumblePort = wrapper.getInt(first);
-				properties.add(mumblePort);
-				first += 4;
-			}
-
-			// Player's online status
-			boolean isOnline = wrapper.getInt(first) == 1;
-			properties.add(isOnline);
+			// Player's administrator status
+			boolean isAdmin = wrapper.getInt(first) == 1 ? true : false;
+			properties.add(isAdmin);
 			first += 4;
 
-			String playerName = null, gameAddress = null;
-			boolean isAdmin = false, isMute = false, isDeafen = false;
-			double x = 0, y = 0, z = 0, yaw = 0, pitch = 0;
-			int gamePort = 0;
+			// Player's mute status
+			boolean isMute = wrapper.getInt(first) == 1 ? true : false;
+			properties.add(isMute);
+			first += 4;
 
-			if (isOnline) {
-				// Client's game address
-				int addressLength = wrapper.getInt(first);
-				first += 4;
-				gameAddress = wrapper.getString(first, addressLength);
-				properties.add(mumbleAddress);
-				first += addressLength;
+			// Player's deafen status
+			boolean isDeafen = wrapper.getInt(first) == 1 ? true : false;
+			properties.add(isDeafen);
+			first += 4;
 
-				// Client's game port
-				gamePort = wrapper.getInt(first);
-				properties.add(mumblePort);
-				first += 4;
+			// Player's x coordinate
+			double x = wrapper.getDouble(first);
+			properties.add(x);
+			first += 8;
 
-				// Player's name
-				int playerNameLength = wrapper.getInt(first);
-				first += 4;
-				playerName = wrapper.getString(first, playerNameLength);
-				properties.add(playerName);
-				first += playerNameLength;
+			// Player's y coordinate
+			double y = wrapper.getDouble(first);
+			properties.add(y);
+			first += 8;
 
-				// Player's admin status
-				isAdmin = wrapper.getInt(first) == 1;
-				properties.add(isAdmin);
-				first += 4;
+			// Player's z coordinate
+			double z = wrapper.getDouble(first);
+			properties.add(z);
+			first += 8;
 
-				// Player's mute status
-				isMute = wrapper.getInt(first) == 1;
-				properties.add(isMute);
-				first += 4;
+			// Player's yaw angle
+			double yaw = wrapper.getDouble(first);
+			properties.add(yaw);
+			first += 8;
 
-				// Player's deafen status
-				isDeafen = wrapper.getInt(first) == 1;
-				properties.add(isDeafen);
-				first += 4;
+			// Player's pitch angle
+			double pitch = wrapper.getDouble(first);
+			properties.add(pitch);
+			first += 8;
 
-				// X position
-				x = wrapper.getDouble(first);
-				properties.add(x);
-				first += 8;
-
-				// Y position
-				y = wrapper.getDouble(first);
-				properties.add(y);
-				first += 8;
-
-				// Z position
-				z = wrapper.getDouble(first);
-				properties.add(z);
-				first += 8;
-
-				// Yaw position
-				yaw = wrapper.getDouble(first);
-				properties.add(yaw);
-				first += 8;
-
-				// Pitch position
-				pitch = wrapper.getDouble(first);
-				properties.add(pitch);
-				first += 8;
-
-			}
-
-			serverInfo.getClientInfo().add(new FullClientInfo(identifier, isMumbleConnected, mumbleAddress, mumblePort, isOnline, gameAddress, gamePort, playerName,
-					isAdmin, isMute, isDeafen, x, y, z, yaw, pitch));
+			serverInfo.getPlayerInfo().add(new FullPlayerInfo(playerName, true, identifier, gameAddress, gamePort, isAdmin, isMute, isDeafen, x, y, z, yaw, pitch));
 		}
 
 		// Number of modifiers
@@ -270,11 +234,11 @@ public class ServerInfoGetMessageV10 extends MumbleMessage {
 			SimpleChannelInfo channelInfo = new SimpleChannelInfo(channelName, soundModifierInfo);
 
 			// Number of players
-			int numberOfPlayers = wrapper.getInt(first);
-			properties.add(numberOfPlayers);
+			int numberOfChannelPlayers = wrapper.getInt(first);
+			properties.add(numberOfChannelPlayers);
 			first += 4;
 
-			for (int j = 0; j < numberOfPlayers; j++) {
+			for (int j = 0; j < numberOfChannelPlayers; j++) {
 				// Player's name
 				int playerNameLength = wrapper.getInt(first);
 				first += 4;
@@ -303,58 +267,80 @@ public class ServerInfoGetMessageV10 extends MumbleMessage {
 
 		int currentIndex = 0;
 
-		int numberOfClients = (int) properties[currentIndex++];
-		for (int i = 0; i < numberOfClients; i++) {
-			UUID identifier = (UUID) properties[currentIndex++];
+		// Number of players
+		int numberOfPlayers = (int) properties[currentIndex++];
 
-			boolean isMumbleConnected = (boolean) properties[currentIndex++];
-			String mumbleAddress = null;
-			int mumblePort = 0;
+		for (int i = 0; i < numberOfPlayers; i++) {
+			// Player name
+			String playerName = (String) properties[currentIndex++];
 
-			if (isMumbleConnected) {
-				mumbleAddress = (String) properties[currentIndex++];
-				mumblePort = (int) properties[currentIndex++];
-			}
+			// Player's identifier
+			UUID identifier = UUID.fromString((String) properties[currentIndex++]);
 
-			boolean isOnline = (boolean) properties[currentIndex++];
-			String playerName = null, gameAddress = null;
-			boolean isAdmin = false, isMute = false, isDeafen = false;
-			double x = 0, y = 0, z = 0, yaw = 0, pitch = 0;
-			int gamePort = 0;
+			// Player's game address
+			String gameAddress = (String) properties[currentIndex++];
 
-			if (isOnline) {
-				gameAddress = (String) properties[currentIndex++];
-				gamePort = (int) properties[currentIndex++];
-				playerName = (String) properties[currentIndex++];
-				isAdmin = (boolean) properties[currentIndex++];
-				isMute = (boolean) properties[currentIndex++];
-				isDeafen = (boolean) properties[currentIndex++];
-				x = (double) properties[currentIndex++];
-				y = (double) properties[currentIndex++];
-				z = (double) properties[currentIndex++];
-				yaw = (double) properties[currentIndex++];
-				pitch = (double) properties[currentIndex++];
-			}
+			// Player's game port
+			int gamePort = (int) properties[currentIndex++];
 
-			serverInfo.getClientInfo().add(new FullClientInfo(identifier, isMumbleConnected, mumbleAddress, mumblePort, isOnline, gameAddress, gamePort, playerName,
-					isAdmin, isMute, isDeafen, x, y, z, yaw, pitch));
+			// Player's administrator status
+			boolean isAdmin = (boolean) properties[currentIndex++];
+
+			// Player's mute status
+			boolean isMute = (boolean) properties[currentIndex++];
+
+			// Player's deafen status
+			boolean isDeafen = (boolean) properties[currentIndex++];
+
+			// Player's x coordinate
+			double x = (double) properties[currentIndex++];
+
+			// Player's y coordinate
+			double y = (double) properties[currentIndex++];
+
+			// Player's z coordinate
+			double z = (double) properties[currentIndex++];
+
+			// Player's yaw angle
+			double yaw = (double) properties[currentIndex++];
+
+			// Player's pitch angle
+			double pitch = (double) properties[currentIndex++];
+
+			serverInfo.getPlayerInfo().add(new FullPlayerInfo(playerName, true, identifier, gameAddress, gamePort, isAdmin, isMute, isDeafen, x, y, z, yaw, pitch));
 		}
 
+		// Number of sound modifiers
 		int numberOfModifiers = (int) properties[currentIndex++];
 		for (int i = 0; i < numberOfModifiers; i++) {
+			// Sound modifier's name
 			String modifierName = (String) properties[currentIndex++];
 			FullSoundModifierInfo soundModifierInfo = new FullSoundModifierInfo(modifierName);
 
+			// Number of parameters
 			int numberOfParameters = (int) properties[currentIndex++];
 			for (int j = 0; j < numberOfParameters; j++) {
+				// Parameter's name
 				String parameterName = (String) properties[currentIndex++];
+
+				// Parameter's type
 				ParameterType<?> type = (ParameterType<?>) properties[currentIndex++];
+
+				// Parameter's range
 				boolean isRange = (boolean) properties[currentIndex++];
+
+				// Parameter's default value
 				Object defaultValue = (Object) properties[currentIndex++];
+
+				// Parameter's current value
 				Object parameterValue = (Object) properties[currentIndex++];
+
 				Object minValue = null, maxValue = null;
 				if (isRange) {
+					// Parameter's minimum value
 					minValue = (Object) properties[currentIndex++];
+
+					// Parameter's maximum
 					maxValue = (Object) properties[currentIndex++];
 				}
 
@@ -363,24 +349,37 @@ public class ServerInfoGetMessageV10 extends MumbleMessage {
 			serverInfo.getSoundModifierInfo().add(soundModifierInfo);
 		}
 
+		// Number of channels
 		int numberOfChannels = (int) properties[currentIndex++];
 		for (int i = 0; i < numberOfChannels; i++) {
+			// Channel's name
 			String channelName = (String) properties[currentIndex++];
+
+			// Sound modifier's name
 			String modifierName = (String) properties[currentIndex++];
 			LazySoundModifierInfo soundModifierInfo = new LazySoundModifierInfo(modifierName);
 
+			// Number of parameters
 			int numberOfParameters = (int) properties[currentIndex++];
 			for (int j = 0; j < numberOfParameters; j++) {
+				// Parameter's name
 				String parameterName = (String) properties[currentIndex++];
+
+				// Parameter's type
 				ParameterType<?> type = (ParameterType<?>) properties[currentIndex++];
+
+				// Parameter's current value
 				Object parameterValue = (Object) properties[currentIndex++];
+
 				soundModifierInfo.getParameterInfo().add(new LazyParameterInfo(parameterName, type, parameterValue));
 			}
 
 			SimpleChannelInfo channelInfo = new SimpleChannelInfo(channelName, soundModifierInfo);
 
-			int numberOfPlayers = (int) properties[currentIndex++];
-			for (int j = 0; j < numberOfPlayers; j++) {
+			// Number of players registered in the channel
+			int numberOfChannelsPlayers = (int) properties[currentIndex++];
+			for (int j = 0; j < numberOfChannelsPlayers; j++) {
+				// Player's name
 				String playerName = (String) properties[currentIndex++];
 				channelInfo.getPlayerInfo().add(new SimplePlayerInfo(playerName));
 			}
@@ -396,61 +395,45 @@ public class ServerInfoGetMessageV10 extends MumbleMessage {
 		if (getProperties().length == 0 || getHeader().isError())
 			return wrapper.get();
 
-		// Number of client
-		wrapper.putInt(serverInfo.getClientInfo().size());
+		// Number of players
+		wrapper.putInt(serverInfo.getPlayerInfo().size());
 
-		for (FullClientInfo clientInfo : serverInfo.getClientInfo()) {
-			// Client identifier
-			wrapper.putString(clientInfo.getIdentifier().toString(), true);
+		for (FullPlayerInfo playerInfo : serverInfo.getPlayerInfo()) {
+			// Player's name
+			wrapper.putString(playerInfo.getName(), true);
 
-			// Client mumble connected status
-			wrapper.putInt(clientInfo.isMumbleConnected() ? 1 : 0);
+			// Player's identifier
+			wrapper.putString(playerInfo.getIdentifier().toString(), true);
 
-			if (clientInfo.isMumbleConnected()) {
-				// Client mumble address
-				wrapper.putString(clientInfo.getMumbleAddress(), true);
+			// Player's game address
+			wrapper.putString(playerInfo.getGameAddress(), true);
 
-				// Client mumble port
-				wrapper.putInt(clientInfo.getMumblePort());
-			}
+			// Player's game port
+			wrapper.putInt(playerInfo.getGamePort());
 
-			// Player's online status
-			wrapper.putInt(clientInfo.isOnline() ? 1 : 0);
+			// Player's administrator status
+			wrapper.putInt(playerInfo.isAdmin() ? 1 : 0);
 
-			if (clientInfo.isOnline()) {
-				// Player's game address
-				wrapper.putString(clientInfo.getGameAddress(), true);
+			// Player's mute status
+			wrapper.putInt(playerInfo.isMute() ? 1 : 0);
 
-				// Player's game port
-				wrapper.putInt(clientInfo.getGamePort());
+			// Player's deafen status
+			wrapper.putInt(playerInfo.isDeafen() ? 1 : 0);
 
-				// Player's name
-				wrapper.putString(clientInfo.getPlayerName(), true);
+			// Player's x coordinate
+			wrapper.putDouble(playerInfo.getX());
 
-				// Player's admin status
-				wrapper.putInt(clientInfo.isAdmin() ? 1 : 0);
+			// Player's y coordinate
+			wrapper.putDouble(playerInfo.getY());
 
-				// Player's mute status
-				wrapper.putInt(clientInfo.isMute() ? 1 : 0);
+			// Player's z coordinate
+			wrapper.putDouble(playerInfo.getZ());
 
-				// Player's deafen status
-				wrapper.putInt(clientInfo.isDeafen() ? 1 : 0);
+			// Player's yaw angle
+			wrapper.putDouble(playerInfo.getYaw());
 
-				// X position
-				wrapper.putDouble(clientInfo.getX());
-
-				// Y position
-				wrapper.putDouble(clientInfo.getY());
-
-				// Z position
-				wrapper.putDouble(clientInfo.getZ());
-
-				// Yaw position
-				wrapper.putDouble(clientInfo.getYaw());
-
-				// Pitch position
-				wrapper.putDouble(clientInfo.getPitch());
-			}
+			// Player's pitch
+			wrapper.putDouble(playerInfo.getPitch());
 		}
 
 		// Number of sound modifier

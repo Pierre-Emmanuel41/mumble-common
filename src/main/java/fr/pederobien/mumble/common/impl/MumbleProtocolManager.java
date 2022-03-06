@@ -272,7 +272,7 @@ public class MumbleProtocolManager {
 
 		// Server info map
 		Map<Oid, String> serverInfoMap = new HashMap<Oid, String>();
-		serverInfoMap.put(Oid.INFO, SERVER_INFO_GET);
+		serverInfoMap.put(Oid.GET, SERVER_INFO_GET);
 		associations.put(Idc.SERVER_INFO, serverInfoMap);
 
 		// Server join map

@@ -4,18 +4,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fr.pederobien.mumble.common.impl.model.ChannelInfo.SimpleChannelInfo;
-import fr.pederobien.mumble.common.impl.model.ClientInfo.FullClientInfo;
+import fr.pederobien.mumble.common.impl.model.PlayerInfo.FullPlayerInfo;
 import fr.pederobien.mumble.common.impl.model.SoundModifierInfo.FullSoundModifierInfo;
 
 public class ServerInfo {
 	private List<FullSoundModifierInfo> soundModifierInfo;
 	private List<SimpleChannelInfo> channelInfo;
-	private List<FullClientInfo> clientInfo;
+	private List<FullPlayerInfo> playerInfo;
 
 	public ServerInfo() {
 		soundModifierInfo = new ArrayList<FullSoundModifierInfo>();
 		channelInfo = new ArrayList<SimpleChannelInfo>();
-		clientInfo = new ArrayList<FullClientInfo>();
+		playerInfo = new ArrayList<FullPlayerInfo>();
 	}
 
 	/**
@@ -33,9 +33,9 @@ public class ServerInfo {
 	}
 
 	/**
-	 * @return A list that contains a description of each client.
+	 * @return A list that contains a description of each connected player.
 	 */
-	public List<FullClientInfo> getClientInfo() {
-		return clientInfo;
+	public List<FullPlayerInfo> getPlayerInfo() {
+		return playerInfo;
 	}
 }
