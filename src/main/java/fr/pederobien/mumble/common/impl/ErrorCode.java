@@ -24,6 +24,9 @@ public enum ErrorCode {
 	// Code when there are no treatment associated to the given idc.
 	IDC_UNKNOWN("There is no treatment associated to the given idc."),
 
+	// Code when server plugins cancelled a request.
+	REQUEST_CANCELLED("The request has been cancelled by the server"),
+
 	// Code when trying to add a channel whose name is already used.
 	CHANNEL_ALREADY_EXISTS("The channel already exists."),
 
