@@ -6,9 +6,9 @@ import java.util.List;
 import fr.pederobien.messenger.interfaces.IMessage;
 import fr.pederobien.mumble.common.impl.MumbleProtocolManager;
 import fr.pederobien.mumble.common.impl.messages.MumbleMessage;
-import fr.pederobien.mumble.common.impl.model.ParameterType;
 import fr.pederobien.mumble.common.impl.model.ChannelInfo.LazyChannelInfo;
 import fr.pederobien.mumble.common.impl.model.ParameterInfo.LazyParameterInfo;
+import fr.pederobien.mumble.common.impl.model.ParameterType;
 import fr.pederobien.mumble.common.impl.model.SoundModifierInfo.LazySoundModifierInfo;
 import fr.pederobien.mumble.common.interfaces.IMumbleHeader;
 import fr.pederobien.utils.ByteWrapper;
@@ -90,16 +90,25 @@ public class ChannelsAddMessageV10 extends MumbleMessage {
 			return;
 
 		int currentIndex = 0;
+
+		// Channel's name
 		String channelName = (String) properties[currentIndex++];
+
+		// Sound modifier's name
 		String soundModifierName = (String) properties[currentIndex++];
 
 		LazySoundModifierInfo soundModifierInfo = new LazySoundModifierInfo(soundModifierName);
 
+		// Number of parameters
 		int numberOfParameters = (int) properties[currentIndex++];
-
 		for (int i = 0; i < numberOfParameters; i++) {
+			// Parameter's name
 			String parameterName = (String) properties[currentIndex++];
+
+			// Parameter's type
 			ParameterType<?> parameterType = (ParameterType<?>) properties[currentIndex++];
+
+			// Parameter's value
 			Object parameterValue = (Object) properties[currentIndex++];
 
 			soundModifierInfo.getParameterInfo().add(new LazyParameterInfo(parameterName, parameterType, parameterValue));
