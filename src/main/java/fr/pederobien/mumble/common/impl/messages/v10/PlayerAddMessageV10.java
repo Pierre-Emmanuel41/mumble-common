@@ -39,13 +39,6 @@ public class PlayerAddMessageV10 extends MumbleMessage {
 		properties.add(playerName);
 		first += playerNameLength;
 
-		// Player's identifier
-		int identifierLength = wrapper.getInt(first);
-		first += 4;
-		UUID identifier = UUID.fromString(wrapper.getString(first, identifierLength));
-		properties.add(identifier);
-		first += identifierLength;
-
 		// Player's game address
 		int addressLength = wrapper.getInt(first);
 		first += 4;
@@ -57,6 +50,18 @@ public class PlayerAddMessageV10 extends MumbleMessage {
 		int gamePort = wrapper.getInt(first);
 		properties.add(gamePort);
 		first += 4;
+
+		// Player's identifier
+		int identifierLength = wrapper.getInt(first);
+		first += 4;
+		UUID identifier = null;
+		if (identifierLength > 1) {
+			identifier = UUID.fromString(wrapper.getString(first, identifierLength));
+			properties.add(identifier);
+			first += identifierLength;
+		} else {
+			first -= 4;
+		}
 
 		// Player's administrator status
 		boolean isAdmin = wrapper.getInt(first) == 1 ? true : false;
@@ -110,41 +115,45 @@ public class PlayerAddMessageV10 extends MumbleMessage {
 		if (getHeader().isError())
 			return;
 
-		// Player's name
-		String playerName = (String) properties[0];
+		int currentIndex = 0;
 
-		// Player's identifier
-		UUID identifier = (UUID) properties[2];
+		// Player's name
+		String playerName = (String) properties[currentIndex++];
 
 		// Player's game address
-		String gameAddress = (String) properties[3];
+		String gameAddress = (String) properties[currentIndex++];
 
 		// Player's game port
-		int gamePort = (int) properties[4];
+		int gamePort = (int) properties[currentIndex++];
+
+		// Player's identifier
+		UUID identifier = null;
+		if (properties[currentIndex] instanceof UUID)
+			identifier = (UUID) properties[currentIndex++];
 
 		// Player's administrator status
-		boolean isAdmin = (boolean) properties[5];
+		boolean isAdmin = (boolean) properties[currentIndex++];
 
 		// Player's mute status
-		boolean isMute = (boolean) properties[6];
+		boolean isMute = (boolean) properties[currentIndex++];
 
 		// Player's deafen status
-		boolean isDeafen = (boolean) properties[7];
+		boolean isDeafen = (boolean) properties[currentIndex++];
 
 		// Player's x coordinate
-		double x = (double) properties[8];
+		double x = (double) properties[currentIndex++];
 
 		// Player's y coordinate
-		double y = (double) properties[9];
+		double y = (double) properties[currentIndex++];
 
 		// Player's z coordinate
-		double z = (double) properties[10];
+		double z = (double) properties[currentIndex++];
 
 		// Player's yaw angle
-		double yaw = (double) properties[11];
+		double yaw = (double) properties[currentIndex++];
 
 		// Player's pitch angle
-		double pitch = (double) properties[12];
+		double pitch = (double) properties[currentIndex++];
 
 		playerInfo = new FullPlayerInfo(playerName, true, identifier, gameAddress, gamePort, isAdmin, isMute, isDeafen, x, y, z, yaw, pitch);
 	}
@@ -159,14 +168,15 @@ public class PlayerAddMessageV10 extends MumbleMessage {
 		// Player's name
 		wrapper.putString(playerInfo.getName(), true);
 
-		// Player's identifier
-		wrapper.putString(playerInfo.getIdentifier().toString(), true);
-
 		// Player's game address
 		wrapper.putString(playerInfo.getGameAddress(), true);
 
 		// Player's game port
 		wrapper.putInt(playerInfo.getGamePort());
+
+		// Player's identifier
+		if (playerInfo.getIdentifier() != null)
+			wrapper.putString(playerInfo.getIdentifier().toString(), true);
 
 		// Player's administrator status
 		wrapper.putInt(playerInfo.isAdmin() ? 1 : 0);
