@@ -286,11 +286,12 @@ public class MumbleProtocolManager {
 		associations.put(Idc.SERVER_LEAVE, serverLeaveMap);
 
 		// Player map
-		Map<Oid, String> playerInfoMap = new HashMap<Oid, String>();
-		playerInfoMap.put(Oid.GET, PLAYER_GET);
-		playerInfoMap.put(Oid.SET, PLAYER_SET);
-		playerInfoMap.put(Oid.ADD, PLAYER_ADD);
-		associations.put(Idc.PLAYER, playerInfoMap);
+		Map<Oid, String> playerMap = new HashMap<Oid, String>();
+		playerMap.put(Oid.GET, PLAYER_GET);
+		playerMap.put(Oid.SET, PLAYER_SET);
+		playerMap.put(Oid.ADD, PLAYER_ADD);
+		playerMap.put(Oid.REMOVE, PLAYER_REMOVE);
+		associations.put(Idc.PLAYER, playerMap);
 
 		// Player online map
 		Map<Oid, String> playerOnlineMap = new HashMap<Oid, String>();

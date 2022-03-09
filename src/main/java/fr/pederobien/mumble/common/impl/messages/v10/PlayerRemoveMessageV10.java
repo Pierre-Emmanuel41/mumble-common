@@ -40,6 +40,9 @@ public class PlayerRemoveMessageV10 extends MumbleMessage {
 	public void setProperties(Object... properties) {
 		super.setProperties(properties);
 
+		if (getHeader().isError())
+			return;
+
 		playerName = (String) properties[0];
 	}
 
