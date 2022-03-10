@@ -275,7 +275,7 @@ public class ServerInfoGetMessageV10 extends MumbleMessage {
 			String playerName = (String) properties[currentIndex++];
 
 			// Player's identifier
-			UUID identifier = UUID.fromString((String) properties[currentIndex++]);
+			UUID identifier = (UUID) properties[currentIndex++];
 
 			// Player's game address
 			String gameAddress = (String) properties[currentIndex++];
