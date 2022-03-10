@@ -36,6 +36,9 @@ public enum ErrorCode {
 	// Code when the player is not recognized.
 	PLAYER_NOT_RECOGNIZED("The player is not recognized."),
 
+	// Code when trying to rename a player
+	PLAYER_ALREADY_EXISTS("The player already exist"),
+
 	// Code when trying to add an already registered player in a channel.
 	PLAYER_ALREADY_REGISTERED("The player is already registered in a channel."),
 

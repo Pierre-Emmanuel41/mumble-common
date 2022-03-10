@@ -40,7 +40,7 @@ public class PlayerNameSetMessageV10 extends MumbleMessage {
 		first += newNameLength;
 
 		super.setProperties(properties.toArray());
-		return null;
+		return this;
 	}
 
 	@Override
@@ -68,5 +68,19 @@ public class PlayerNameSetMessageV10 extends MumbleMessage {
 		wrapper.putString(newName, true);
 
 		return wrapper.get();
+	}
+
+	/**
+	 * @return The name of the player to rename.
+	 */
+	public String getOldName() {
+		return oldName;
+	}
+
+	/**
+	 * @return The new player name.
+	 */
+	public String getNewName() {
+		return newName;
 	}
 }
