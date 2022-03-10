@@ -308,7 +308,7 @@ public class MumbleProtocolManager {
 		Map<Oid, String> playerGameAddressMap = new HashMap<Oid, String>();
 		playerGameAddressMap.put(Oid.GET, PLAYER_GAME_ADDRESS_GET);
 		playerGameAddressMap.put(Oid.SET, PLAYER_GAME_ADDRESS_SET);
-		associations.put(Idc.PLAYER_ONLINE, playerGameAddressMap);
+		associations.put(Idc.PLAYER_GAME_ADDRESS, playerGameAddressMap);
 
 		// Player admin map
 		Map<Oid, String> playerAdminMap = new HashMap<Oid, String>();

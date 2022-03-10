@@ -19,7 +19,7 @@ public class PlayerOnlineSetMessageV10 extends MumbleMessage {
 
 	@Override
 	public IMessage parse(byte[] payload) {
-		if (payload.length == 0 || getHeader().isError())
+		if (getHeader().isError())
 			return this;
 
 		List<Object> properties = new ArrayList<Object>();
@@ -46,6 +46,9 @@ public class PlayerOnlineSetMessageV10 extends MumbleMessage {
 	public void setProperties(Object... properties) {
 		super.setProperties(properties);
 
+		if (getHeader().isError())
+			return;
+
 		// Player's name
 		playerName = (String) properties[0];
 
@@ -57,7 +60,7 @@ public class PlayerOnlineSetMessageV10 extends MumbleMessage {
 	protected byte[] generateProperties() {
 		ByteWrapper wrapper = ByteWrapper.create();
 
-		if (getProperties().length == 0 || getHeader().isError())
+		if (getHeader().isError())
 			return wrapper.get();
 
 		// Player's name

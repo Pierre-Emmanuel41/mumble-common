@@ -14,7 +14,7 @@ public class PlayerOnlineGetMessageV10 extends MumbleMessage {
 	private boolean isOnline;
 
 	protected PlayerOnlineGetMessageV10(IMumbleHeader header) {
-		super(MumbleProtocolManager.PLAYER_GAME_ADDRESS_GET, header);
+		super(MumbleProtocolManager.PLAYER_ONLINE_GET, header);
 	}
 
 	@Override

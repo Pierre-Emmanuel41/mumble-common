@@ -15,7 +15,7 @@ public class PlayerGameAddressSetMessageV10 extends MumbleMessage {
 	private int gamePort;
 
 	protected PlayerGameAddressSetMessageV10(IMumbleHeader header) {
-		super(MumbleProtocolManager.PLAYER_ONLINE_GET, header);
+		super(MumbleProtocolManager.PLAYER_GAME_ADDRESS_SET, header);
 	}
 
 	@Override
