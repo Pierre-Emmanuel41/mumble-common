@@ -169,10 +169,10 @@ public class PlayerAddMessageV10 extends MumbleMessage {
 		wrapper.putString(playerInfo.getName(), true);
 
 		// Player's game address
-		wrapper.putString(playerInfo.getGameAddress(), true);
+		wrapper.putString(playerInfo.getGameAddress().getAddress().getHostAddress(), true);
 
 		// Player's game port
-		wrapper.putInt(playerInfo.getGamePort());
+		wrapper.putInt(playerInfo.getGameAddress().getPort());
 
 		// Player's identifier
 		if (playerInfo.getIdentifier() != null)

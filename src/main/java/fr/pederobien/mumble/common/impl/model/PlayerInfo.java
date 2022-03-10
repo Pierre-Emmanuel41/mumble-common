@@ -1,5 +1,8 @@
 package fr.pederobien.mumble.common.impl.model;
 
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.UnknownHostException;
 import java.util.UUID;
 
 public class PlayerInfo {
@@ -116,8 +119,7 @@ public class PlayerInfo {
 	public static class FullPlayerInfo extends SimplePlayerInfo {
 		private boolean isOnline;
 		private UUID identifier;
-		private String gameAddress;
-		private int gamePort;
+		private InetSocketAddress gameAddress;
 		private boolean isAdmin;
 		private boolean isMute;
 		private boolean isDeafen;
@@ -130,7 +132,6 @@ public class PlayerInfo {
 		 * @param isOnline    The player's online status.
 		 * @param identifier  The player's identifier.
 		 * @param gameAddress The player's address used to play to the game.
-		 * @param gamePort    The player's port used to play to the game.
 		 * @param isAdmin     The player's administrator status.
 		 * @param isMute      The player's mute status.
 		 * @param isDeafen    The player's deafen status.
@@ -140,13 +141,11 @@ public class PlayerInfo {
 		 * @param yaw         The player's yaw angle.
 		 * @param pitch       The player's pitch angle.
 		 */
-		public FullPlayerInfo(String name, boolean isOnline, UUID identifier, String gameAddress, int gamePort, boolean isAdmin, boolean isMute, boolean isDeafen,
-				double x, double y, double z, double yaw, double pitch) {
+		public FullPlayerInfo(String name, boolean isOnline, UUID identifier, String address, int port, boolean isAdmin, boolean isMute, boolean isDeafen, double x,
+				double y, double z, double yaw, double pitch) {
 			super(name);
 			this.isOnline = isOnline;
 			this.identifier = identifier;
-			this.gameAddress = gameAddress;
-			this.gamePort = gamePort;
 			this.isAdmin = isAdmin;
 			this.isMute = isMute;
 			this.isDeafen = isDeafen;
@@ -155,6 +154,12 @@ public class PlayerInfo {
 			this.z = z;
 			this.yaw = yaw;
 			this.pitch = pitch;
+
+			try {
+				gameAddress = new InetSocketAddress(InetAddress.getByName(address), port);
+			} catch (UnknownHostException e) {
+				e.printStackTrace();
+			}
 		}
 
 		/**
@@ -174,15 +179,8 @@ public class PlayerInfo {
 		/**
 		 * @return The player's address used to play to the game.
 		 */
-		public String getGameAddress() {
+		public InetSocketAddress getGameAddress() {
 			return gameAddress;
-		}
-
-		/**
-		 * @return The player's port used to play to the game.
-		 */
-		public int getGamePort() {
-			return gamePort;
 		}
 
 		/**

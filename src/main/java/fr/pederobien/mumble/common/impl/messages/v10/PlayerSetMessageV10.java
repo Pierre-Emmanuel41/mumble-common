@@ -192,10 +192,10 @@ public class PlayerSetMessageV10 extends MumbleMessage {
 			wrapper.putString(playerInfo.getIdentifier().toString(), true);
 
 			// Player's game address
-			wrapper.putString(playerInfo.getGameAddress(), true);
+			wrapper.putString(playerInfo.getGameAddress().getAddress().getHostAddress(), true);
 
 			// Player's game port
-			wrapper.putInt(playerInfo.getGamePort());
+			wrapper.putInt(playerInfo.getGameAddress().getPort());
 
 			// Player's administrator status
 			wrapper.putInt(playerInfo.isAdmin() ? 1 : 0);
