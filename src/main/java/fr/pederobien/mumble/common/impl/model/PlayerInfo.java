@@ -158,7 +158,7 @@ public class PlayerInfo {
 			try {
 				gameAddress = new InetSocketAddress(InetAddress.getByName(address), port);
 			} catch (UnknownHostException e) {
-				e.printStackTrace();
+				throw new RuntimeException(e.getMessage());
 			}
 		}
 
