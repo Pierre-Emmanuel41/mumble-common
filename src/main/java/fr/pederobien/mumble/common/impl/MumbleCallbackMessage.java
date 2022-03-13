@@ -17,7 +17,7 @@ public class MumbleCallbackMessage extends RequestCallbackMessage {
 	 * @param timeout  The request timeout.
 	 */
 	public MumbleCallbackMessage(IMessage message, Consumer<ResponseCallbackArgs> callback, int timeout) {
-		super(message.generate(), message.getHeader().getIdentifier(), callback, timeout);
+		super(message.generate(), message.getHeader().getSequence(), callback, timeout);
 		this.message = message;
 	}
 
@@ -28,7 +28,7 @@ public class MumbleCallbackMessage extends RequestCallbackMessage {
 	 * @param callback The callback to run when a response has been received before the timeout.
 	 */
 	public MumbleCallbackMessage(IMessage message, Consumer<ResponseCallbackArgs> callback) {
-		super(message.generate(), message.getHeader().getIdentifier(), callback);
+		super(message.generate(), message.getHeader().getSequence(), callback);
 		this.message = message;
 	}
 

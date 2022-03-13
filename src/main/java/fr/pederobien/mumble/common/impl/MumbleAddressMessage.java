@@ -15,7 +15,7 @@ public class MumbleAddressMessage extends AddressMessage {
 	 * @param address The address at which the message should be sent.
 	 */
 	public MumbleAddressMessage(IMessage message, InetSocketAddress address) {
-		super(message.generate(), message.getHeader().getIdentifier(), address);
+		super(message.generate(), message.getHeader().getSequence(), address);
 		this.message = message;
 	}
 

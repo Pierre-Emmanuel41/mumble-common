@@ -13,7 +13,7 @@ public class ProtocolV10 extends Protocol {
 	 * @param mumbleManager The manager associated to this protocol.
 	 */
 	public ProtocolV10(MumbleProtocolManager mumbleManager) {
-		super(mumbleManager.getManager().getIdentifiers(), 1.0f, mumbleManager.getManager().getHeader(), mumbleManager.getManager().getParser());
+		super(mumbleManager.getManager().getSequence(), 1.0f, mumbleManager.getManager().getHeader(), mumbleManager.getManager().getParser());
 
 		// Server messages
 		register(new MessageCreator(MumbleProtocolManager.SERVER_INFO_GET, header -> new ServerInfoGetMessageV10((IMumbleHeader) header)));

@@ -247,7 +247,7 @@ public class MumbleProtocolManager {
 		if (message == null)
 			return null;
 
-		message.getHeader().setIdentifier(identifier);
+		message.getHeader().setSequence(identifier);
 		message.getHeader().setProperties(idc, oid, errorCode);
 		message.setProperties(properties);
 		return message;

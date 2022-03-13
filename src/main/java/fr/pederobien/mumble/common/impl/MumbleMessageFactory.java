@@ -98,7 +98,7 @@ public class MumbleMessageFactory {
 	 * @return The message associated to the answer.
 	 */
 	public IMumbleMessage answer(IMumbleMessage message, Idc idc, Oid oid, ErrorCode errorCode, Object... properties) {
-		return (IMumbleMessage) manager.answer(message.getHeader().getIdentifier(), idc, oid, errorCode, properties);
+		return (IMumbleMessage) manager.answer(message.getHeader().getSequence(), idc, oid, errorCode, properties);
 	}
 
 	/**
