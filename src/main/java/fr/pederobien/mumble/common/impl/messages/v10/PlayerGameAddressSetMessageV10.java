@@ -1,5 +1,8 @@
 package fr.pederobien.mumble.common.impl.messages.v10;
 
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,8 +14,7 @@ import fr.pederobien.utils.ByteWrapper;
 
 public class PlayerGameAddressSetMessageV10 extends MumbleMessage {
 	private String playerName;
-	private String gameAddress;
-	private int gamePort;
+	private InetSocketAddress gameAddress;
 
 	protected PlayerGameAddressSetMessageV10(IMumbleHeader header) {
 		super(MumbleProtocolManager.PLAYER_GAME_ADDRESS_SET, header);
@@ -37,14 +39,20 @@ public class PlayerGameAddressSetMessageV10 extends MumbleMessage {
 		// Player's game address
 		int gameAddressLength = wrapper.getInt(first);
 		first += 4;
-		gameAddress = wrapper.getString(first, gameAddressLength);
-		properties.add(gameAddress);
-		first += 4;
+		String address = wrapper.getString(first, gameAddressLength);
+		properties.add(address);
+		first += gameAddressLength;
 
 		// Player's game port
-		gamePort = wrapper.getInt(first);
-		properties.add(gamePort);
+		int port = wrapper.getInt(first);
+		properties.add(port);
 		first += 4;
+
+		try {
+			gameAddress = new InetSocketAddress(InetAddress.getByName(address), port);
+		} catch (UnknownHostException e) {
+			throw new RuntimeException(e.getMessage());
+		}
 
 		super.setProperties(properties.toArray());
 		return this;
@@ -61,10 +69,16 @@ public class PlayerGameAddressSetMessageV10 extends MumbleMessage {
 		playerName = (String) properties[0];
 
 		// Player's online status
-		gameAddress = (String) properties[1];
+		String address = (String) properties[1];
 
 		// Player's port number
-		gamePort = (int) properties[2];
+		int port = (int) properties[2];
+
+		try {
+			gameAddress = new InetSocketAddress(InetAddress.getByName(address), port);
+		} catch (UnknownHostException e) {
+			throw new RuntimeException(e.getMessage());
+		}
 	}
 
 	@Override
@@ -78,10 +92,10 @@ public class PlayerGameAddressSetMessageV10 extends MumbleMessage {
 		wrapper.putString(playerName, true);
 
 		// Player's game address
-		wrapper.putString(gameAddress, true);
+		wrapper.putString(gameAddress.getAddress().getHostAddress(), true);
 
 		// Player's online status
-		wrapper.putInt(gamePort);
+		wrapper.putInt(gameAddress.getPort());
 
 		return wrapper.get();
 	}
@@ -96,14 +110,7 @@ public class PlayerGameAddressSetMessageV10 extends MumbleMessage {
 	/**
 	 * @return The player's address used to play to the game.
 	 */
-	public String getGameAddress() {
+	public InetSocketAddress getGameAddress() {
 		return gameAddress;
-	}
-
-	/**
-	 * @return The player's port number used to play to the game.
-	 */
-	public int getGamePort() {
-		return gamePort;
 	}
 }

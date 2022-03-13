@@ -1,5 +1,8 @@
 package fr.pederobien.mumble.common.impl.messages.v10;
 
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,8 +14,7 @@ import fr.pederobien.utils.ByteWrapper;
 
 public class PlayerGameAddressGetMessageV10 extends MumbleMessage {
 	private String playerName;
-	private String gameAddress;
-	private int gamePort;
+	private InetSocketAddress gameAddress;
 
 	protected PlayerGameAddressGetMessageV10(IMumbleHeader header) {
 		super(MumbleProtocolManager.PLAYER_GAME_ADDRESS_GET, header);
@@ -34,17 +36,26 @@ public class PlayerGameAddressGetMessageV10 extends MumbleMessage {
 		properties.add(playerName);
 		first += playerNameLength;
 
-		// Player's game address
-		int gameAddressLength = wrapper.getInt(first);
-		first += 4;
-		gameAddress = wrapper.getString(first, gameAddressLength);
-		properties.add(gameAddress);
-		first += 4;
+		if (first < payload.length) {
 
-		// Player's game port
-		gamePort = wrapper.getInt(first);
-		properties.add(gamePort);
-		first += 4;
+			// Player's game address
+			int gameAddressLength = wrapper.getInt(first);
+			first += 4;
+			String address = wrapper.getString(first, gameAddressLength);
+			properties.add(address);
+			first += gameAddressLength;
+
+			// Player's game port
+			int port = wrapper.getInt(first);
+			properties.add(port);
+			first += 4;
+
+			try {
+				gameAddress = new InetSocketAddress(InetAddress.getByName(address), port);
+			} catch (UnknownHostException e) {
+				throw new RuntimeException(e.getMessage());
+			}
+		}
 
 		super.setProperties(properties.toArray());
 		return this;
@@ -60,11 +71,19 @@ public class PlayerGameAddressGetMessageV10 extends MumbleMessage {
 		// Player's name
 		playerName = (String) properties[0];
 
-		// Player's online status
-		gameAddress = (String) properties[1];
+		if (properties.length > 1) {
+			// Player's online status
+			String address = (String) properties[1];
 
-		// Player's port number
-		gamePort = (int) properties[2];
+			// Player's port number
+			int port = (int) properties[2];
+
+			try {
+				gameAddress = new InetSocketAddress(InetAddress.getByName(address), port);
+			} catch (UnknownHostException e) {
+				throw new RuntimeException(e.getMessage());
+			}
+		}
 	}
 
 	@Override
@@ -77,12 +96,13 @@ public class PlayerGameAddressGetMessageV10 extends MumbleMessage {
 		// Player's name
 		wrapper.putString(playerName, true);
 
-		// Player's game address
-		wrapper.putString(gameAddress, true);
+		if (getProperties().length > 1) {
+			// Player's game address
+			wrapper.putString(gameAddress.getAddress().getHostAddress(), true);
 
-		// Player's online status
-		wrapper.putInt(gamePort);
-
+			// Player's online status
+			wrapper.putInt(gameAddress.getPort());
+		}
 		return wrapper.get();
 	}
 
@@ -96,14 +116,7 @@ public class PlayerGameAddressGetMessageV10 extends MumbleMessage {
 	/**
 	 * @return The player's address used to play to the game.
 	 */
-	public String getGameAddress() {
+	public InetSocketAddress getGameAddress() {
 		return gameAddress;
-	}
-
-	/**
-	 * @return The player's port number used to play to the game.
-	 */
-	public int getGamePort() {
-		return gamePort;
 	}
 }
