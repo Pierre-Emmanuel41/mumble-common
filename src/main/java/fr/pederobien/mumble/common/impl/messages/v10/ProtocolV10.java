@@ -31,10 +31,11 @@ public class ProtocolV10 extends Protocol {
 		register(new MessageCreator(MumbleProtocolManager.PLAYER_GAME_ADDRESS_GET, header -> new PlayerGameAddressGetMessageV10((IMumbleHeader) header)));
 		register(new MessageCreator(MumbleProtocolManager.PLAYER_GAME_ADDRESS_SET, header -> new PlayerGameAddressSetMessageV10((IMumbleHeader) header)));
 		register(new MessageCreator(MumbleProtocolManager.PLAYER_ADMIN_SET, header -> new PlayerAdminSetMessageV10((IMumbleHeader) header)));
-		register(new MessageCreator(MumbleProtocolManager.PLAYER_SPEAK_INFO, header -> new PlayerSpeakInfoMessageV10((IMumbleHeader) header)));
-		register(new MessageCreator(MumbleProtocolManager.PLAYER_SPEAK_SET, header -> new PlayerSpeakSetMessageV10((IMumbleHeader) header)));
 		register(new MessageCreator(MumbleProtocolManager.PLAYER_MUTE_SET, header -> new PlayerMuteSetMessageV10((IMumbleHeader) header)));
 		register(new MessageCreator(MumbleProtocolManager.PLAYER_DEAFEN_SET, header -> new PlayerDeafenSetMessageV10((IMumbleHeader) header)));
+		register(new MessageCreator(MumbleProtocolManager.PLAYER_MUTE_BY_SET, header -> new PlayerMuteBySetMessageV10((IMumbleHeader) header)));
+		register(new MessageCreator(MumbleProtocolManager.PLAYER_SPEAK_INFO, header -> new PlayerSpeakInfoMessageV10((IMumbleHeader) header)));
+		register(new MessageCreator(MumbleProtocolManager.PLAYER_SPEAK_SET, header -> new PlayerSpeakSetMessageV10((IMumbleHeader) header)));
 		register(new MessageCreator(MumbleProtocolManager.PLAYER_KICK_SET, header -> new PlayerKickSetMessageV10((IMumbleHeader) header)));
 		register(new MessageCreator(MumbleProtocolManager.PLAYER_POSITION_GET, header -> new PlayerPositionGetMessageV10((IMumbleHeader) header)));
 		register(new MessageCreator(MumbleProtocolManager.PLAYER_POSITION_SET, header -> new PlayerPositionSetMessageV10((IMumbleHeader) header)));

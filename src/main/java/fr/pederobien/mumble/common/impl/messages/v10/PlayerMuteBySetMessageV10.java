@@ -7,7 +7,7 @@ import fr.pederobien.mumble.common.interfaces.IMumbleHeader;
 import fr.pederobien.utils.ByteWrapper;
 
 public class PlayerMuteBySetMessageV10 extends MumbleMessage {
-	private String mutingPlayer, mutedPlayer;
+	private String target, source;
 	private boolean isMute;
 
 	/**
@@ -27,22 +27,22 @@ public class PlayerMuteBySetMessageV10 extends MumbleMessage {
 		int first = 0;
 		ByteWrapper wrapper = ByteWrapper.wrap(payload);
 
-		// Muting player name
+		// Target player name
 		int playerNameLength = wrapper.getInt(first);
 		first += 4;
-		mutingPlayer = wrapper.getString(first, playerNameLength);
+		target = wrapper.getString(first, playerNameLength);
 		first += playerNameLength;
 
-		// Muted player name
+		// Source player name
 		int playerMutedOrUnmutedNameLength = wrapper.getInt(first);
 		first += 4;
-		mutedPlayer = wrapper.getString(first, playerMutedOrUnmutedNameLength);
+		source = wrapper.getString(first, playerMutedOrUnmutedNameLength);
 		first += playerMutedOrUnmutedNameLength;
 
 		// Player mute or unmute
 		isMute = wrapper.get(first) == 1;
 
-		super.setProperties(mutingPlayer, mutedPlayer, isMute);
+		super.setProperties(target, source, isMute);
 		return this;
 	}
 
@@ -53,8 +53,8 @@ public class PlayerMuteBySetMessageV10 extends MumbleMessage {
 		if (getHeader().isError())
 			return;
 
-		mutingPlayer = (String) properties[0];
-		mutedPlayer = (String) properties[1];
+		target = (String) properties[0];
+		source = (String) properties[1];
 		isMute = (boolean) properties[2];
 	}
 
@@ -65,30 +65,30 @@ public class PlayerMuteBySetMessageV10 extends MumbleMessage {
 		if (getHeader().isError())
 			return wrapper.get();
 
-		// Player name
-		wrapper.putString(mutingPlayer, true);
+		// Target player name
+		wrapper.putString(target, true);
 
-		// Player muted/unmuted name
-		wrapper.putString(mutedPlayer, true);
+		// Source player name
+		wrapper.putString(source, true);
 
-		// Player mute or unmute
+		// Player's mute status
 		wrapper.put((byte) (isMute ? 1 : 0));
 
 		return wrapper.get();
 	}
 
 	/**
-	 * @return The muting player name.
+	 * @return The name of the player to mute or unmute for another player
 	 */
-	public String getMutingPlayer() {
-		return mutingPlayer;
+	public String getTarget() {
+		return target;
 	}
 
 	/**
-	 * @return The muted player name.
+	 * @return The name of the player for which the target player is mute or unmute.
 	 */
-	public String getMutedPlayer() {
-		return mutedPlayer;
+	public String getSource() {
+		return source;
 	}
 
 	/**
