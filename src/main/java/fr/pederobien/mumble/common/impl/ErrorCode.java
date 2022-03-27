@@ -30,11 +30,11 @@ public enum ErrorCode {
 	// Code when trying to add a channel whose name is already used.
 	CHANNEL_ALREADY_EXISTS("The channel already exists."),
 
-	// Code when trying to remove a not existing channel.
-	CHANNEL_DOES_NOT_EXISTS("The channel does not exists."),
+	// Code the channel does not exist.
+	CHANNEL_NOT_FOUND("The channel does not exists."),
 
-	// Code when the player is not recognized.
-	PLAYER_NOT_RECOGNIZED("The player is not recognized."),
+	// Code when the player does not exist.
+	PLAYER_NOT_FOUND("The player does not exist."),
 
 	// Code when trying to rename a player
 	PLAYER_ALREADY_EXISTS("The player already exist"),
