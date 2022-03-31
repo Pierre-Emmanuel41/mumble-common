@@ -7,7 +7,7 @@ import fr.pederobien.mumble.common.interfaces.IMumbleHeader;
 import fr.pederobien.utils.ByteWrapper;
 
 public class PlayerKickSetMessageV10 extends MumbleMessage {
-	private String kickingPlayer, kickedPlayer;
+	private String kicked, kicking;
 
 	/**
 	 * Creates a message to kick a player from a channel.
@@ -26,19 +26,19 @@ public class PlayerKickSetMessageV10 extends MumbleMessage {
 		int first = 0;
 		ByteWrapper wrapper = ByteWrapper.wrap(payload);
 
-		// Player Name
-		int playerNameLength = wrapper.getInt(first);
+		// Kicked player's name
+		int kickedPlayerNameLength = wrapper.getInt(first);
 		first += 4;
-		kickingPlayer = wrapper.getString(first, playerNameLength);
-		first += playerNameLength;
+		kicked = wrapper.getString(first, kickedPlayerNameLength);
+		first += kickedPlayerNameLength;
 
 		// Player kick name
-		int playerKickedNameLength = wrapper.getInt(first);
+		int kickingPlayerNameLength = wrapper.getInt(first);
 		first += 4;
-		kickedPlayer = wrapper.getString(first, playerKickedNameLength);
-		first += playerKickedNameLength;
+		kicking = wrapper.getString(first, kickingPlayerNameLength);
+		first += kickingPlayerNameLength;
 
-		super.setProperties(kickingPlayer, kickedPlayer);
+		super.setProperties(kicked, kicking);
 		return this;
 	}
 
@@ -49,8 +49,8 @@ public class PlayerKickSetMessageV10 extends MumbleMessage {
 		if (getHeader().isError())
 			return;
 
-		kickingPlayer = (String) properties[0];
-		kickedPlayer = (String) properties[1];
+		kicked = (String) properties[0];
+		kicking = (String) properties[1];
 	}
 
 	@Override
@@ -60,26 +60,26 @@ public class PlayerKickSetMessageV10 extends MumbleMessage {
 		if (getHeader().isError())
 			return wrapper.get();
 
-		// Kicking player name
-		wrapper.putString(kickingPlayer, true);
-
 		// Kicked player name
-		wrapper.putString(kickedPlayer, true);
+		wrapper.putString(kicked, true);
+
+		// Kicking player name
+		wrapper.putString(kicking, true);
 
 		return wrapper.get();
 	}
 
 	/**
-	 * @return The kicking player name.
+	 * @return The kicked player name.
 	 */
-	public String getKickingPlayer() {
-		return kickingPlayer;
+	public String getKicked() {
+		return kicked;
 	}
 
 	/**
-	 * @return The kicked player name.
+	 * @return The kicking player name.
 	 */
-	public String getKickedPlayer() {
-		return kickedPlayer;
+	public String getKicking() {
+		return kicking;
 	}
 }
