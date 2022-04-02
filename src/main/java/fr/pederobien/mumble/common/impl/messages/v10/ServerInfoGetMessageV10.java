@@ -62,6 +62,11 @@ public class ServerInfoGetMessageV10 extends MumbleMessage {
 			properties.add(identifier);
 			first += identifierLength;
 
+			// Player's online status
+			boolean isOnline = wrapper.getInt(first) == 1 ? true : false;
+			properties.add(isOnline);
+			first += 4;
+
 			// Player's game address
 			int addressLength = wrapper.getInt(first);
 			first += 4;
@@ -114,7 +119,7 @@ public class ServerInfoGetMessageV10 extends MumbleMessage {
 			properties.add(pitch);
 			first += 8;
 
-			serverInfo.getPlayerInfo().add(new FullPlayerInfo(playerName, true, identifier, gameAddress, gamePort, isAdmin, isMute, isDeafen, x, y, z, yaw, pitch));
+			serverInfo.getPlayerInfo().add(new FullPlayerInfo(playerName, isOnline, identifier, gameAddress, gamePort, isAdmin, isMute, isDeafen, x, y, z, yaw, pitch));
 		}
 
 		// Number of modifiers
@@ -277,6 +282,9 @@ public class ServerInfoGetMessageV10 extends MumbleMessage {
 			// Player's identifier
 			UUID identifier = (UUID) properties[currentIndex++];
 
+			// Player's online status
+			boolean isOnline = (boolean) properties[currentIndex++];
+
 			// Player's game address
 			String gameAddress = (String) properties[currentIndex++];
 
@@ -307,7 +315,7 @@ public class ServerInfoGetMessageV10 extends MumbleMessage {
 			// Player's pitch angle
 			double pitch = (double) properties[currentIndex++];
 
-			serverInfo.getPlayerInfo().add(new FullPlayerInfo(playerName, true, identifier, gameAddress, gamePort, isAdmin, isMute, isDeafen, x, y, z, yaw, pitch));
+			serverInfo.getPlayerInfo().add(new FullPlayerInfo(playerName, isOnline, identifier, gameAddress, gamePort, isAdmin, isMute, isDeafen, x, y, z, yaw, pitch));
 		}
 
 		// Number of sound modifiers
@@ -404,6 +412,9 @@ public class ServerInfoGetMessageV10 extends MumbleMessage {
 
 			// Player's identifier
 			wrapper.putString(playerInfo.getIdentifier().toString(), true);
+
+			// Player's online status
+			wrapper.putInt(playerInfo.isOnline() ? 1 : 0);
 
 			// Player's game address
 			wrapper.putString(playerInfo.getGameAddress().getAddress().getHostAddress(), true);
