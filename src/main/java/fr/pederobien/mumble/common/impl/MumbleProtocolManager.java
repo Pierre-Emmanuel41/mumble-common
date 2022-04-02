@@ -355,18 +355,18 @@ public class MumbleProtocolManager {
 		playerKickMap.put(Oid.SET, PLAYER_KICK_SET);
 		associations.put(Idc.PLAYER_KICK, playerKickMap);
 
+		// Player position map
+		Map<Oid, String> playerPositionMap = new HashMap<Oid, String>();
+		playerPositionMap.put(Oid.GET, PLAYER_POSITION_GET);
+		playerPositionMap.put(Oid.SET, PLAYER_POSITION_SET);
+		associations.put(Idc.PLAYER_POSITION, playerPositionMap);
+
 		// Sound modifier map
 		Map<Oid, String> soundModifierMap = new HashMap<Oid, String>();
 		soundModifierMap.put(Oid.GET, SOUND_MODIFIER_GET);
 		soundModifierMap.put(Oid.SET, SOUND_MODIFIER_SET);
 		soundModifierMap.put(Oid.INFO, SOUND_MODIFIER_INFO);
 		associations.put(Idc.SOUND_MODIFIER, soundModifierMap);
-
-		// Player position map
-		Map<Oid, String> playerPositionMap = new HashMap<Oid, String>();
-		playerPositionMap.put(Oid.GET, PLAYER_POSITION_GET);
-		playerPositionMap.put(Oid.SET, PLAYER_POSITION_SET);
-		associations.put(Idc.PLAYER_POSITION, playerPositionMap);
 
 		// Game port map
 		Map<Oid, String> gamePortMap = new HashMap<Oid, String>();
