@@ -149,6 +149,11 @@ public class MumbleProtocolManager {
 	public static final String CHANNELS_PLAYER_REMOVE = "ChannelsPlayerRemove";
 
 	/**
+	 * The name of the message to set the value of a parameter of a sound modifier associated to a channel.
+	 */
+	public static final String PARAMETER_VALUE_SET = "ParameterValueSet";
+
+	/**
 	 * The name of the message to get the sound modifier associated to a channel.
 	 */
 	public static final String SOUND_MODIFIER_GET = "SoundModifierGet";
@@ -360,6 +365,11 @@ public class MumbleProtocolManager {
 		playerPositionMap.put(Oid.GET, PLAYER_POSITION_GET);
 		playerPositionMap.put(Oid.SET, PLAYER_POSITION_SET);
 		associations.put(Idc.PLAYER_POSITION, playerPositionMap);
+
+		// Parameter value map
+		Map<Oid, String> parameterValueMap = new HashMap<Oid, String>();
+		parameterValueMap.put(Oid.SET, PARAMETER_VALUE_SET);
+		associations.put(Idc.PARAMETER_VALUE, parameterValueMap);
 
 		// Sound modifier map
 		Map<Oid, String> soundModifierMap = new HashMap<Oid, String>();

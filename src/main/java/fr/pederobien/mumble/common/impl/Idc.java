@@ -52,6 +52,9 @@ public enum Idc {
 	// Idc to know if a player has been added, removed from a channel.
 	CHANNELS_PLAYER,
 
+	// Idc to set the value of a parameter of a sound modifier associated to a channel.
+	PARAMETER_VALUE,
+
 	// Idc to set the sound modifier of a channel.
 	SOUND_MODIFIER,
 
