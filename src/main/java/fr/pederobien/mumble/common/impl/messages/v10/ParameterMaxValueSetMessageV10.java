@@ -7,19 +7,19 @@ import fr.pederobien.mumble.common.impl.model.ParameterType;
 import fr.pederobien.mumble.common.interfaces.IMumbleHeader;
 import fr.pederobien.utils.ByteWrapper;
 
-public class ParameterMinValueSetMessageV10 extends MumbleMessage {
+public class ParameterMaxValueSetMessageV10 extends MumbleMessage {
 	private String channelName;
 	private String parameterName;
 	private ParameterType<?> parameterType;
-	private Object newMinValue;
+	private Object newMaxValue;
 
 	/**
 	 * Creates a request in order to set the value of a parameter of a sound modifier associated to a channel.
 	 * 
 	 * @param header The message header.
 	 */
-	protected ParameterMinValueSetMessageV10(IMumbleHeader header) {
-		super(MumbleProtocolManager.PARAMETER_MIN_VALUE_SET, header);
+	protected ParameterMaxValueSetMessageV10(IMumbleHeader header) {
+		super(MumbleProtocolManager.PARAMETER_MAX_VALUE_SET, header);
 	}
 
 	@Override
@@ -47,11 +47,11 @@ public class ParameterMinValueSetMessageV10 extends MumbleMessage {
 		first += 4;
 		parameterType = ParameterType.fromCode(code);
 
-		// Parameter's new min value
-		newMinValue = parameterType.getValue(wrapper.extract(first, parameterType.size()));
+		// Parameter's new max value
+		newMaxValue = parameterType.getValue(wrapper.extract(first, parameterType.size()));
 		first += parameterType.size();
 
-		super.setProperties(channelName, parameterName, newMinValue);
+		super.setProperties(channelName, parameterName, newMaxValue);
 		return this;
 	}
 
@@ -65,7 +65,7 @@ public class ParameterMinValueSetMessageV10 extends MumbleMessage {
 		channelName = (String) properties[0];
 		parameterName = (String) properties[1];
 		parameterType = (ParameterType<?>) properties[2];
-		newMinValue = properties[3];
+		newMaxValue = properties[3];
 	}
 
 	@Override
@@ -84,8 +84,8 @@ public class ParameterMinValueSetMessageV10 extends MumbleMessage {
 		// Parameter's type
 		wrapper.putInt(parameterType.getCode());
 
-		// Parameter's new value
-		wrapper.put(parameterType.getBytes(newMinValue));
+		// Parameter's new max value
+		wrapper.put(parameterType.getBytes(newMaxValue));
 
 		return wrapper.get();
 	}
@@ -105,9 +105,9 @@ public class ParameterMinValueSetMessageV10 extends MumbleMessage {
 	}
 
 	/**
-	 * @return The new parameter's minimum value.
+	 * @return The new parameter's maximum value.
 	 */
-	public Object getNewMinValue() {
-		return newMinValue;
+	public Object getNewMaxValue() {
+		return newMaxValue;
 	}
 }

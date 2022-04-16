@@ -54,6 +54,9 @@ public enum ErrorCode {
 	// Code when there is no minimum defined for a parameter.
 	PARAMETER_WITHOUT_MIN("The parameter has no defined minimum"),
 
+	// Code when there is no minimum defined for a parameter.
+	PARAMETER_WITHOUT_MAX("The parameter has no defined maximum"),
+
 	// Code when the sound modifier does not exist.
 	SOUND_MODIFIER_DOES_NOT_EXIST("The sound modifier does not exist"),
 

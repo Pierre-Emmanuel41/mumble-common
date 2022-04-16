@@ -51,6 +51,7 @@ public class ProtocolV10 extends Protocol {
 		// Parameter message
 		register(new MessageCreator(MumbleProtocolManager.PARAMETER_VALUE_SET, header -> new ParameterValueSetMessageV10((IMumbleHeader) header)));
 		register(new MessageCreator(MumbleProtocolManager.PARAMETER_MIN_VALUE_SET, header -> new ParameterMinValueSetMessageV10((IMumbleHeader) header)));
+		register(new MessageCreator(MumbleProtocolManager.PARAMETER_MAX_VALUE_SET, header -> new ParameterMaxValueSetMessageV10((IMumbleHeader) header)));
 
 		// Sound modifier messages
 		register(new MessageCreator(MumbleProtocolManager.SOUND_MODIFIER_GET, header -> new SoundModifierGetMessageV10((IMumbleHeader) header)));
