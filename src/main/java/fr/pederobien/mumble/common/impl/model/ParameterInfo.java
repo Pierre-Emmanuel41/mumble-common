@@ -1,61 +1,65 @@
 package fr.pederobien.mumble.common.impl.model;
 
 public class ParameterInfo {
+	private String name;
+	private ParameterType<?> type;
+	private Object value;
 
-	public static class LazyParameterInfo {
-		private String name;
-		private ParameterType<?> type;
-		private Object value;
+	protected ParameterInfo(String name, ParameterType<?> type, Object value) {
+		this.name = name;
+		this.type = type;
+		this.value = value;
+	}
+
+	/**
+	 * @return The parameter name.
+	 */
+	public String getName() {
+		return name;
+	}
+
+	/**
+	 * @return The parameter type.
+	 */
+	public ParameterType<?> getType() {
+		return type;
+	}
+
+	/**
+	 * @return The parameter current value.
+	 */
+	public Object getValue() {
+		return value;
+	}
+
+	public static class SimpleParameterInfo extends ParameterInfo {
 
 		/**
 		 * Creates a parameter description.
 		 * 
 		 * @param name  The parameter name.
 		 * @param type  The parameter type.
-		 * @param value The parameter value.
+		 * @param value The parameter current value.
 		 */
-		public LazyParameterInfo(String name, ParameterType<?> type, Object value) {
-			this.name = name;
-			this.type = type;
-			this.value = value;
-		}
-
-		/**
-		 * @return The parameter name.
-		 */
-		public String getName() {
-			return name;
-		}
-
-		/**
-		 * @return The parameter type.
-		 */
-		public ParameterType<?> getType() {
-			return type;
-		}
-
-		/**
-		 * @return The parameter value.
-		 */
-		public Object getValue() {
-			return value;
+		public SimpleParameterInfo(String name, ParameterType<?> type, Object value) {
+			super(name, type, value);
 		}
 	}
 
-	public static class FullParameterInfo extends LazyParameterInfo {
+	public static class FullParameterInfo extends ParameterInfo {
 		private Object defaultValue, minValue, maxValue;
 		private boolean isRange;
 
 		/**
-		 * Creates a description of a parameter.
+		 * Creates a parameter description.
 		 * 
 		 * @param name         The parameter name.
 		 * @param type         The parameter type.
-		 * @param value        The parameter value.
-		 * @param defaultValue The default parameter value.
-		 * @param isRange      true if a range is associated to the parameter.
-		 * @param min          The minimum parameter value.
-		 * @param max          The maximum parameter value.
+		 * @param value        The parameter current value.
+		 * @param defaultValue The parameter default value.
+		 * @param isRange      True if a range is associated to the parameter.
+		 * @param min          The parameter minimum value.
+		 * @param max          The parameter maximum value.
 		 */
 		public FullParameterInfo(String name, ParameterType<?> type, Object value, Object defaultValue, boolean isRange, Object min, Object max) {
 			super(name, type, defaultValue);

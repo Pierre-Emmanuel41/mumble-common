@@ -154,6 +154,11 @@ public class MumbleProtocolManager {
 	public static final String PARAMETER_VALUE_SET = "ParameterValueSet";
 
 	/**
+	 * The name of the message to set the value of a parameter of a sound modifier associated to a channel.
+	 */
+	public static final String PARAMETER_MIN_VALUE_SET = "ParameterMinValueSet";
+
+	/**
 	 * The name of the message to get the sound modifier associated to a channel.
 	 */
 	public static final String SOUND_MODIFIER_GET = "SoundModifierGet";
@@ -370,6 +375,11 @@ public class MumbleProtocolManager {
 		Map<Oid, String> parameterValueMap = new HashMap<Oid, String>();
 		parameterValueMap.put(Oid.SET, PARAMETER_VALUE_SET);
 		associations.put(Idc.PARAMETER_VALUE, parameterValueMap);
+
+		// Parameter min value map
+		Map<Oid, String> parameterMinValueMap = new HashMap<Oid, String>();
+		parameterMinValueMap.put(Oid.SET, PARAMETER_MIN_VALUE_SET);
+		associations.put(Idc.PARAMETER_MIN_VALUE, parameterMinValueMap);
 
 		// Sound modifier map
 		Map<Oid, String> soundModifierMap = new HashMap<Oid, String>();

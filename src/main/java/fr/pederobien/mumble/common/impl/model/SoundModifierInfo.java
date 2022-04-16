@@ -1,45 +1,47 @@
 package fr.pederobien.mumble.common.impl.model;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import fr.pederobien.mumble.common.impl.model.ParameterInfo.FullParameterInfo;
-import fr.pederobien.mumble.common.impl.model.ParameterInfo.LazyParameterInfo;
+import fr.pederobien.mumble.common.impl.model.ParameterInfo.SimpleParameterInfo;
 
-public class SoundModifierInfo {
+public class SoundModifierInfo<T extends ParameterInfo> {
+	private String name;
+	private Map<String, T> parameterInfo;
 
-	public static class LazySoundModifierInfo {
-		private String name;
-		private List<LazyParameterInfo> parameterInfo;
+	protected SoundModifierInfo(String name) {
+		this.name = name;
+		parameterInfo = new LinkedHashMap<String, T>();
+	}
+
+	/**
+	 * @return The sound modifier name.
+	 */
+	public String getName() {
+		return name;
+	}
+
+	/**
+	 * @return A list of description for each parameter associated to the sound modifier.
+	 */
+	public Map<String, T> getParameterInfo() {
+		return parameterInfo;
+	}
+
+	public static class SimpleSoundModifierInfo extends SoundModifierInfo<SimpleParameterInfo> {
 
 		/**
 		 * Creates a sound modifier description.
 		 * 
 		 * @param name The sound modifier name.
 		 */
-		public LazySoundModifierInfo(String name) {
-			this.name = name;
-			parameterInfo = new ArrayList<LazyParameterInfo>();
-		}
-
-		/**
-		 * @return The sound modifier name.
-		 */
-		public String getName() {
-			return name;
-		}
-
-		/**
-		 * @return The list that contains a description of each parameter.
-		 */
-		public List<LazyParameterInfo> getParameterInfo() {
-			return parameterInfo;
+		public SimpleSoundModifierInfo(String name) {
+			super(name);
 		}
 	}
 
-	public static class FullSoundModifierInfo {
-		private String name;
-		private List<FullParameterInfo> parameterInfo;
+	public static class FullSoundModifierInfo extends SoundModifierInfo<FullParameterInfo> {
 
 		/**
 		 * Creates a sound modifier description.
@@ -47,22 +49,7 @@ public class SoundModifierInfo {
 		 * @param name The sound modifier name.
 		 */
 		public FullSoundModifierInfo(String name) {
-			this.name = name;
-			parameterInfo = new ArrayList<FullParameterInfo>();
-		}
-
-		/**
-		 * @return The sound modifier name.
-		 */
-		public String getName() {
-			return name;
-		}
-
-		/**
-		 * @return The list that contains a description of each parameter.
-		 */
-		public List<FullParameterInfo> getParameterInfo() {
-			return parameterInfo;
+			super(name);
 		}
 	}
 }

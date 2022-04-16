@@ -6,15 +6,15 @@ import java.util.List;
 import fr.pederobien.messenger.interfaces.IMessage;
 import fr.pederobien.mumble.common.impl.MumbleProtocolManager;
 import fr.pederobien.mumble.common.impl.messages.MumbleMessage;
+import fr.pederobien.mumble.common.impl.model.ChannelInfo.SemiFullChannelInfo;
+import fr.pederobien.mumble.common.impl.model.ParameterInfo.FullParameterInfo;
 import fr.pederobien.mumble.common.impl.model.ParameterType;
-import fr.pederobien.mumble.common.impl.model.ParameterInfo.LazyParameterInfo;
-import fr.pederobien.mumble.common.impl.model.SoundModifierInfo.LazySoundModifierInfo;
+import fr.pederobien.mumble.common.impl.model.SoundModifierInfo.FullSoundModifierInfo;
 import fr.pederobien.mumble.common.interfaces.IMumbleHeader;
 import fr.pederobien.utils.ByteWrapper;
 
 public class SoundModifierSetMessageV10 extends MumbleMessage {
-	private String channelName;
-	private LazySoundModifierInfo soundModifierInfo;
+	private SemiFullChannelInfo channelInfo;
 
 	/**
 	 * Creates a request in order to set the sound modifier associated to a channel.
@@ -37,7 +37,7 @@ public class SoundModifierSetMessageV10 extends MumbleMessage {
 		// Channel name
 		int channelNameLength = wrapper.getInt(first);
 		first += 4;
-		channelName = wrapper.getString(first, channelNameLength);
+		String channelName = wrapper.getString(first, channelNameLength);
 		properties.add(channelName);
 		first += channelNameLength;
 
@@ -48,7 +48,7 @@ public class SoundModifierSetMessageV10 extends MumbleMessage {
 		properties.add(modifierName);
 		first += modifierNameLength;
 
-		soundModifierInfo = new LazySoundModifierInfo(modifierName);
+		FullSoundModifierInfo modifierInfo = new FullSoundModifierInfo(modifierName);
 
 		// Number of parameters
 		int numberOfParameters = wrapper.getInt(first);
@@ -66,16 +66,40 @@ public class SoundModifierSetMessageV10 extends MumbleMessage {
 			// Parameter's type
 			int code = wrapper.getInt(first);
 			first += 4;
-			ParameterType<?> parameterType = ParameterType.fromCode(code);
-			properties.add(parameterType);
+			ParameterType<?> type = ParameterType.fromCode(code);
+			properties.add(type);
+
+			// Parameter's default value
+			Object defaultValue = type.getValue(wrapper.extract(first, type.size()));
+			properties.add(defaultValue);
+			first += type.size();
 
 			// Parameter's value
-			Object parameterValue = parameterType.getValue(wrapper.extract(first, parameterType.size()));
+			Object parameterValue = type.getValue(wrapper.extract(first, type.size()));
 			properties.add(parameterValue);
-			first += parameterType.size();
+			first += type.size();
 
-			soundModifierInfo.getParameterInfo().add(new LazyParameterInfo(parameterName, parameterType, parameterValue));
+			// Parameter's range
+			boolean isRange = wrapper.getInt(first) == 1;
+			properties.add(isRange);
+			first += 4;
+
+			Object minValue = null, maxValue = null;
+			if (isRange) {
+				// Parameter's minimum value
+				minValue = type.getValue(wrapper.extract(first, type.size()));
+				properties.add(minValue);
+				first += type.size();
+
+				// Parameter's maximum value
+				maxValue = type.getValue(wrapper.extract(first, type.size()));
+				properties.add(maxValue);
+				first += type.size();
+			}
+			modifierInfo.getParameterInfo().put(parameterName, new FullParameterInfo(parameterName, type, parameterValue, defaultValue, isRange, minValue, maxValue));
 		}
+
+		channelInfo = new SemiFullChannelInfo(channelName, modifierInfo);
 
 		super.setProperties(properties.toArray());
 		return this;
@@ -90,19 +114,45 @@ public class SoundModifierSetMessageV10 extends MumbleMessage {
 
 		int currentIndex = 0;
 
-		channelName = (String) properties[currentIndex++];
+		// Channel name
+		String channelName = (String) properties[currentIndex++];
+
+		// Sound modifier's name
 		String modifierName = (String) properties[currentIndex++];
-		soundModifierInfo = new LazySoundModifierInfo(modifierName);
+
+		FullSoundModifierInfo modifierInfo = new FullSoundModifierInfo(modifierName);
 
 		int numberOfParameters = (int) properties[currentIndex++];
 
 		for (int i = 0; i < numberOfParameters; i++) {
+			// Parameter's name
 			String parameterName = (String) properties[currentIndex++];
-			ParameterType<?> parameterType = (ParameterType<?>) properties[currentIndex++];
-			Object parameterValue = (Object) properties[currentIndex++];
 
-			soundModifierInfo.getParameterInfo().add(new LazyParameterInfo(parameterName, parameterType, parameterValue));
+			// Parameter's type
+			ParameterType<?> type = (ParameterType<?>) properties[currentIndex++];
+
+			// Parameter's value
+			Object value = (Object) properties[currentIndex++];
+
+			// Parameter's default value
+			Object defaultValue = (Object) properties[currentIndex++];
+
+			// Parameter's range
+			boolean isRange = (boolean) properties[currentIndex++];
+
+			Object min = null, max = null;
+			if (isRange) {
+				// Parameter's minimum value
+				min = (Object) properties[currentIndex++];
+
+				// Parameter's maximum value
+				max = (Object) properties[currentIndex++];
+			}
+
+			modifierInfo.getParameterInfo().put(parameterName, new FullParameterInfo(parameterName, type, value, defaultValue, isRange, min, max));
 		}
+
+		channelInfo = new SemiFullChannelInfo(channelName, modifierInfo);
 	}
 
 	@Override
@@ -112,16 +162,16 @@ public class SoundModifierSetMessageV10 extends MumbleMessage {
 		if (getHeader().isError())
 			return wrapper.get();
 
-		// Channel's name
-		wrapper.putString(channelName, true);
+		// Channel' name
+		wrapper.putString(channelInfo.getName(), true);
 
 		// Modifier's name
-		wrapper.putString(soundModifierInfo.getName(), true);
+		wrapper.putString(channelInfo.getSoundModifierInfo().getName(), true);
 
-		// Number of parameters
-		wrapper.putInt(soundModifierInfo.getParameterInfo().size());
+		// Number of parameter
+		wrapper.putInt(channelInfo.getSoundModifierInfo().getParameterInfo().size());
 
-		for (LazyParameterInfo parameterInfo : soundModifierInfo.getParameterInfo()) {
+		for (FullParameterInfo parameterInfo : channelInfo.getSoundModifierInfo().getParameterInfo().values()) {
 			// Parameter's name
 			wrapper.putString(parameterInfo.getName(), true);
 
@@ -130,22 +180,29 @@ public class SoundModifierSetMessageV10 extends MumbleMessage {
 
 			// Parameter's value
 			wrapper.put(parameterInfo.getType().getBytes(parameterInfo.getValue()));
+
+			// Parameter's default value
+			wrapper.put(parameterInfo.getType().getBytes(parameterInfo.getDefaultValue()));
+
+			// Parameter's range
+			wrapper.putInt(parameterInfo.isRange() ? 1 : 0);
+
+			if (parameterInfo.isRange()) {
+				// Parameter's minimum value
+				wrapper.put(parameterInfo.getType().getBytes(parameterInfo.getMinValue()));
+
+				// Parameter's maximum value
+				wrapper.put(parameterInfo.getType().getBytes(parameterInfo.getMaxValue()));
+			}
 		}
 
 		return wrapper.get();
 	}
 
 	/**
-	 * @return The channel name whose the sound modifier should be changed.
+	 * @return The channel description.
 	 */
-	public String getChannelName() {
-		return channelName;
-	}
-
-	/**
-	 * @return The sound modifier description.
-	 */
-	public LazySoundModifierInfo getSoundModifierInfo() {
-		return soundModifierInfo;
+	public SemiFullChannelInfo getChannelInfo() {
+		return channelInfo;
 	}
 }

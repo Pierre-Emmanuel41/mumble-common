@@ -55,6 +55,9 @@ public enum Idc {
 	// Idc to set the value of a parameter of a sound modifier associated to a channel.
 	PARAMETER_VALUE,
 
+	// Idc to set the minimum value of a parameter of a sound modifier associated to a channel.
+	PARAMETER_MIN_VALUE,
+
 	// Idc to set the sound modifier of a channel.
 	SOUND_MODIFIER,
 

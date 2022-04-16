@@ -6,11 +6,11 @@ import java.util.List;
 import fr.pederobien.messenger.interfaces.IMessage;
 import fr.pederobien.mumble.common.impl.MumbleProtocolManager;
 import fr.pederobien.mumble.common.impl.messages.MumbleMessage;
-import fr.pederobien.mumble.common.impl.model.ParameterType;
 import fr.pederobien.mumble.common.impl.model.ChannelInfo.FullChannelInfo;
-import fr.pederobien.mumble.common.impl.model.ParameterInfo.LazyParameterInfo;
+import fr.pederobien.mumble.common.impl.model.ParameterInfo.FullParameterInfo;
+import fr.pederobien.mumble.common.impl.model.ParameterType;
 import fr.pederobien.mumble.common.impl.model.PlayerInfo.StatusPlayerInfo;
-import fr.pederobien.mumble.common.impl.model.SoundModifierInfo.LazySoundModifierInfo;
+import fr.pederobien.mumble.common.impl.model.SoundModifierInfo.FullSoundModifierInfo;
 import fr.pederobien.mumble.common.interfaces.IMumbleHeader;
 import fr.pederobien.utils.ByteWrapper;
 
@@ -56,7 +56,7 @@ public class ChannelsGetMessageV10 extends MumbleMessage {
 			properties.add(soundModifierName);
 			first += soundModifierNameLength;
 
-			LazySoundModifierInfo soundModifierInfo = new LazySoundModifierInfo(soundModifierName);
+			FullSoundModifierInfo modifierInfo = new FullSoundModifierInfo(soundModifierName);
 
 			// Number of parameters
 			int numberOfParameters = wrapper.getInt(first);
@@ -77,15 +77,37 @@ public class ChannelsGetMessageV10 extends MumbleMessage {
 				ParameterType<?> type = ParameterType.fromCode(code);
 				properties.add(type);
 
-				// Parameter's value
-				Object value = type.getValue(wrapper.extract(first, type.size()));
-				properties.add(value);
+				// Parameter's default value
+				Object defaultValue = type.getValue(wrapper.extract(first, type.size()));
+				properties.add(defaultValue);
 				first += type.size();
 
-				soundModifierInfo.getParameterInfo().add(new LazyParameterInfo(parameterName, type, value));
+				// Parameter's value
+				Object parameterValue = type.getValue(wrapper.extract(first, type.size()));
+				properties.add(parameterValue);
+				first += type.size();
+
+				// Parameter's range
+				boolean isRange = wrapper.getInt(first) == 1;
+				properties.add(isRange);
+				first += 4;
+
+				Object minValue = null, maxValue = null;
+				if (isRange) {
+					// Parameter's minimum value
+					minValue = type.getValue(wrapper.extract(first, type.size()));
+					properties.add(minValue);
+					first += type.size();
+
+					// Parameter's maximum value
+					maxValue = type.getValue(wrapper.extract(first, type.size()));
+					properties.add(maxValue);
+					first += type.size();
+				}
+				modifierInfo.getParameterInfo().put(parameterName, new FullParameterInfo(parameterName, type, parameterValue, defaultValue, isRange, minValue, maxValue));
 			}
 
-			FullChannelInfo channelInfo = new FullChannelInfo(channelName, soundModifierInfo);
+			FullChannelInfo channelInfo = new FullChannelInfo(channelName, modifierInfo);
 
 			// Number of players
 			int numberOfPlayers = wrapper.getInt(first);
@@ -110,7 +132,7 @@ public class ChannelsGetMessageV10 extends MumbleMessage {
 				properties.add(isDeafen);
 				first += 4;
 
-				channelInfo.getPlayerInfo().add(new StatusPlayerInfo(playerName, isMute, isDeafen));
+				channelInfo.getPlayerInfo().put(playerName, new StatusPlayerInfo(playerName, isMute, isDeafen));
 			}
 
 			channels.add(channelInfo);
@@ -135,19 +157,39 @@ public class ChannelsGetMessageV10 extends MumbleMessage {
 			String channelName = (String) properties[currentIndex++];
 			String modifierName = (String) properties[currentIndex++];
 
-			LazySoundModifierInfo soundModifierInfo = new LazySoundModifierInfo(modifierName);
+			FullSoundModifierInfo modifierInfo = new FullSoundModifierInfo(modifierName);
 
 			int numberOfParameters = (int) properties[currentIndex++];
 
 			for (int j = 0; j < numberOfParameters; j++) {
+				// Parameter's name
 				String parameterName = (String) properties[currentIndex++];
-				ParameterType<?> parameterType = (ParameterType<?>) properties[currentIndex++];
-				Object parameterValue = (Object) properties[currentIndex++];
 
-				soundModifierInfo.getParameterInfo().add(new LazyParameterInfo(parameterName, parameterType, parameterValue));
+				// Parameter's type
+				ParameterType<?> type = (ParameterType<?>) properties[currentIndex++];
+
+				// Parameter's value
+				Object value = (Object) properties[currentIndex++];
+
+				// Parameter's default value
+				Object defaultValue = (Object) properties[currentIndex++];
+
+				// Parameter's range
+				boolean isRange = (boolean) properties[currentIndex++];
+
+				Object min = null, max = null;
+				if (isRange) {
+					// Parameter's minimum value
+					min = (Object) properties[currentIndex++];
+
+					// Parameter's maximum value
+					max = (Object) properties[currentIndex++];
+				}
+
+				modifierInfo.getParameterInfo().put(parameterName, new FullParameterInfo(parameterName, type, value, defaultValue, isRange, min, max));
 			}
 
-			FullChannelInfo channelInfo = new FullChannelInfo(channelName, soundModifierInfo);
+			FullChannelInfo channelInfo = new FullChannelInfo(channelName, modifierInfo);
 
 			int numberOfPlayers = (int) properties[currentIndex++];
 
@@ -156,7 +198,7 @@ public class ChannelsGetMessageV10 extends MumbleMessage {
 				boolean isMute = (boolean) properties[currentIndex++];
 				boolean isDeafen = (boolean) properties[currentIndex++];
 
-				channelInfo.getPlayerInfo().add(new StatusPlayerInfo(playerName, isMute, isDeafen));
+				channelInfo.getPlayerInfo().put(playerName, new StatusPlayerInfo(playerName, isMute, isDeafen));
 			}
 
 			channels.add(channelInfo);
@@ -183,7 +225,7 @@ public class ChannelsGetMessageV10 extends MumbleMessage {
 			// Number of parameter
 			wrapper.putInt(channelInfo.getSoundModifierInfo().getParameterInfo().size());
 
-			for (LazyParameterInfo parameterInfo : channelInfo.getSoundModifierInfo().getParameterInfo()) {
+			for (FullParameterInfo parameterInfo : channelInfo.getSoundModifierInfo().getParameterInfo().values()) {
 				// Parameter's name
 				wrapper.putString(parameterInfo.getName(), true);
 
@@ -192,12 +234,26 @@ public class ChannelsGetMessageV10 extends MumbleMessage {
 
 				// Parameter's value
 				wrapper.put(parameterInfo.getType().getBytes(parameterInfo.getValue()));
+
+				// Parameter's default value
+				wrapper.put(parameterInfo.getType().getBytes(parameterInfo.getDefaultValue()));
+
+				// Parameter's range
+				wrapper.putInt(parameterInfo.isRange() ? 1 : 0);
+
+				if (parameterInfo.isRange()) {
+					// Parameter's minimum value
+					wrapper.put(parameterInfo.getType().getBytes(parameterInfo.getMinValue()));
+
+					// Parameter's maximum value
+					wrapper.put(parameterInfo.getType().getBytes(parameterInfo.getMaxValue()));
+				}
 			}
 
 			// Number of players
 			wrapper.putInt(channelInfo.getPlayerInfo().size());
 
-			for (StatusPlayerInfo playerInfo : channelInfo.getPlayerInfo()) {
+			for (StatusPlayerInfo playerInfo : channelInfo.getPlayerInfo().values()) {
 				// Player's name
 				wrapper.putString(playerInfo.getName(), true);
 

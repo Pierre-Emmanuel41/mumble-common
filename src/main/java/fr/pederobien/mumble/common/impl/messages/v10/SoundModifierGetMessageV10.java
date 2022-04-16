@@ -6,15 +6,15 @@ import java.util.List;
 import fr.pederobien.messenger.interfaces.IMessage;
 import fr.pederobien.mumble.common.impl.MumbleProtocolManager;
 import fr.pederobien.mumble.common.impl.messages.MumbleMessage;
+import fr.pederobien.mumble.common.impl.model.ParameterInfo.FullParameterInfo;
 import fr.pederobien.mumble.common.impl.model.ParameterType;
-import fr.pederobien.mumble.common.impl.model.ParameterInfo.LazyParameterInfo;
-import fr.pederobien.mumble.common.impl.model.SoundModifierInfo.LazySoundModifierInfo;
+import fr.pederobien.mumble.common.impl.model.SoundModifierInfo.FullSoundModifierInfo;
 import fr.pederobien.mumble.common.interfaces.IMumbleHeader;
 import fr.pederobien.utils.ByteWrapper;
 
 public class SoundModifierGetMessageV10 extends MumbleMessage {
 	private String channelName;
-	private LazySoundModifierInfo soundModifierInfo;
+	private FullSoundModifierInfo modifierInfo;
 
 	/**
 	 * Creates a request in order to get the sound modifier associated to a channel.
@@ -50,7 +50,7 @@ public class SoundModifierGetMessageV10 extends MumbleMessage {
 			properties.add(modifierName);
 			first += modifierNameLength;
 
-			soundModifierInfo = new LazySoundModifierInfo(modifierName);
+			modifierInfo = new FullSoundModifierInfo(modifierName);
 
 			// Number of parameters
 			int numberOfParameters = wrapper.getInt(first);
@@ -68,15 +68,37 @@ public class SoundModifierGetMessageV10 extends MumbleMessage {
 				// Parameter's type
 				int code = wrapper.getInt(first);
 				first += 4;
-				ParameterType<?> parameterType = ParameterType.fromCode(code);
-				properties.add(parameterType);
+				ParameterType<?> type = ParameterType.fromCode(code);
+				properties.add(type);
+
+				// Parameter's default value
+				Object defaultValue = type.getValue(wrapper.extract(first, type.size()));
+				properties.add(defaultValue);
+				first += type.size();
 
 				// Parameter's value
-				Object parameterValue = parameterType.getValue(wrapper.extract(first, parameterType.size()));
+				Object parameterValue = type.getValue(wrapper.extract(first, type.size()));
 				properties.add(parameterValue);
-				first += parameterType.size();
+				first += type.size();
 
-				soundModifierInfo.getParameterInfo().add(new LazyParameterInfo(parameterName, parameterType, parameterValue));
+				// Parameter's range
+				boolean isRange = wrapper.getInt(first) == 1;
+				properties.add(isRange);
+				first += 4;
+
+				Object minValue = null, maxValue = null;
+				if (isRange) {
+					// Parameter's minimum value
+					minValue = type.getValue(wrapper.extract(first, type.size()));
+					properties.add(minValue);
+					first += type.size();
+
+					// Parameter's maximum value
+					maxValue = type.getValue(wrapper.extract(first, type.size()));
+					properties.add(maxValue);
+					first += type.size();
+				}
+				modifierInfo.getParameterInfo().put(parameterName, new FullParameterInfo(parameterName, type, parameterValue, defaultValue, isRange, minValue, maxValue));
 			}
 		}
 
@@ -99,16 +121,36 @@ public class SoundModifierGetMessageV10 extends MumbleMessage {
 		if (properties.length > 1) {
 			String modifierName = (String) properties[currentIndex++];
 
-			soundModifierInfo = new LazySoundModifierInfo(modifierName);
+			modifierInfo = new FullSoundModifierInfo(modifierName);
 
 			int numberOfParameters = (int) properties[currentIndex++];
 
 			for (int i = 0; i < numberOfParameters; i++) {
+				// Parameter's name
 				String parameterName = (String) properties[currentIndex++];
-				ParameterType<?> parameterType = (ParameterType<?>) properties[currentIndex++];
-				Object parameterValue = (Object) properties[currentIndex++];
 
-				soundModifierInfo.getParameterInfo().add(new LazyParameterInfo(parameterName, parameterType, parameterValue));
+				// Parameter's type
+				ParameterType<?> type = (ParameterType<?>) properties[currentIndex++];
+
+				// Parameter's value
+				Object value = (Object) properties[currentIndex++];
+
+				// Parameter's default value
+				Object defaultValue = (Object) properties[currentIndex++];
+
+				// Parameter's range
+				boolean isRange = (boolean) properties[currentIndex++];
+
+				Object min = null, max = null;
+				if (isRange) {
+					// Parameter's minimum value
+					min = (Object) properties[currentIndex++];
+
+					// Parameter's maximum value
+					max = (Object) properties[currentIndex++];
+				}
+
+				modifierInfo.getParameterInfo().put(parameterName, new FullParameterInfo(parameterName, type, value, defaultValue, isRange, min, max));
 			}
 		}
 	}
@@ -124,14 +166,14 @@ public class SoundModifierGetMessageV10 extends MumbleMessage {
 		wrapper.putString(channelName, true);
 
 		// When it is an answer
-		if (soundModifierInfo != null) {
+		if (modifierInfo != null) {
 			// Modifier's name
-			wrapper.putString(soundModifierInfo.getName(), true);
+			wrapper.putString(modifierInfo.getName(), true);
 
 			// Number of parameters
-			wrapper.putInt(soundModifierInfo.getParameterInfo().size());
+			wrapper.putInt(modifierInfo.getParameterInfo().size());
 
-			for (LazyParameterInfo parameterInfo : soundModifierInfo.getParameterInfo()) {
+			for (FullParameterInfo parameterInfo : modifierInfo.getParameterInfo().values()) {
 				// Parameter's name
 				wrapper.putString(parameterInfo.getName(), true);
 
@@ -140,6 +182,20 @@ public class SoundModifierGetMessageV10 extends MumbleMessage {
 
 				// Parameter's value
 				wrapper.put(parameterInfo.getType().getBytes(parameterInfo.getValue()));
+
+				// Parameter's default value
+				wrapper.put(parameterInfo.getType().getBytes(parameterInfo.getDefaultValue()));
+
+				// Parameter's range
+				wrapper.putInt(parameterInfo.isRange() ? 1 : 0);
+
+				if (parameterInfo.isRange()) {
+					// Parameter's minimum value
+					wrapper.put(parameterInfo.getType().getBytes(parameterInfo.getMinValue()));
+
+					// Parameter's maximum value
+					wrapper.put(parameterInfo.getType().getBytes(parameterInfo.getMaxValue()));
+				}
 			}
 		}
 		return wrapper.get();
@@ -155,7 +211,7 @@ public class SoundModifierGetMessageV10 extends MumbleMessage {
 	/**
 	 * @return The sound modifier description. It is not null when the server replies but null when client send a request.
 	 */
-	public LazySoundModifierInfo getSoundModifierInfo() {
-		return soundModifierInfo;
+	public FullSoundModifierInfo getSoundModifierInfo() {
+		return modifierInfo;
 	}
 }

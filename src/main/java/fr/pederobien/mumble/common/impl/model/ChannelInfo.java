@@ -1,17 +1,47 @@
 package fr.pederobien.mumble.common.impl.model;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import fr.pederobien.mumble.common.impl.model.PlayerInfo.SimplePlayerInfo;
 import fr.pederobien.mumble.common.impl.model.PlayerInfo.StatusPlayerInfo;
-import fr.pederobien.mumble.common.impl.model.SoundModifierInfo.LazySoundModifierInfo;
+import fr.pederobien.mumble.common.impl.model.SoundModifierInfo.FullSoundModifierInfo;
+import fr.pederobien.mumble.common.impl.model.SoundModifierInfo.SimpleSoundModifierInfo;
 
-public class ChannelInfo {
+public class ChannelInfo<T extends SoundModifierInfo<?>, U extends PlayerInfo> {
+	private String name;
+	private T soundModifierInfo;
+	private Map<String, U> playerInfo;
 
-	public static class LazyChannelInfo {
-		private String name;
-		private LazySoundModifierInfo soundModifierInfo;
+	protected ChannelInfo(String name, T soundModifierInfo) {
+		this.name = name;
+		this.soundModifierInfo = soundModifierInfo;
+
+		playerInfo = new LinkedHashMap<String, U>();
+	}
+
+	/**
+	 * @return The channel name.
+	 */
+	public String getName() {
+		return name;
+	}
+
+	/**
+	 * @return The sound modifier description.
+	 */
+	public T getSoundModifierInfo() {
+		return soundModifierInfo;
+	}
+
+	/**
+	 * @return A description of each player registered in this channel.
+	 */
+	public Map<String, U> getPlayerInfo() {
+		return playerInfo;
+	}
+
+	public static class SimpleChannelInfo extends ChannelInfo<SimpleSoundModifierInfo, SimplePlayerInfo> {
 
 		/**
 		 * Creates a channel description.
@@ -19,28 +49,12 @@ public class ChannelInfo {
 		 * @param name              The channel name.
 		 * @param soundModifierInfo The sound modifier description.
 		 */
-		public LazyChannelInfo(String name, LazySoundModifierInfo soundModifierInfo) {
-			this.name = name;
-			this.soundModifierInfo = soundModifierInfo;
-		}
-
-		/**
-		 * @return The channel name.
-		 */
-		public String getName() {
-			return name;
-		}
-
-		/**
-		 * @return The sound modifier description.
-		 */
-		public LazySoundModifierInfo getSoundModifierInfo() {
-			return soundModifierInfo;
+		public SimpleChannelInfo(String name, SimpleSoundModifierInfo soundModifierInfo) {
+			super(name, soundModifierInfo);
 		}
 	}
 
-	public static class SimpleChannelInfo extends LazyChannelInfo {
-		private List<SimplePlayerInfo> playerInfo;
+	public static class SemiFullChannelInfo extends ChannelInfo<FullSoundModifierInfo, SimplePlayerInfo> {
 
 		/**
 		 * Creates a channel description.
@@ -48,22 +62,12 @@ public class ChannelInfo {
 		 * @param name              The channel name.
 		 * @param soundModifierInfo The sound modifier description.
 		 */
-		public SimpleChannelInfo(String name, LazySoundModifierInfo soundModifierInfo) {
+		public SemiFullChannelInfo(String name, FullSoundModifierInfo soundModifierInfo) {
 			super(name, soundModifierInfo);
-
-			playerInfo = new ArrayList<SimplePlayerInfo>();
-		}
-
-		/**
-		 * @return A description of each player registered in this channel.
-		 */
-		public List<SimplePlayerInfo> getPlayerInfo() {
-			return playerInfo;
 		}
 	}
 
-	public static class FullChannelInfo extends LazyChannelInfo {
-		private List<StatusPlayerInfo> playerInfo;
+	public static class FullChannelInfo extends ChannelInfo<FullSoundModifierInfo, StatusPlayerInfo> {
 
 		/**
 		 * Creates a channel description.
@@ -71,17 +75,8 @@ public class ChannelInfo {
 		 * @param name              The channel name.
 		 * @param soundModifierInfo The sound modifier description.
 		 */
-		public FullChannelInfo(String name, LazySoundModifierInfo soundModifierInfo) {
+		public FullChannelInfo(String name, FullSoundModifierInfo soundModifierInfo) {
 			super(name, soundModifierInfo);
-
-			playerInfo = new ArrayList<StatusPlayerInfo>();
-		}
-
-		/**
-		 * @return A description of each player registered in this channel.
-		 */
-		public List<StatusPlayerInfo> getPlayerInfo() {
-			return playerInfo;
 		}
 	}
 }

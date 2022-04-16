@@ -6,9 +6,20 @@ import java.net.UnknownHostException;
 import java.util.UUID;
 
 public class PlayerInfo {
+	private String name;
 
-	public static class SimplePlayerInfo {
-		private String name;
+	protected PlayerInfo(String name) {
+		this.name = name;
+	}
+
+	/**
+	 * @return The player name.
+	 */
+	public String getName() {
+		return name;
+	}
+
+	public static class SimplePlayerInfo extends PlayerInfo {
 
 		/**
 		 * Creates a player description containing the player name.
@@ -16,18 +27,11 @@ public class PlayerInfo {
 		 * @param name The playerName.
 		 */
 		public SimplePlayerInfo(String name) {
-			this.name = name;
-		}
-
-		/**
-		 * @return The player name.
-		 */
-		public String getName() {
-			return name;
+			super(name);
 		}
 	}
 
-	public static class StatusPlayerInfo extends SimplePlayerInfo {
+	public static class StatusPlayerInfo extends PlayerInfo {
 		private boolean isMute, isDeafen;
 
 		/**
@@ -58,7 +62,7 @@ public class PlayerInfo {
 		}
 	}
 
-	public static class CoordinatePlayerInfo extends SimplePlayerInfo {
+	public static class CoordinatePlayerInfo extends PlayerInfo {
 		private double x, y, z, yaw, pitch;
 
 		/**
@@ -116,7 +120,7 @@ public class PlayerInfo {
 		}
 	}
 
-	public static class FullPlayerInfo extends SimplePlayerInfo {
+	public static class FullPlayerInfo extends PlayerInfo {
 		private boolean isOnline;
 		private UUID identifier;
 		private InetSocketAddress gameAddress;

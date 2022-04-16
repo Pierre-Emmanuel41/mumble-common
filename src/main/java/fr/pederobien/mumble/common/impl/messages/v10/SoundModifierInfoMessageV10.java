@@ -6,8 +6,8 @@ import java.util.List;
 import fr.pederobien.messenger.interfaces.IMessage;
 import fr.pederobien.mumble.common.impl.MumbleProtocolManager;
 import fr.pederobien.mumble.common.impl.messages.MumbleMessage;
-import fr.pederobien.mumble.common.impl.model.ParameterType;
 import fr.pederobien.mumble.common.impl.model.ParameterInfo.FullParameterInfo;
+import fr.pederobien.mumble.common.impl.model.ParameterType;
 import fr.pederobien.mumble.common.impl.model.SoundModifierInfo.FullSoundModifierInfo;
 import fr.pederobien.mumble.common.interfaces.IMumbleHeader;
 import fr.pederobien.utils.ByteWrapper;
@@ -47,7 +47,7 @@ public class SoundModifierInfoMessageV10 extends MumbleMessage {
 			properties.add(modifierName);
 			first += modifierNameLength;
 
-			FullSoundModifierInfo soundModifierInfo = new FullSoundModifierInfo(modifierName);
+			FullSoundModifierInfo modifierInfo = new FullSoundModifierInfo(modifierName);
 
 			// Number of parameters
 			int numberOfParameters = wrapper.getInt(first);
@@ -95,10 +95,10 @@ public class SoundModifierInfoMessageV10 extends MumbleMessage {
 					first += type.size();
 				}
 
-				soundModifierInfo.getParameterInfo().add(new FullParameterInfo(parameterName, type, parameterValue, defaultValue, isRange, minValue, maxValue));
+				modifierInfo.getParameterInfo().put(parameterName, new FullParameterInfo(parameterName, type, parameterValue, defaultValue, isRange, minValue, maxValue));
 			}
 
-			soundModifiers.add(soundModifierInfo);
+			soundModifiers.add(modifierInfo);
 		}
 
 		super.setProperties(properties.toArray());
@@ -114,28 +114,45 @@ public class SoundModifierInfoMessageV10 extends MumbleMessage {
 
 		int currentIndex = 0;
 
+		// Number of sound modifiers registered on the server
 		int numberOfSoundModifiers = (int) properties[currentIndex++];
 		for (int i = 0; i < numberOfSoundModifiers; i++) {
+			// Sound modifier's name
 			String modifierName = (String) properties[currentIndex++];
-			FullSoundModifierInfo soundModifierInfo = new FullSoundModifierInfo(modifierName);
 
+			FullSoundModifierInfo modifierInfo = new FullSoundModifierInfo(modifierName);
+
+			// Number of parameters
 			int numberOfParameters = (int) properties[currentIndex++];
 			for (int j = 0; j < numberOfParameters; j++) {
+				// Parameter's name
 				String parameterName = (String) properties[currentIndex++];
-				ParameterType<?> parameterType = (ParameterType<?>) properties[currentIndex++];
-				boolean isRange = (boolean) properties[currentIndex++];
+
+				// Parameter's type
+				ParameterType<?> type = (ParameterType<?>) properties[currentIndex++];
+
+				// Parameter's value
+				Object value = (Object) properties[currentIndex++];
+
+				// Parameter's default value
 				Object defaultValue = (Object) properties[currentIndex++];
-				Object parameterValue = (Object) properties[currentIndex++];
-				Object minValue = null, maxValue = null;
+
+				// Parameter's range
+				boolean isRange = (boolean) properties[currentIndex++];
+
+				Object min = null, max = null;
 				if (isRange) {
-					minValue = (Object) properties[currentIndex++];
-					maxValue = (Object) properties[currentIndex++];
+					// Parameter's minimum value
+					min = (Object) properties[currentIndex++];
+
+					// Parameter's maximum value
+					max = (Object) properties[currentIndex++];
 				}
 
-				soundModifierInfo.getParameterInfo().add(new FullParameterInfo(parameterName, parameterType, parameterValue, defaultValue, isRange, minValue, maxValue));
+				modifierInfo.getParameterInfo().put(parameterName, new FullParameterInfo(parameterName, type, value, defaultValue, isRange, min, max));
 			}
 
-			soundModifiers.add(soundModifierInfo);
+			soundModifiers.add(modifierInfo);
 		}
 	}
 
@@ -156,7 +173,7 @@ public class SoundModifierInfoMessageV10 extends MumbleMessage {
 			// Number of parameter
 			wrapper.putInt(soundModifierInfo.getParameterInfo().size());
 
-			for (FullParameterInfo parameterInfo : soundModifierInfo.getParameterInfo()) {
+			for (FullParameterInfo parameterInfo : soundModifierInfo.getParameterInfo().values()) {
 				// Parameter's name
 				wrapper.putString(parameterInfo.getName(), true);
 
