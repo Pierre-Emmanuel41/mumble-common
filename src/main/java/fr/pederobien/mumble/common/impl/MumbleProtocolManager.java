@@ -2,6 +2,7 @@ package fr.pederobien.mumble.common.impl;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 
 import fr.pederobien.messenger.impl.ProtocolManager;
@@ -10,6 +11,7 @@ import fr.pederobien.messenger.interfaces.IMessage;
 import fr.pederobien.messenger.interfaces.IProtocol;
 import fr.pederobien.mumble.common.impl.messages.v10.ProtocolV10;
 import fr.pederobien.mumble.common.interfaces.IMumbleHeader;
+import fr.pederobien.mumble.common.interfaces.IMumbleMessage;
 
 public class MumbleProtocolManager {
 
@@ -27,6 +29,16 @@ public class MumbleProtocolManager {
 	 * The name of the message to leave a mumble server.
 	 */
 	public static final String SERVER_LEAVE_INFO = "ServerLeaveInfo";
+
+	/**
+	 * The name of the message to get the version of the communication protocol of the remote.
+	 */
+	public static final String COMMUNICATION_PROTOCOL_VERSION_GET = "CommunicationProtocolVersionGet";
+
+	/**
+	 * The name of the message to set the version of the communication protocol of the remote.
+	 */
+	public static final String COMMUNICATION_PROTOCOL_VERSION_SET = "CommunicationProtocolVersionSet";
 
 	/**
 	 * The name of the message to get information about a player.
@@ -214,17 +226,42 @@ public class MumbleProtocolManager {
 	}
 
 	/**
-	 * Create a message based on the given parameters.
+	 * Create a message based on the given parameters associated to the latest version of the communication protocol.
 	 * 
-	 * @param idc       The message idc.
-	 * @param oid       The message oid.
+	 * @param idc       The message IDC.
+	 * @param oid       The message OID.
 	 * @param errorCode The message errorCode.
 	 * @param payload   The message payload.
 	 * 
 	 * @return The created message.
 	 */
-	public IMessage create(Idc idc, Oid oid, ErrorCode errorCode, Object... payload) {
-		IMessage message = protocol.get(associations.get(idc).get(oid));
+	public IMumbleMessage create(Idc idc, Oid oid, ErrorCode errorCode, Object... payload) {
+		IMumbleMessage message = (IMumbleMessage) protocol.get(associations.get(idc).get(oid));
+		if (message == null)
+			return null;
+
+		message.getHeader().setProperties(idc, oid, errorCode);
+		message.setProperties(payload);
+		return message;
+	}
+
+	/**
+	 * Create a message based on the given parameters associated to a specific version of the communication protocol.
+	 * 
+	 * @param version   The protocol version to use for the returned message.
+	 * @param idc       The message idc.
+	 * @param oid       The message oid.
+	 * @param errorCode The message errorCode.
+	 * @param payload   The message payload.
+	 * 
+	 * @return A message associated to the given protocol version.
+	 */
+	public IMumbleMessage create(float version, Idc idc, Oid oid, ErrorCode errorCode, Object... payload) {
+		Optional<IProtocol> optProtocol = manager.getProtocol(version);
+		if (!optProtocol.isPresent())
+			return null;
+
+		IMumbleMessage message = (IMumbleMessage) optProtocol.get().get(associations.get(idc).get(oid));
 		if (message == null)
 			return null;
 
@@ -235,19 +272,38 @@ public class MumbleProtocolManager {
 
 	/**
 	 * Creates a new message corresponding to the answer of the <code>message</code>. Neither the identifier nor the header are
-	 * modified.
+	 * modified. The latest version of the communication protocol is used to create the answer.
 	 * 
 	 * @param message    The message to answer.
 	 * @param properties The response properties.
 	 * 
 	 * @return A new message.
 	 */
-	public IMessage answer(IMessage message, Object... properties) {
-		return protocol.answer(message, properties);
+	public IMumbleMessage answer(IMessage message, Object... properties) {
+		return (IMumbleMessage) protocol.answer(message, properties);
 	}
 
 	/**
-	 * Creates a new message corresponding to the answer of the <code>message</code>. The identifier is not incremented.
+	 * Creates a new message corresponding to the answer of the <code>message</code>. Neither the identifier nor the header are
+	 * modified. A specific version of the communication protocol is used to create the answer.
+	 * 
+	 * @param version    The protocol version to use for the returned message.
+	 * @param message    The message to answer.
+	 * @param properties The response properties.
+	 * 
+	 * @return A new message.
+	 */
+	public IMumbleMessage answer(float version, IMessage message, Object... properties) {
+		Optional<IProtocol> optProtocol = manager.getProtocol(version);
+		if (!optProtocol.isPresent())
+			return null;
+
+		return (IMumbleMessage) optProtocol.get().answer(message, properties);
+	}
+
+	/**
+	 * Creates a new message corresponding to the answer of the <code>message</code>. The identifier is not incremented. The latest
+	 * version of the communication protocol is used to create the returned message.
 	 * 
 	 * @param message    The message to answer.
 	 * @param idc        The response IDC.
@@ -257,8 +313,35 @@ public class MumbleProtocolManager {
 	 * 
 	 * @return The message associated to the answer.
 	 */
-	public IMessage answer(int identifier, Idc idc, Oid oid, ErrorCode errorCode, Object... properties) {
-		IMessage message = protocol.get(associations.get(idc).get(oid));
+	public IMumbleMessage answer(int identifier, Idc idc, Oid oid, ErrorCode errorCode, Object... properties) {
+		IMumbleMessage message = (IMumbleMessage) protocol.get(associations.get(idc).get(oid));
+		if (message == null)
+			return null;
+
+		message.getHeader().setSequence(identifier);
+		message.getHeader().setProperties(idc, oid, errorCode);
+		message.setProperties(properties);
+		return message;
+	}
+
+	/**
+	 * Creates a new message corresponding to the answer of the <code>message</code>. The identifier is not incremented. A specific
+	 * version of the communication protocol is used to create the answer.
+	 * 
+	 * @param message    The message to answer.
+	 * @param idc        The response IDC.
+	 * @param oid        The response OID.
+	 * @param errorCode  The response ErrorCode.
+	 * @param properties The response properties.
+	 * 
+	 * @return The message associated to the answer.
+	 */
+	public IMumbleMessage answer(float version, int identifier, Idc idc, Oid oid, ErrorCode errorCode, Object... properties) {
+		Optional<IProtocol> optProtocol = manager.getProtocol(version);
+		if (!optProtocol.isPresent())
+			return null;
+
+		IMumbleMessage message = (IMumbleMessage) optProtocol.get().get(associations.get(idc).get(oid));
 		if (message == null)
 			return null;
 
@@ -299,6 +382,12 @@ public class MumbleProtocolManager {
 		Map<Oid, String> serverLeaveMap = new HashMap<Oid, String>();
 		serverLeaveMap.put(Oid.INFO, SERVER_LEAVE_INFO);
 		associations.put(Idc.SERVER_LEAVE, serverLeaveMap);
+
+		// Communication protocol map
+		Map<Oid, String> communicationProtocolMap = new HashMap<Oid, String>();
+		communicationProtocolMap.put(Oid.GET, COMMUNICATION_PROTOCOL_VERSION_GET);
+		communicationProtocolMap.put(Oid.SET, COMMUNICATION_PROTOCOL_VERSION_SET);
+		associations.put(Idc.COMMUNICATION_PROTOCOL_VERSION, communicationProtocolMap);
 
 		// Player map
 		Map<Oid, String> playerMap = new HashMap<Oid, String>();

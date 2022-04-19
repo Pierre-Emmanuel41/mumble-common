@@ -13,6 +13,9 @@ public enum Idc {
 	// Idc to leave the server.
 	SERVER_LEAVE,
 
+	// Idc to modify the version of the communication protocol
+	COMMUNICATION_PROTOCOL_VERSION,
+
 	// Idc to get access to all information about a player.
 	PLAYER,
 
