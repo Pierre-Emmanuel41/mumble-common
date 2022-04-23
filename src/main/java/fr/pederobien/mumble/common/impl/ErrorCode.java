@@ -27,6 +27,9 @@ public enum ErrorCode {
 	// Code when server plugins cancelled a request.
 	REQUEST_CANCELLED("The request has been cancelled by the server"),
 
+	// Code when a client try to join a server whereas it has already joined the server
+	SERVER_ALREADY_JOINED("The client has already joined the server"),
+
 	// Code when trying to add a channel whose name is already used.
 	CHANNEL_ALREADY_EXISTS("The channel already exists."),
 
