@@ -13,7 +13,7 @@ public class ServerLeaveInfoMessageV10 extends MumbleMessage {
 	 * @param header The message header.
 	 */
 	protected ServerLeaveInfoMessageV10(IMumbleHeader header) {
-		super(MumbleProtocolManager.SERVER_LEAVE_INFO, header);
+		super(MumbleProtocolManager.SERVER_LEAVE_SET, header);
 	}
 
 	@Override

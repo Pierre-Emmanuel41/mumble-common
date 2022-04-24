@@ -18,7 +18,7 @@ public class ProtocolV10 extends Protocol {
 		// Server messages
 		register(new MessageCreator(MumbleProtocolManager.SERVER_INFO_GET, header -> new ServerInfoGetMessageV10((IMumbleHeader) header)));
 		register(new MessageCreator(MumbleProtocolManager.SERVER_JOIN_SET, header -> new ServerJoinInfoMessageV10((IMumbleHeader) header)));
-		register(new MessageCreator(MumbleProtocolManager.SERVER_LEAVE_INFO, header -> new ServerLeaveInfoMessageV10((IMumbleHeader) header)));
+		register(new MessageCreator(MumbleProtocolManager.SERVER_LEAVE_SET, header -> new ServerLeaveInfoMessageV10((IMumbleHeader) header)));
 		register(new MessageCreator(MumbleProtocolManager.COMMUNICATION_PROTOCOL_VERSION_GET, header -> new CommunicationProtocolGetMessageV10((IMumbleHeader) header)));
 		register(new MessageCreator(MumbleProtocolManager.COMMUNICATION_PROTOCOL_VERSION_SET, header -> new CommunicationProtocolSetMessageV10((IMumbleHeader) header)));
 

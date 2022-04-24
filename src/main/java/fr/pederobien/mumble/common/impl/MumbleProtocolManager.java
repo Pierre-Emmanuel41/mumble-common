@@ -28,7 +28,7 @@ public class MumbleProtocolManager {
 	/**
 	 * The name of the message to leave a mumble server.
 	 */
-	public static final String SERVER_LEAVE_INFO = "ServerLeaveInfo";
+	public static final String SERVER_LEAVE_SET = "ServerLeaveSet";
 
 	/**
 	 * The name of the message to get the version of the communication protocol of the remote.
@@ -380,7 +380,7 @@ public class MumbleProtocolManager {
 
 		// Server leave map
 		Map<Oid, String> serverLeaveMap = new HashMap<Oid, String>();
-		serverLeaveMap.put(Oid.INFO, SERVER_LEAVE_INFO);
+		serverLeaveMap.put(Oid.SET, SERVER_LEAVE_SET);
 		associations.put(Idc.SERVER_LEAVE, serverLeaveMap);
 
 		// Communication protocol map
