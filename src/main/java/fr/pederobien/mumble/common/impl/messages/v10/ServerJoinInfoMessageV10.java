@@ -13,7 +13,7 @@ public class ServerJoinInfoMessageV10 extends MumbleMessage {
 	 * @param header The message header.
 	 */
 	protected ServerJoinInfoMessageV10(IMumbleHeader header) {
-		super(MumbleProtocolManager.SERVER_JOIN_INFO, header);
+		super(MumbleProtocolManager.SERVER_JOIN_SET, header);
 	}
 
 	@Override

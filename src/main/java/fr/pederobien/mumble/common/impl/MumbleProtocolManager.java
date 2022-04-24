@@ -23,7 +23,7 @@ public class MumbleProtocolManager {
 	/*
 	 * The name of the message in order to join a mumble server.
 	 */
-	public static final String SERVER_JOIN_INFO = "ServerJoinInfo";
+	public static final String SERVER_JOIN_SET = "ServerJoinSet";
 
 	/**
 	 * The name of the message to leave a mumble server.
@@ -375,7 +375,7 @@ public class MumbleProtocolManager {
 
 		// Server join map
 		Map<Oid, String> serverJoinMap = new HashMap<Oid, String>();
-		serverJoinMap.put(Oid.INFO, SERVER_JOIN_INFO);
+		serverJoinMap.put(Oid.SET, SERVER_JOIN_SET);
 		associations.put(Idc.SERVER_JOIN, serverJoinMap);
 
 		// Server leave map
