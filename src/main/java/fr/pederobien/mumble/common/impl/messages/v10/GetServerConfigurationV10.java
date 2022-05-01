@@ -2,7 +2,6 @@ package fr.pederobien.mumble.common.impl.messages.v10;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import fr.pederobien.messenger.interfaces.IMessage;
 import fr.pederobien.mumble.common.impl.Identifier;
@@ -10,23 +9,22 @@ import fr.pederobien.mumble.common.impl.messages.MumbleMessage;
 import fr.pederobien.mumble.common.impl.messages.v10.model.ChannelInfo.SemiFullChannelInfo;
 import fr.pederobien.mumble.common.impl.messages.v10.model.ParameterInfo.FullParameterInfo;
 import fr.pederobien.mumble.common.impl.messages.v10.model.ParameterType;
-import fr.pederobien.mumble.common.impl.messages.v10.model.PlayerInfo.FullPlayerInfo;
 import fr.pederobien.mumble.common.impl.messages.v10.model.PlayerInfo.SimplePlayerInfo;
-import fr.pederobien.mumble.common.impl.messages.v10.model.ServerInfo.FullServerInfo;
+import fr.pederobien.mumble.common.impl.messages.v10.model.ServerInfo.SimpleServerInfo;
 import fr.pederobien.mumble.common.impl.messages.v10.model.SoundModifierInfo.FullSoundModifierInfo;
 import fr.pederobien.mumble.common.interfaces.IMumbleHeader;
 import fr.pederobien.utils.ByteWrapper;
 
-public class GetFullServerConfigurationV10 extends MumbleMessage {
-	private FullServerInfo serverInfo;
+public class GetServerConfigurationV10 extends MumbleMessage {
+	private SimpleServerInfo serverInfo;
 
 	/**
 	 * Creates a message in order to get the full configuration of a mumble server.
 	 * 
 	 * @param header The message header.
 	 */
-	protected GetFullServerConfigurationV10(IMumbleHeader header) {
-		super(Identifier.GET_FULL_SERVER_CONFIGURATION, header);
+	protected GetServerConfigurationV10(IMumbleHeader header) {
+		super(Identifier.GET_SERVER_CONFIGURATION, header);
 	}
 
 	@Override
@@ -38,88 +36,7 @@ public class GetFullServerConfigurationV10 extends MumbleMessage {
 		int first = 0;
 		ByteWrapper wrapper = ByteWrapper.wrap(payload);
 
-		serverInfo = new FullServerInfo();
-
-		// Number of players
-		int numberOfPlayers = (int) wrapper.getInt(first);
-		properties.add(numberOfPlayers);
-		first += 4;
-
-		for (int i = 0; i < numberOfPlayers; i++) {
-			// Player name
-			int playerNameLength = wrapper.getInt(first);
-			first += 4;
-			String playerName = wrapper.getString(first, playerNameLength);
-			properties.add(playerName);
-			first += playerNameLength;
-
-			// Player's identifier
-			int identifierLength = wrapper.getInt(first);
-			first += 4;
-			UUID identifier = UUID.fromString(wrapper.getString(first, identifierLength));
-			properties.add(identifier);
-			first += identifierLength;
-
-			// Player's online status
-			boolean isOnline = wrapper.getInt(first) == 1 ? true : false;
-			properties.add(isOnline);
-			first += 4;
-
-			// Player's game address
-			int addressLength = wrapper.getInt(first);
-			first += 4;
-			String gameAddress = wrapper.getString(first, addressLength);
-			properties.add(gameAddress);
-			first += addressLength;
-
-			// Player's game port
-			int gamePort = wrapper.getInt(first);
-			properties.add(gamePort);
-			first += 4;
-
-			// Player's administrator status
-			boolean isAdmin = wrapper.getInt(first) == 1 ? true : false;
-			properties.add(isAdmin);
-			first += 4;
-
-			// Player's mute status
-			boolean isMute = wrapper.getInt(first) == 1 ? true : false;
-			properties.add(isMute);
-			first += 4;
-
-			// Player's deafen status
-			boolean isDeafen = wrapper.getInt(first) == 1 ? true : false;
-			properties.add(isDeafen);
-			first += 4;
-
-			// Player's x coordinate
-			double x = wrapper.getDouble(first);
-			properties.add(x);
-			first += 8;
-
-			// Player's y coordinate
-			double y = wrapper.getDouble(first);
-			properties.add(y);
-			first += 8;
-
-			// Player's z coordinate
-			double z = wrapper.getDouble(first);
-			properties.add(z);
-			first += 8;
-
-			// Player's yaw angle
-			double yaw = wrapper.getDouble(first);
-			properties.add(yaw);
-			first += 8;
-
-			// Player's pitch angle
-			double pitch = wrapper.getDouble(first);
-			properties.add(pitch);
-			first += 8;
-
-			serverInfo.getPlayerInfo().put(playerName,
-					new FullPlayerInfo(playerName, isOnline, identifier, gameAddress, gamePort, isAdmin, isMute, isDeafen, x, y, z, yaw, pitch));
-		}
+		serverInfo = new SimpleServerInfo();
 
 		// Number of modifiers
 		int numberOfModifiers = wrapper.getInt(first);
@@ -290,56 +207,9 @@ public class GetFullServerConfigurationV10 extends MumbleMessage {
 		if (properties.length == 0 || getHeader().isError())
 			return;
 
-		serverInfo = new FullServerInfo();
+		serverInfo = new SimpleServerInfo();
 
 		int currentIndex = 0;
-
-		// Number of players
-		int numberOfPlayers = (int) properties[currentIndex++];
-
-		for (int i = 0; i < numberOfPlayers; i++) {
-			// Player name
-			String playerName = (String) properties[currentIndex++];
-
-			// Player's identifier
-			UUID identifier = (UUID) properties[currentIndex++];
-
-			// Player's online status
-			boolean isOnline = (boolean) properties[currentIndex++];
-
-			// Player's game address
-			String gameAddress = (String) properties[currentIndex++];
-
-			// Player's game port
-			int gamePort = (int) properties[currentIndex++];
-
-			// Player's administrator status
-			boolean isAdmin = (boolean) properties[currentIndex++];
-
-			// Player's mute status
-			boolean isMute = (boolean) properties[currentIndex++];
-
-			// Player's deafen status
-			boolean isDeafen = (boolean) properties[currentIndex++];
-
-			// Player's x coordinate
-			double x = (double) properties[currentIndex++];
-
-			// Player's y coordinate
-			double y = (double) properties[currentIndex++];
-
-			// Player's z coordinate
-			double z = (double) properties[currentIndex++];
-
-			// Player's yaw angle
-			double yaw = (double) properties[currentIndex++];
-
-			// Player's pitch angle
-			double pitch = (double) properties[currentIndex++];
-
-			serverInfo.getPlayerInfo().put(playerName,
-					new FullPlayerInfo(playerName, isOnline, identifier, gameAddress, gamePort, isAdmin, isMute, isDeafen, x, y, z, yaw, pitch));
-		}
 
 		// Number of sound modifiers
 		int numberOfModifiers = (int) properties[currentIndex++];
@@ -443,50 +313,6 @@ public class GetFullServerConfigurationV10 extends MumbleMessage {
 		if (getProperties().length == 0 || getHeader().isError())
 			return wrapper.get();
 
-		// Number of players
-		wrapper.putInt(serverInfo.getPlayerInfo().size());
-
-		for (FullPlayerInfo playerInfo : serverInfo.getPlayerInfo().values()) {
-			// Player's name
-			wrapper.putString(playerInfo.getName(), true);
-
-			// Player's identifier
-			wrapper.putString(playerInfo.getIdentifier().toString(), true);
-
-			// Player's online status
-			wrapper.putInt(playerInfo.isOnline() ? 1 : 0);
-
-			// Player's game address
-			wrapper.putString(playerInfo.getGameAddress().getAddress().getHostAddress(), true);
-
-			// Player's game port
-			wrapper.putInt(playerInfo.getGameAddress().getPort());
-
-			// Player's administrator status
-			wrapper.putInt(playerInfo.isAdmin() ? 1 : 0);
-
-			// Player's mute status
-			wrapper.putInt(playerInfo.isMute() ? 1 : 0);
-
-			// Player's deafen status
-			wrapper.putInt(playerInfo.isDeafen() ? 1 : 0);
-
-			// Player's x coordinate
-			wrapper.putDouble(playerInfo.getX());
-
-			// Player's y coordinate
-			wrapper.putDouble(playerInfo.getY());
-
-			// Player's z coordinate
-			wrapper.putDouble(playerInfo.getZ());
-
-			// Player's yaw angle
-			wrapper.putDouble(playerInfo.getYaw());
-
-			// Player's pitch
-			wrapper.putDouble(playerInfo.getPitch());
-		}
-
 		// Number of sound modifier
 		wrapper.putInt(serverInfo.getSoundModifierInfo().size());
 
@@ -575,7 +401,7 @@ public class GetFullServerConfigurationV10 extends MumbleMessage {
 	/**
 	 * @return A description that contains a mumble server configuration.
 	 */
-	public FullServerInfo getServerInfo() {
+	public SimpleServerInfo getServerInfo() {
 		return serverInfo;
 	}
 }

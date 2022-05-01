@@ -18,7 +18,7 @@ public class ProtocolV10 extends Protocol {
 
 		// Server messages
 		register(new MessageCreator(Identifier.GET_FULL_SERVER_CONFIGURATION.name(), header -> new GetFullServerConfigurationV10((IMumbleHeader) header)));
-		register(new MessageCreator(Identifier.GET_SERVER_CONFIGURATION.name(), null));
+		register(new MessageCreator(Identifier.GET_SERVER_CONFIGURATION.name(), header -> new GetServerConfigurationV10((IMumbleHeader) header)));
 		register(new MessageCreator(Identifier.SET_SERVER_JOIN.name(), header -> new SetServerJoinV10((IMumbleHeader) header)));
 		register(new MessageCreator(Identifier.SET_SERVER_LEAVE.name(), header -> new SetServerLeaveV10((IMumbleHeader) header)));
 		register(new MessageCreator(Identifier.GET_CP_VERSIONS.name(), header -> new GetCommunicationProtocolVersionsV10((IMumbleHeader) header)));
