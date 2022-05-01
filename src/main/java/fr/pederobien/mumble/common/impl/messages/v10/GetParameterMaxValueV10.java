@@ -3,7 +3,7 @@ package fr.pederobien.mumble.common.impl.messages.v10;
 import fr.pederobien.messenger.interfaces.IMessage;
 import fr.pederobien.mumble.common.impl.Identifier;
 import fr.pederobien.mumble.common.impl.messages.MumbleMessage;
-import fr.pederobien.mumble.common.impl.model.ParameterType;
+import fr.pederobien.mumble.common.impl.messages.v10.model.ParameterType;
 import fr.pederobien.mumble.common.interfaces.IMumbleHeader;
 import fr.pederobien.utils.ByteWrapper;
 

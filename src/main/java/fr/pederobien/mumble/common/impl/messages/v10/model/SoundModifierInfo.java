@@ -1,10 +1,10 @@
-package fr.pederobien.mumble.common.impl.model;
+package fr.pederobien.mumble.common.impl.messages.v10.model;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import fr.pederobien.mumble.common.impl.model.ParameterInfo.FullParameterInfo;
-import fr.pederobien.mumble.common.impl.model.ParameterInfo.SimpleParameterInfo;
+import fr.pederobien.mumble.common.impl.messages.v10.model.ParameterInfo.FullParameterInfo;
+import fr.pederobien.mumble.common.impl.messages.v10.model.ParameterInfo.SimpleParameterInfo;
 
 public class SoundModifierInfo<T extends ParameterInfo> {
 	private String name;

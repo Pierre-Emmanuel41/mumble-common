@@ -1,11 +1,11 @@
-package fr.pederobien.mumble.common.impl.model;
+package fr.pederobien.mumble.common.impl.messages.v10.model;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import fr.pederobien.mumble.common.impl.model.ChannelInfo.SemiFullChannelInfo;
-import fr.pederobien.mumble.common.impl.model.PlayerInfo.FullPlayerInfo;
-import fr.pederobien.mumble.common.impl.model.SoundModifierInfo.FullSoundModifierInfo;
+import fr.pederobien.mumble.common.impl.messages.v10.model.ChannelInfo.SemiFullChannelInfo;
+import fr.pederobien.mumble.common.impl.messages.v10.model.PlayerInfo.FullPlayerInfo;
+import fr.pederobien.mumble.common.impl.messages.v10.model.SoundModifierInfo.FullSoundModifierInfo;
 
 public class ServerInfo {
 	private Map<String, FullSoundModifierInfo> soundModifierInfo;

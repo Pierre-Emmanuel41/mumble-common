@@ -1,4 +1,4 @@
-package fr.pederobien.mumble.common.impl.model;
+package fr.pederobien.mumble.common.impl.messages.v10.model;
 
 import java.util.function.Function;
 

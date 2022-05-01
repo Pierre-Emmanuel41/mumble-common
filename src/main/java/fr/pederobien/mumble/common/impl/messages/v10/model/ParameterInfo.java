@@ -1,4 +1,4 @@
-package fr.pederobien.mumble.common.impl.model;
+package fr.pederobien.mumble.common.impl.messages.v10.model;
 
 public class ParameterInfo {
 	private String name;
