@@ -2,20 +2,14 @@ package fr.pederobien.mumble.common.interfaces;
 
 import fr.pederobien.messenger.interfaces.IHeader;
 import fr.pederobien.mumble.common.impl.ErrorCode;
-import fr.pederobien.mumble.common.impl.Idc;
-import fr.pederobien.mumble.common.impl.Oid;
+import fr.pederobien.mumble.common.impl.Identifier;
 
 public interface IMumbleHeader extends IHeader {
 
 	/**
-	 * @return The header idc.
+	 * @return The mumble identifier of this message.
 	 */
-	Idc getIdc();
-
-	/**
-	 * @return The header oid.
-	 */
-	Oid getOid();
+	Identifier getIdentifier();
 
 	/**
 	 * @return The header error code.

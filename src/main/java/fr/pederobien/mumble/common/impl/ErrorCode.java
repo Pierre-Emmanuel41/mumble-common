@@ -15,14 +15,14 @@ public enum ErrorCode {
 	// Code when an unexpected error attempt on the server.
 	UNEXPECTED_ERROR("An unexpected error occurs."),
 
-	// Code when incompatible idc and oid
-	INCOMPATIBLE_IDC_OID("The idc and the oid are incompatibles."),
+	// Code when the request is malformed
+	REQUEST_MALFORMED("The request is malformed."),
 
 	// Code when the version is not supported.
 	INCOMPATIBLE_VERSION("The protocol version is not supported"),
 
-	// Code when there are no treatment associated to the given idc.
-	IDC_UNKNOWN("There is no treatment associated to the given idc."),
+	// Code when there are no treatment associated to the given identifier.
+	IDENTIFIER_UNKNOWN("There is no treatment associated to the given identifier."),
 
 	// Code when server plugins cancelled a request.
 	REQUEST_CANCELLED("The request has been cancelled by the server"),

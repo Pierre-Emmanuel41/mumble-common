@@ -26,34 +26,33 @@ public class MumbleMessageFactory {
 	/**
 	 * Creates a message based on the given parameters associated to the latest version of the communication protocol.
 	 * 
-	 * @param idc       The message IDC.
-	 * @param oid       The message OID.
-	 * @param errorCode The message errorCode.
-	 * @param payload   The message payload.
+	 * 
+	 * @param identifier The identifier of the request to create.
+	 * @param errorCode  The message errorCode.
+	 * @param properties The message properties.
 	 * 
 	 * @return The created message.
 	 */
-	public IMumbleMessage create(Idc idc, Oid oid, ErrorCode errorCode, Object... payload) {
-		return manager.create(idc, oid, errorCode, payload);
+	public IMumbleMessage create(Identifier identifier, ErrorCode errorCode, Object... properties) {
+		return manager.create(identifier, errorCode, properties);
 	}
 
 	/**
 	 * Creates a message based on the given parameters associated to a specific version of the communication protocol.
 	 * 
-	 * @param version   The protocol version to use for the returned message.
-	 * @param idc       The message IDC.
-	 * @param oid       The message OID.
-	 * @param errorCode The message errorCode.
-	 * @param payload   The message payload.
+	 * @param version    The protocol version to use for the returned message.
+	 * @param identifier The identifier of the request to create.
+	 * @param errorCode  The message errorCode.
+	 * @param properties The message properties.
 	 * 
 	 * @return A message associated to the given protocol version.
 	 */
-	public IMumbleMessage create(float version, Idc idc, Oid oid, ErrorCode errorCode, Object... payload) {
-		return manager.create(version, idc, oid, errorCode, payload);
+	public IMumbleMessage create(float version, Identifier identifier, ErrorCode errorCode, Object... properties) {
+		return manager.create(version, identifier, errorCode, properties);
 	}
 
 	/**
-	 * Parses the given buffer in order to create the associated header and the payload.
+	 * Parses the given buffer in order to create the associated header and the properties.
 	 * 
 	 * @param buffer The bytes array received from the remote.
 	 * 
@@ -95,15 +94,14 @@ public class MumbleMessageFactory {
 	 * version of the communication protocol is used to create the answer.
 	 * 
 	 * @param message    The message to answer.
-	 * @param idc        The response IDC.
-	 * @param oid        The response OID.
+	 * @param identifier The identifier of the answer request.
 	 * @param errorCode  The response ErrorCode.
 	 * @param properties The response properties.
 	 * 
 	 * @return The message associated to the answer.
 	 */
-	public IMumbleMessage answer(IMumbleMessage message, Idc idc, Oid oid, ErrorCode errorCode, Object... properties) {
-		return manager.answer(message.getHeader().getSequence(), idc, oid, errorCode, properties);
+	public IMumbleMessage answer(IMumbleMessage message, Identifier identifier, ErrorCode errorCode, Object... properties) {
+		return manager.answer(message.getHeader().getSequence(), identifier, errorCode, properties);
 	}
 
 	/**
@@ -112,14 +110,13 @@ public class MumbleMessageFactory {
 	 * 
 	 * @param version    The protocol version to use for the returned message.
 	 * @param message    The message to answer.
-	 * @param idc        The response IDC.
-	 * @param oid        The response OID.
+	 * @param identifier The identifier of the answer request.
 	 * @param errorCode  The response ErrorCode.
 	 * @param properties The response properties.
 	 * 
 	 * @return The message associated to the answer.
 	 */
-	public IMumbleMessage answer(float version, IMumbleMessage message, Idc idc, Oid oid, ErrorCode errorCode, Object... properties) {
-		return manager.answer(version, message.getHeader().getSequence(), idc, oid, errorCode, properties);
+	public IMumbleMessage answer(float version, IMumbleMessage message, Identifier identifier, ErrorCode errorCode, Object... properties) {
+		return manager.answer(version, message.getHeader().getSequence(), identifier, errorCode, properties);
 	}
 }

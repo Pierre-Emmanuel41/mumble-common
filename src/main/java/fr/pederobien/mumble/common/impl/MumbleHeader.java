@@ -1,12 +1,21 @@
 package fr.pederobien.mumble.common.impl;
 
 import fr.pederobien.messenger.impl.Header;
+import fr.pederobien.mumble.common.impl.messages.MumbleMessage;
 import fr.pederobien.mumble.common.interfaces.IMumbleHeader;
 import fr.pederobien.utils.ByteWrapper;
 
 public class MumbleHeader extends Header implements IMumbleHeader {
-	private Idc idc;
-	private Oid oid;
+	/**
+	 * The number of bytes reserved for the message header. It correspond to:</br>
+	 * </br>
+	 * +0: Communication protocol version.</br>
+	 * +4: The sequence number.</br>
+	 * +8: The identifier.</br>
+	 * +12: The error code.
+	 */
+	public static final int HEADER_LENGH = 16;
+	private Identifier identifier;
 	private ErrorCode errorCode;
 
 	/**
@@ -17,22 +26,20 @@ public class MumbleHeader extends Header implements IMumbleHeader {
 	 */
 	public MumbleHeader(float version) {
 		super(version);
-		idc = Idc.UNKNOWN;
-		oid = Oid.UNKNOWN;
+		identifier = Identifier.UNKNOWN;
 		errorCode = ErrorCode.NONE;
 	}
 
 	@Override
 	public void setProperties(Object... properties) {
 		super.setProperties(properties);
-		idc = (Idc) properties[0];
-		oid = (Oid) properties[1];
-		errorCode = (ErrorCode) properties[2];
+		identifier = (Identifier) properties[0];
+		errorCode = (ErrorCode) properties[1];
 	}
 
 	@Override
 	protected byte[] generateProperties() {
-		return ByteWrapper.create().put(idc.getBytes()).put(oid.getBytes()).put(errorCode.getBytes()).get();
+		return ByteWrapper.create().put(identifier.getBytes()).put(errorCode.getBytes()).get();
 	}
 
 	@Override
@@ -40,26 +47,18 @@ public class MumbleHeader extends Header implements IMumbleHeader {
 		super.parse(buffer);
 		ByteWrapper wrapper = ByteWrapper.wrap(buffer);
 
-		// +8: Idc
-		idc = Idc.fromCode(wrapper.getInt(8));
+		// +8: Identifier
+		identifier = Identifier.fromCode(wrapper.getInt(MumbleMessage.IDENTIFIER_INDEX - MumbleMessage.BEGIN_WORD.length));
 
-		// +12: Oid
-		oid = Oid.fromCode(wrapper.getInt(12));
-
-		// +16: ErrorCode
-		errorCode = ErrorCode.fromCode(wrapper.getInt(16));
-		super.setProperties(idc, oid, errorCode);
+		// +12: ErrorCode
+		errorCode = ErrorCode.fromCode(wrapper.getInt(MumbleMessage.ERROR_CODE_INDEX - MumbleMessage.BEGIN_WORD.length));
+		super.setProperties(identifier, errorCode);
 		return this;
 	}
 
 	@Override
-	public Idc getIdc() {
-		return idc;
-	}
-
-	@Override
-	public Oid getOid() {
-		return oid;
+	public Identifier getIdentifier() {
+		return identifier;
 	}
 
 	@Override
