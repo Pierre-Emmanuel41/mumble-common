@@ -10,12 +10,21 @@ import fr.pederobien.mumble.common.impl.messages.v10.model.SoundModifierInfo.Ful
 public class ServerInfo {
 
 	public static class SimpleServerInfo extends ServerInfo {
+		private FullPlayerInfo playerInfo;
 		private Map<String, FullSoundModifierInfo> soundModifierInfo;
 		private Map<String, SemiFullChannelInfo> channelInfo;
 
-		public SimpleServerInfo() {
+		public SimpleServerInfo(FullPlayerInfo playerInfo) {
+			this.playerInfo = playerInfo;
 			soundModifierInfo = new LinkedHashMap<String, FullSoundModifierInfo>();
 			channelInfo = new LinkedHashMap<String, SemiFullChannelInfo>();
+		}
+
+		/**
+		 * @return A complete description of the main player.
+		 */
+		public FullPlayerInfo getPlayerInfo() {
+			return playerInfo;
 		}
 
 		/**
