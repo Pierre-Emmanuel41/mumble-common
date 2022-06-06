@@ -42,6 +42,9 @@ public enum ErrorCode {
 	// Code when the player involved in the request does not match with the player's mumble client
 	PLAYER_DOES_NOT_MATCH("The player involved in the request does not match with the player hosted by the client"),
 
+	// Code when the client of a player has not joined the server yet
+	PLAYER_CLIENT_NOT_JOINED("The client of the player has not joined the server yet"),
+
 	// Code when trying to rename a player
 	PLAYER_ALREADY_EXISTS("The player already exist"),
 
