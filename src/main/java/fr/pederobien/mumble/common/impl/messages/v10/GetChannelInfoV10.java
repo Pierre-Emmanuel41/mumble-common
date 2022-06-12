@@ -6,9 +6,9 @@ import java.util.List;
 import fr.pederobien.messenger.interfaces.IMessage;
 import fr.pederobien.mumble.common.impl.Identifier;
 import fr.pederobien.mumble.common.impl.messages.MumbleMessage;
-import fr.pederobien.mumble.common.impl.messages.v10.model.ParameterType;
 import fr.pederobien.mumble.common.impl.messages.v10.model.ChannelInfo.FullChannelInfo;
 import fr.pederobien.mumble.common.impl.messages.v10.model.ParameterInfo.FullParameterInfo;
+import fr.pederobien.mumble.common.impl.messages.v10.model.ParameterType;
 import fr.pederobien.mumble.common.impl.messages.v10.model.PlayerInfo.StatusPlayerInfo;
 import fr.pederobien.mumble.common.impl.messages.v10.model.SoundModifierInfo.FullSoundModifierInfo;
 import fr.pederobien.mumble.common.interfaces.IMumbleHeader;
@@ -128,7 +128,12 @@ public class GetChannelInfoV10 extends MumbleMessage {
 				properties.add(isDeafen);
 				first += 4;
 
-				channelInfo.getPlayerInfo().put(playerName, new StatusPlayerInfo(playerName, isMute, isDeafen));
+				// Player's muteBy status
+				boolean isMuteByMainPlayer = wrapper.getInt(first) == 1;
+				properties.add(isMuteByMainPlayer);
+				first += 4;
+
+				channelInfo.getPlayerInfo().put(playerName, new StatusPlayerInfo(playerName, isMute, isDeafen, isMuteByMainPlayer));
 			}
 		}
 		super.setProperties(properties.toArray());
@@ -189,11 +194,19 @@ public class GetChannelInfoV10 extends MumbleMessage {
 			int numberOfPlayers = (int) properties[currentIndex++];
 
 			for (int j = 0; j < numberOfPlayers; j++) {
+				// Player's name
 				String playerName = (String) properties[currentIndex++];
+
+				// Player's mute status
 				boolean isMute = (boolean) properties[currentIndex++];
+
+				// Player's deafen status
 				boolean isDeafen = (boolean) properties[currentIndex++];
 
-				channelInfo.getPlayerInfo().put(playerName, new StatusPlayerInfo(playerName, isMute, isDeafen));
+				// Player's muteBy status
+				boolean isMutebyMainPlayer = (boolean) properties[currentIndex++];
+
+				channelInfo.getPlayerInfo().put(playerName, new StatusPlayerInfo(playerName, isMute, isDeafen, isMutebyMainPlayer));
 			}
 		}
 	}

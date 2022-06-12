@@ -11,7 +11,7 @@ import fr.pederobien.mumble.common.impl.messages.v10.model.ChannelInfo.SemiFullC
 import fr.pederobien.mumble.common.impl.messages.v10.model.ParameterInfo.FullParameterInfo;
 import fr.pederobien.mumble.common.impl.messages.v10.model.ParameterType;
 import fr.pederobien.mumble.common.impl.messages.v10.model.PlayerInfo.FullPlayerInfo;
-import fr.pederobien.mumble.common.impl.messages.v10.model.PlayerInfo.SimplePlayerInfo;
+import fr.pederobien.mumble.common.impl.messages.v10.model.PlayerInfo.StatusPlayerInfo;
 import fr.pederobien.mumble.common.impl.messages.v10.model.ServerInfo.SimpleServerInfo;
 import fr.pederobien.mumble.common.impl.messages.v10.model.SoundModifierInfo.FullSoundModifierInfo;
 import fr.pederobien.mumble.common.interfaces.IMumbleHeader;
@@ -271,7 +271,22 @@ public class GetServerConfigurationV10 extends MumbleMessage {
 				properties.add(playerName);
 				first += playerNameLength;
 
-				channelInfo.getPlayerInfo().put(playerName, new SimplePlayerInfo(playerName));
+				// Player's mute status
+				boolean playerMute = wrapper.getInt(first) == 1;
+				properties.add(isMute);
+				first += 4;
+
+				// Player's deafen status
+				boolean playerDeafen = wrapper.getInt(first) == 1;
+				properties.add(isDeafen);
+				first += 4;
+
+				// Player's muteBy status
+				boolean isMuteByMainPlayer = wrapper.getInt(first) == 1;
+				properties.add(isMuteByMainPlayer);
+				first += 4;
+
+				channelInfo.getPlayerInfo().put(playerName, new StatusPlayerInfo(playerName, playerMute, playerDeafen, isMuteByMainPlayer));
 			}
 
 			serverInfo.getChannelInfo().put(channelName, channelInfo);
@@ -427,7 +442,17 @@ public class GetServerConfigurationV10 extends MumbleMessage {
 			for (int j = 0; j < numberOfChannelsPlayers; j++) {
 				// Player's name
 				String playerName = (String) properties[currentIndex++];
-				channelInfo.getPlayerInfo().put(playerName, new SimplePlayerInfo(playerName));
+
+				// Player's mute status
+				boolean playerMute = (boolean) properties[currentIndex++];
+
+				// Player's deafen status
+				boolean playerDeafen = (boolean) properties[currentIndex++];
+
+				// Player's muteBy status
+				boolean isMuteByMainPlayer = (boolean) properties[currentIndex++];
+
+				channelInfo.getPlayerInfo().put(playerName, new StatusPlayerInfo(playerName, playerMute, playerDeafen, isMuteByMainPlayer));
 			}
 
 			serverInfo.getChannelInfo().put(channelName, channelInfo);
@@ -559,9 +584,19 @@ public class GetServerConfigurationV10 extends MumbleMessage {
 			// Number of players
 			wrapper.putInt(channelInfo.getPlayerInfo().size());
 
-			for (SimplePlayerInfo playerInfo : channelInfo.getPlayerInfo().values())
+			for (StatusPlayerInfo playerInfo : channelInfo.getPlayerInfo().values()) {
 				// Player's name
 				wrapper.putString(playerInfo.getName(), true);
+
+				// Player's mute status
+				wrapper.putInt(playerInfo.isMute() ? 1 : 0);
+
+				// Player's deafen status
+				wrapper.putInt(playerInfo.isDeafen() ? 1 : 0);
+
+				// Player's muteBy status
+				wrapper.putInt(playerInfo.isMuteByMainPlayer() ? 1 : 0);
+			}
 		}
 
 		return wrapper.get();

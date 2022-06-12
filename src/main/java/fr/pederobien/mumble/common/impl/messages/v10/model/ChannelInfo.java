@@ -54,7 +54,7 @@ public class ChannelInfo<T extends SoundModifierInfo<?>, U extends PlayerInfo> {
 		}
 	}
 
-	public static class SemiFullChannelInfo extends ChannelInfo<FullSoundModifierInfo, SimplePlayerInfo> {
+	public static class SemiFullChannelInfo extends ChannelInfo<FullSoundModifierInfo, StatusPlayerInfo> {
 
 		/**
 		 * Creates a channel description.
