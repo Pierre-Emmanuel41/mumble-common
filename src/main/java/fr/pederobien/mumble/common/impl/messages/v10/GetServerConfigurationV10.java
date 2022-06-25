@@ -273,12 +273,12 @@ public class GetServerConfigurationV10 extends MumbleMessage {
 
 				// Player's mute status
 				boolean playerMute = wrapper.getInt(first) == 1;
-				properties.add(isMute);
+				properties.add(playerMute);
 				first += 4;
 
 				// Player's deafen status
 				boolean playerDeafen = wrapper.getInt(first) == 1;
-				properties.add(isDeafen);
+				properties.add(playerDeafen);
 				first += 4;
 
 				// Player's muteBy status
