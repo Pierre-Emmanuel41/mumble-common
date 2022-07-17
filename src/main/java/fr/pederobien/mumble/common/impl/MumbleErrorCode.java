@@ -1,8 +1,10 @@
 package fr.pederobien.mumble.common.impl;
 
+import fr.pederobien.messenger.interfaces.IErrorCode;
 import fr.pederobien.utils.ByteWrapper;
 
-public enum ErrorCode {
+public enum MumbleErrorCode implements IErrorCode {
+
 	// Code when no errors happened.
 	NONE("No error."),
 
@@ -77,31 +79,34 @@ public enum ErrorCode {
 	private String message;
 	private byte[] bytes;
 
-	private ErrorCode(String message) {
+	private MumbleErrorCode(String message) {
 		this(generateCode(), message);
 	}
 
-	private ErrorCode(int code, String message) {
+	private MumbleErrorCode(int code, String message) {
 		this.code = code;
 		this.message = message;
 		bytes = ByteWrapper.create().putInt(code).get();
 	}
 
 	@Override
-	public String toString() {
-		return "ErrorCode={" + super.toString() + "," + code + "," + message + "}";
-	}
-
 	public byte[] getBytes() {
 		return bytes;
 	}
 
+	@Override
 	public int getCode() {
 		return code;
 	}
 
+	@Override
 	public String getMessage() {
 		return message;
+	}
+
+	@Override
+	public String toString() {
+		return "ErrorCode={" + super.toString() + "," + code + "," + message + "}";
 	}
 
 	/**
@@ -111,10 +116,10 @@ public enum ErrorCode {
 	 * 
 	 * @return The ErrorCode associated to the given code or UNKNOWN if there is no ErrorCode associated to the given code.
 	 */
-	public static ErrorCode fromCode(int code) {
-		for (ErrorCode errorCode : values())
-			if (errorCode.getCode() == code)
-				return errorCode;
+	public static MumbleErrorCode fromCode(int code) {
+		for (MumbleErrorCode mumbleErrorCode : values())
+			if (mumbleErrorCode.getCode() == code)
+				return mumbleErrorCode;
 		return UNKNOWN;
 	}
 

@@ -1,7 +1,7 @@
 package fr.pederobien.mumble.common.interfaces;
 
 import fr.pederobien.messenger.interfaces.IHeader;
-import fr.pederobien.mumble.common.impl.ErrorCode;
+import fr.pederobien.mumble.common.impl.MumbleErrorCode;
 import fr.pederobien.mumble.common.impl.Identifier;
 
 public interface IMumbleHeader extends IHeader {
@@ -14,12 +14,12 @@ public interface IMumbleHeader extends IHeader {
 	/**
 	 * @return The header error code.
 	 */
-	ErrorCode getErrorCode();
+	MumbleErrorCode getErrorCode();
 
 	/**
-	 * @return True if and only if the error code is not equals to {@link ErrorCode#NONE}.
+	 * @return True if and only if the error code is not equals to {@link MumbleErrorCode#NONE}.
 	 */
 	default boolean isError() {
-		return getErrorCode() != ErrorCode.NONE;
+		return getErrorCode() != MumbleErrorCode.NONE;
 	}
 }

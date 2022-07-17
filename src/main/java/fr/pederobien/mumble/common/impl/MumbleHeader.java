@@ -16,30 +16,30 @@ public class MumbleHeader extends Header implements IMumbleHeader {
 	 */
 	public static final int HEADER_LENGH = 16;
 	private Identifier identifier;
-	private ErrorCode errorCode;
+	private MumbleErrorCode mumbleErrorCode;
 
 	/**
 	 * Creates a new header associated to the given version. The value of the Idc is {@link Idc#UNKNOWN}, the Oid is
-	 * {@link Oid#UNKNOWN} and the error code is {@link ErrorCode#NONE}.
+	 * {@link Oid#UNKNOWN} and the error code is {@link MumbleErrorCode#NONE}.
 	 * 
 	 * @param version The protocol version used to create this header.
 	 */
 	public MumbleHeader(float version) {
 		super(version);
 		identifier = Identifier.UNKNOWN;
-		errorCode = ErrorCode.NONE;
+		mumbleErrorCode = MumbleErrorCode.NONE;
 	}
 
 	@Override
 	public void setProperties(Object... properties) {
 		super.setProperties(properties);
 		identifier = (Identifier) properties[0];
-		errorCode = (ErrorCode) properties[1];
+		mumbleErrorCode = (MumbleErrorCode) properties[1];
 	}
 
 	@Override
 	protected byte[] generateProperties() {
-		return ByteWrapper.create().put(identifier.getBytes()).put(errorCode.getBytes()).get();
+		return ByteWrapper.create().put(identifier.getBytes()).put(mumbleErrorCode.getBytes()).get();
 	}
 
 	@Override
@@ -51,8 +51,8 @@ public class MumbleHeader extends Header implements IMumbleHeader {
 		identifier = Identifier.fromCode(wrapper.getInt(MumbleMessage.IDENTIFIER_INDEX - MumbleMessage.BEGIN_WORD.length));
 
 		// +12: ErrorCode
-		errorCode = ErrorCode.fromCode(wrapper.getInt(MumbleMessage.ERROR_CODE_INDEX - MumbleMessage.BEGIN_WORD.length));
-		super.setProperties(identifier, errorCode);
+		mumbleErrorCode = MumbleErrorCode.fromCode(wrapper.getInt(MumbleMessage.ERROR_CODE_INDEX - MumbleMessage.BEGIN_WORD.length));
+		super.setProperties(identifier, mumbleErrorCode);
 		return this;
 	}
 
@@ -62,7 +62,7 @@ public class MumbleHeader extends Header implements IMumbleHeader {
 	}
 
 	@Override
-	public ErrorCode getErrorCode() {
-		return errorCode;
+	public MumbleErrorCode getErrorCode() {
+		return mumbleErrorCode;
 	}
 }
