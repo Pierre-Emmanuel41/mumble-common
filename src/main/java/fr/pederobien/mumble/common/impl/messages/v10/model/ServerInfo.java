@@ -13,9 +13,12 @@ public class ServerInfo {
 		private FullPlayerInfo playerInfo;
 		private Map<String, FullSoundModifierInfo> soundModifierInfo;
 		private Map<String, SemiFullChannelInfo> channelInfo;
+		private int vocalPort;
 
-		public SimpleServerInfo(FullPlayerInfo playerInfo) {
+		public SimpleServerInfo(FullPlayerInfo playerInfo, int vocalPort) {
 			this.playerInfo = playerInfo;
+			this.vocalPort = vocalPort;
+
 			soundModifierInfo = new LinkedHashMap<String, FullSoundModifierInfo>();
 			channelInfo = new LinkedHashMap<String, SemiFullChannelInfo>();
 		}
@@ -39,6 +42,13 @@ public class ServerInfo {
 		 */
 		public Map<String, SemiFullChannelInfo> getChannelInfo() {
 			return channelInfo;
+		}
+
+		/**
+		 * @return The port number on which the vocal server is running.
+		 */
+		public int getVocalPort() {
+			return vocalPort;
 		}
 	}
 

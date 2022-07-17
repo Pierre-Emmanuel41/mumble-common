@@ -38,6 +38,11 @@ public class GetServerConfigurationV10 extends MumbleMessage {
 		int first = 0;
 		ByteWrapper wrapper = ByteWrapper.wrap(payload);
 
+		// Vocal server's port number
+		int vocalPort = wrapper.getInt(first);
+		properties.add(vocalPort);
+		first += 4;
+
 		// Player's online status
 		boolean isOnline = wrapper.getInt(first) == 1 ? true : false;
 		properties.add(isOnline);
@@ -117,7 +122,8 @@ public class GetServerConfigurationV10 extends MumbleMessage {
 			first += 8;
 		}
 
-		serverInfo = new SimpleServerInfo(new FullPlayerInfo(name, isOnline, identifier, gameAddress, gamePort, isAdmin, isMute, isDeafen, x, y, z, yaw, pitch));
+		FullPlayerInfo playerInfo = new FullPlayerInfo(name, isOnline, identifier, gameAddress, gamePort, isAdmin, isMute, isDeafen, x, y, z, yaw, pitch);
+		serverInfo = new SimpleServerInfo(playerInfo, vocalPort);
 
 		// Number of modifiers
 		int numberOfModifiers = wrapper.getInt(first);
@@ -305,6 +311,9 @@ public class GetServerConfigurationV10 extends MumbleMessage {
 
 		int currentIndex = 0;
 
+		// Vocal server's port number
+		int vocalPort = (int) properties[currentIndex++];
+
 		// Player's online status
 		boolean isOnline = (boolean) properties[currentIndex++];
 
@@ -352,7 +361,8 @@ public class GetServerConfigurationV10 extends MumbleMessage {
 			pitch = (double) properties[currentIndex++];
 		}
 
-		serverInfo = new SimpleServerInfo(new FullPlayerInfo(name, isOnline, identifier, gameAddress, gamePort, isAdmin, isMute, isDeafen, x, y, z, yaw, pitch));
+		FullPlayerInfo playerInfo = new FullPlayerInfo(name, isOnline, identifier, gameAddress, gamePort, isAdmin, isMute, isDeafen, x, y, z, yaw, pitch);
+		serverInfo = new SimpleServerInfo(playerInfo, vocalPort);
 
 		// Number of sound modifiers
 		int numberOfModifiers = (int) properties[currentIndex++];
@@ -465,6 +475,9 @@ public class GetServerConfigurationV10 extends MumbleMessage {
 
 		if (getProperties().length == 0 || getHeader().isError())
 			return wrapper.get();
+
+		// Vocal server's port number
+		wrapper.putInt(serverInfo.getVocalPort());
 
 		// Player's online status
 		wrapper.putInt(serverInfo.getPlayerInfo().isOnline() ? 1 : 0);
