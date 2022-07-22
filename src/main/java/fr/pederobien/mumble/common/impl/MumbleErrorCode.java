@@ -68,6 +68,9 @@ public enum MumbleErrorCode implements IErrorCode {
 	// Code when there is no minimum defined for a parameter.
 	PARAMETER_WITHOUT_MAX("The parameter has no defined maximum"),
 
+	// Code when the parameter value is out of range
+	PARAMETER_VALUE_OUT_OF_RANGE("The new parameter value is out of range"),
+
 	// Code when the sound modifier does not exist.
 	SOUND_MODIFIER_DOES_NOT_EXIST("The sound modifier does not exist"),
 
