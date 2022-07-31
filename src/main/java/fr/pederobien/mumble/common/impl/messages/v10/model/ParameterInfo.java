@@ -1,5 +1,7 @@
 package fr.pederobien.mumble.common.impl.messages.v10.model;
 
+import fr.pederobien.mumble.common.impl.ParameterType;
+
 public class ParameterInfo {
 	private String name;
 	private ParameterType<?> type;
