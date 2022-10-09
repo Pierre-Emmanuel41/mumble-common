@@ -5,6 +5,7 @@ import fr.pederobien.mumble.common.impl.Identifier;
 import fr.pederobien.mumble.common.impl.messages.MumbleMessage;
 import fr.pederobien.mumble.common.interfaces.IMumbleHeader;
 import fr.pederobien.utils.ByteWrapper;
+import fr.pederobien.utils.ReadableByteWrapper;
 
 public class SetChannelNameV10 extends MumbleMessage {
 	private String oldName, newName;
@@ -23,19 +24,13 @@ public class SetChannelNameV10 extends MumbleMessage {
 		if (getHeader().isError())
 			return this;
 
-		int first = 0;
-		ByteWrapper wrapper = ByteWrapper.wrap(payload);
+		ReadableByteWrapper wrapper = ReadableByteWrapper.wrap(payload);
 
 		// Old channel name
-		int oldChannelNameLength = wrapper.getInt(first);
-		first += 4;
-		oldName = wrapper.getString(first, oldChannelNameLength);
-		first += oldChannelNameLength;
+		oldName = wrapper.nextString(wrapper.nextInt());
 
 		// New channel name
-		int newChannelNameLength = wrapper.getInt(first);
-		first += 4;
-		newName = wrapper.getString(first, newChannelNameLength);
+		newName = wrapper.nextString(wrapper.nextInt());
 
 		super.setProperties(oldName, newName);
 		return this;
@@ -48,7 +43,10 @@ public class SetChannelNameV10 extends MumbleMessage {
 		if (getHeader().isError())
 			return;
 
+		// Old channel name
 		oldName = (String) properties[0];
+
+		// New channel name
 		newName = (String) properties[1];
 	}
 

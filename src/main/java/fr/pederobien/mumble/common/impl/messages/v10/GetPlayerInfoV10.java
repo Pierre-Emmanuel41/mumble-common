@@ -10,6 +10,7 @@ import fr.pederobien.mumble.common.impl.messages.MumbleMessage;
 import fr.pederobien.mumble.common.impl.messages.v10.model.PlayerInfo.FullPlayerInfo;
 import fr.pederobien.mumble.common.interfaces.IMumbleHeader;
 import fr.pederobien.utils.ByteWrapper;
+import fr.pederobien.utils.ReadableByteWrapper;
 
 public class GetPlayerInfoV10 extends MumbleMessage {
 	private FullPlayerInfo playerInfo;
@@ -29,13 +30,11 @@ public class GetPlayerInfoV10 extends MumbleMessage {
 			return this;
 
 		List<Object> properties = new ArrayList<Object>();
-		int first = 0;
-		ByteWrapper wrapper = ByteWrapper.wrap(payload);
+		ReadableByteWrapper wrapper = ReadableByteWrapper.wrap(payload);
 
 		// Player's online status
-		boolean isOnline = wrapper.getInt(first) == 1 ? true : false;
+		boolean isOnline = wrapper.nextInt() == 1 ? true : false;
 		properties.add(isOnline);
-		first += 4;
 
 		String name = null, gameAddress = null;
 		UUID identifier = null;
@@ -45,70 +44,52 @@ public class GetPlayerInfoV10 extends MumbleMessage {
 
 		if (isOnline) {
 			// Player name
-			int playerNameLength = wrapper.getInt(first);
-			first += 4;
-			name = wrapper.getString(first, playerNameLength);
+			name = wrapper.nextString(wrapper.nextInt());
 			properties.add(name);
-			first += playerNameLength;
 
 			// Player's identifier
-			int identifierLength = wrapper.getInt(first);
-			first += 4;
-			identifier = UUID.fromString(wrapper.getString(first, identifierLength));
+			identifier = UUID.fromString(wrapper.nextString(wrapper.nextInt()));
 			properties.add(identifier);
-			first += identifierLength;
 
 			// Player's game address
-			int addressLength = wrapper.getInt(first);
-			first += 4;
-			gameAddress = wrapper.getString(first, addressLength);
+			gameAddress = wrapper.nextString(wrapper.nextInt());
 			properties.add(gameAddress);
-			first += addressLength;
 
 			// Player's game port
-			gamePort = wrapper.getInt(first);
+			gamePort = wrapper.nextInt();
 			properties.add(gamePort);
-			first += 4;
 
 			// Player's administrator status
-			isAdmin = wrapper.getInt(first) == 1 ? true : false;
+			isAdmin = wrapper.nextInt() == 1 ? true : false;
 			properties.add(isAdmin);
-			first += 4;
 
 			// Player's mute status
-			isMute = wrapper.getInt(first) == 1 ? true : false;
+			isMute = wrapper.nextInt() == 1 ? true : false;
 			properties.add(isMute);
-			first += 4;
 
 			// Player's deafen status
-			isDeafen = wrapper.getInt(first) == 1 ? true : false;
+			isDeafen = wrapper.nextInt() == 1 ? true : false;
 			properties.add(isDeafen);
-			first += 4;
 
 			// Player's x coordinate
-			x = wrapper.getDouble(first);
+			x = wrapper.nextDouble();
 			properties.add(x);
-			first += 8;
 
 			// Player's y coordinate
-			y = wrapper.getDouble(first);
+			y = wrapper.nextDouble();
 			properties.add(y);
-			first += 8;
 
 			// Player's z coordinate
-			z = wrapper.getDouble(first);
+			z = wrapper.nextDouble();
 			properties.add(z);
-			first += 8;
 
 			// Player's yaw angle
-			yaw = wrapper.getDouble(first);
+			yaw = wrapper.nextDouble();
 			properties.add(yaw);
-			first += 8;
 
 			// Player's pitch angle
-			pitch = wrapper.getDouble(first);
+			pitch = wrapper.nextDouble();
 			properties.add(pitch);
-			first += 8;
 		}
 
 		playerInfo = new FullPlayerInfo(name, isOnline, identifier, gameAddress, gamePort, isAdmin, isMute, isDeafen, x, y, z, yaw, pitch);

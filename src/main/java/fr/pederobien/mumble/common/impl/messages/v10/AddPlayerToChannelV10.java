@@ -9,6 +9,7 @@ import fr.pederobien.mumble.common.impl.messages.MumbleMessage;
 import fr.pederobien.mumble.common.impl.messages.v10.model.PlayerInfo.StatusPlayerInfo;
 import fr.pederobien.mumble.common.interfaces.IMumbleHeader;
 import fr.pederobien.utils.ByteWrapper;
+import fr.pederobien.utils.ReadableByteWrapper;
 
 public class AddPlayerToChannelV10 extends MumbleMessage {
 	private String channelName;
@@ -28,38 +29,28 @@ public class AddPlayerToChannelV10 extends MumbleMessage {
 		if (getHeader().isError())
 			return this;
 
-		int first = 0;
 		List<Object> informations = new ArrayList<Object>();
-		ByteWrapper wrapper = ByteWrapper.wrap(payload);
+		ReadableByteWrapper wrapper = ReadableByteWrapper.wrap(payload);
 
 		// Channel's name
-		int channelNameLength = wrapper.getInt(first);
-		first += 4;
-		channelName = wrapper.getString(first, channelNameLength);
+		channelName = wrapper.nextString(wrapper.nextInt());
 		informations.add(channelName);
-		first += channelNameLength;
 
 		// Player's name
-		int playerNameLength = wrapper.getInt(first);
-		first += 4;
-		String playerName = wrapper.getString(first, playerNameLength);
+		String playerName = wrapper.nextString(wrapper.nextInt());
 		informations.add(playerName);
-		first += playerNameLength;
 
 		// Player's mute status
-		boolean isMute = wrapper.getInt(first) == 1;
+		boolean isMute = wrapper.nextInt() == 1;
 		informations.add(isMute);
-		first += 4;
 
 		// Player's deafen status
-		boolean isDeafen = wrapper.getInt(first) == 1;
+		boolean isDeafen = wrapper.nextInt() == 1;
 		informations.add(isDeafen);
-		first += 4;
 
 		// Player's muteBy status
-		boolean isMuteByMainPlayer = wrapper.getInt(first) == 1;
+		boolean isMuteByMainPlayer = wrapper.nextInt() == 1;
 		informations.add(isMuteByMainPlayer);
-		first += 4;
 
 		playerInfo = new StatusPlayerInfo(playerName, isMute, isDeafen, isMuteByMainPlayer);
 		super.setProperties(informations.toArray());

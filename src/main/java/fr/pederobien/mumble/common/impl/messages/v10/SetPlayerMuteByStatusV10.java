@@ -5,6 +5,7 @@ import fr.pederobien.mumble.common.impl.Identifier;
 import fr.pederobien.mumble.common.impl.messages.MumbleMessage;
 import fr.pederobien.mumble.common.interfaces.IMumbleHeader;
 import fr.pederobien.utils.ByteWrapper;
+import fr.pederobien.utils.ReadableByteWrapper;
 
 public class SetPlayerMuteByStatusV10 extends MumbleMessage {
 	private String target, source;
@@ -24,23 +25,16 @@ public class SetPlayerMuteByStatusV10 extends MumbleMessage {
 		if (getHeader().isError())
 			return this;
 
-		int first = 0;
-		ByteWrapper wrapper = ByteWrapper.wrap(payload);
+		ReadableByteWrapper wrapper = ReadableByteWrapper.wrap(payload);
 
 		// Target player name
-		int playerNameLength = wrapper.getInt(first);
-		first += 4;
-		target = wrapper.getString(first, playerNameLength);
-		first += playerNameLength;
+		target = wrapper.nextString(wrapper.nextInt());
 
 		// Source player name
-		int playerMutedOrUnmutedNameLength = wrapper.getInt(first);
-		first += 4;
-		source = wrapper.getString(first, playerMutedOrUnmutedNameLength);
-		first += playerMutedOrUnmutedNameLength;
+		source = wrapper.nextString(wrapper.nextInt());
 
 		// Player mute or unmute
-		isMute = wrapper.get(first) == 1;
+		isMute = wrapper.nextInt() == 1;
 
 		super.setProperties(target, source, isMute);
 		return this;
@@ -53,8 +47,13 @@ public class SetPlayerMuteByStatusV10 extends MumbleMessage {
 		if (getHeader().isError())
 			return;
 
+		// Target player name
 		target = (String) properties[0];
+
+		// Source player name
 		source = (String) properties[1];
+
+		// Player mute status
 		isMute = (boolean) properties[2];
 	}
 
@@ -72,7 +71,7 @@ public class SetPlayerMuteByStatusV10 extends MumbleMessage {
 		wrapper.putString(source, true);
 
 		// Player's mute status
-		wrapper.put((byte) (isMute ? 1 : 0));
+		wrapper.putInt(isMute ? 1 : 0);
 
 		return wrapper.get();
 	}

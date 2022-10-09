@@ -5,6 +5,7 @@ import fr.pederobien.mumble.common.impl.Identifier;
 import fr.pederobien.mumble.common.impl.messages.MumbleMessage;
 import fr.pederobien.mumble.common.interfaces.IMumbleHeader;
 import fr.pederobien.utils.ByteWrapper;
+import fr.pederobien.utils.ReadableByteWrapper;
 
 public class SetPlayerNameV10 extends MumbleMessage {
 	private String oldName, newName;
@@ -23,20 +24,13 @@ public class SetPlayerNameV10 extends MumbleMessage {
 		if (getHeader().isError())
 			return this;
 
-		int first = 0;
-		ByteWrapper wrapper = ByteWrapper.wrap(payload);
+		ReadableByteWrapper wrapper = ReadableByteWrapper.wrap(payload);
 
 		// Old player's name
-		int oldNameLength = wrapper.getInt(first);
-		first += 4;
-		oldName = wrapper.getString(first, oldNameLength);
-		first += oldNameLength;
+		oldName = wrapper.nextString(wrapper.nextInt());
 
 		// New player's name
-		int newNameLength = wrapper.getInt(first);
-		first += 4;
-		newName = wrapper.getString(first, newNameLength);
-		first += newNameLength;
+		newName = wrapper.nextString(wrapper.nextInt());
 
 		super.setProperties(oldName, newName);
 		return this;

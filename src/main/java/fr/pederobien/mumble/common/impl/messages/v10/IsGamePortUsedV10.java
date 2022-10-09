@@ -5,6 +5,7 @@ import fr.pederobien.mumble.common.impl.Identifier;
 import fr.pederobien.mumble.common.impl.messages.MumbleMessage;
 import fr.pederobien.mumble.common.interfaces.IMumbleHeader;
 import fr.pederobien.utils.ByteWrapper;
+import fr.pederobien.utils.ReadableByteWrapper;
 
 public class IsGamePortUsedV10 extends MumbleMessage {
 	private int port;
@@ -23,7 +24,7 @@ public class IsGamePortUsedV10 extends MumbleMessage {
 		if (getHeader().isError())
 			return this;
 
-		port = ByteWrapper.wrap(payload).getInt(0);
+		port = ReadableByteWrapper.wrap(payload).nextInt();
 
 		super.setProperties(port);
 		return this;

@@ -5,6 +5,7 @@ import fr.pederobien.mumble.common.impl.Identifier;
 import fr.pederobien.mumble.common.impl.messages.MumbleMessage;
 import fr.pederobien.mumble.common.interfaces.IMumbleHeader;
 import fr.pederobien.utils.ByteWrapper;
+import fr.pederobien.utils.ReadableByteWrapper;
 
 public class RemovePlayerFromChannelV10 extends MumbleMessage {
 	private String channelName, playerName;
@@ -23,20 +24,13 @@ public class RemovePlayerFromChannelV10 extends MumbleMessage {
 		if (getHeader().isError())
 			return this;
 
-		int first = 0;
-		ByteWrapper wrapper = ByteWrapper.wrap(payload);
+		ReadableByteWrapper wrapper = ReadableByteWrapper.wrap(payload);
 
 		// Channel name
-		int channelNameLength = wrapper.getInt(first);
-		first += 4;
-		channelName = wrapper.getString(first, channelNameLength);
-		first += channelNameLength;
+		channelName = wrapper.nextString(wrapper.nextInt());
 
 		// Player name
-		int playerNameLength = wrapper.getInt(first);
-		first += 4;
-		playerName = wrapper.getString(first, playerNameLength);
-		first += playerNameLength;
+		playerName = wrapper.nextString(wrapper.nextInt());
 
 		super.setProperties(channelName, playerName);
 		return this;

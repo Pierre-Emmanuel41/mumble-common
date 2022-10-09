@@ -9,6 +9,7 @@ import fr.pederobien.mumble.common.impl.messages.MumbleMessage;
 import fr.pederobien.mumble.common.impl.messages.v10.model.PlayerInfo.CoordinatePlayerInfo;
 import fr.pederobien.mumble.common.interfaces.IMumbleHeader;
 import fr.pederobien.utils.ByteWrapper;
+import fr.pederobien.utils.ReadableByteWrapper;
 
 public class GetPlayerPositionV10 extends MumbleMessage {
 	private CoordinatePlayerInfo playerInfo;
@@ -28,44 +29,37 @@ public class GetPlayerPositionV10 extends MumbleMessage {
 			return this;
 
 		List<Object> properties = new ArrayList<Object>();
-		int first = 0;
-		ByteWrapper wrapper = ByteWrapper.wrap(payload);
+		ReadableByteWrapper wrapper = ReadableByteWrapper.wrap(payload);
 
 		// Player name
-		int playerNameLength = wrapper.getInt(first);
-		first += 4;
-		String playerName = wrapper.getString(first, playerNameLength);
+		String playerName = wrapper.nextString(wrapper.nextInt());
 		properties.add(playerName);
-		first += playerNameLength;
 
 		double x = 0, y = 0, z = 0, yaw = 0, pitch = 0;
+		try {
+			// When it is a response
 
-		// When it is an answer
-		if (first < payload.length) {
 			// X position
-			x = wrapper.getDouble(first);
+			x = wrapper.nextDouble();
 			properties.add(x);
-			first += 8;
 
 			// Y position
-			y = wrapper.getDouble(first);
+			y = wrapper.nextDouble();
 			properties.add(y);
-			first += 8;
 
 			// Z position
-			z = wrapper.getDouble(first);
+			z = wrapper.nextDouble();
 			properties.add(z);
-			first += 8;
 
 			// Yaw position
-			yaw = wrapper.getDouble(first);
+			yaw = wrapper.nextDouble();
 			properties.add(yaw);
-			first += 8;
 
 			// Pitch position
-			pitch = wrapper.getDouble(first);
+			pitch = wrapper.nextDouble();
 			properties.add(pitch);
-			first += 8;
+		} catch (IndexOutOfBoundsException e) {
+			// When it is a request
 		}
 
 		playerInfo = new CoordinatePlayerInfo(playerName, x, y, z, yaw, pitch);

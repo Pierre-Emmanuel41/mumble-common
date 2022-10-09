@@ -16,6 +16,7 @@ import fr.pederobien.mumble.common.impl.messages.v10.model.ServerInfo.SimpleServ
 import fr.pederobien.mumble.common.impl.messages.v10.model.SoundModifierInfo.FullSoundModifierInfo;
 import fr.pederobien.mumble.common.interfaces.IMumbleHeader;
 import fr.pederobien.utils.ByteWrapper;
+import fr.pederobien.utils.ReadableByteWrapper;
 
 public class GetServerConfigurationV10 extends MumbleMessage {
 	private SimpleServerInfo serverInfo;
@@ -35,18 +36,15 @@ public class GetServerConfigurationV10 extends MumbleMessage {
 			return this;
 
 		List<Object> properties = new ArrayList<Object>();
-		int first = 0;
-		ByteWrapper wrapper = ByteWrapper.wrap(payload);
+		ReadableByteWrapper wrapper = ReadableByteWrapper.wrap(payload);
 
 		// Vocal server's port number
-		int vocalPort = wrapper.getInt(first);
+		int vocalPort = wrapper.nextInt();
 		properties.add(vocalPort);
-		first += 4;
 
 		// Player's online status
-		boolean isOnline = wrapper.getInt(first) == 1 ? true : false;
+		boolean isOnline = wrapper.nextInt() == 1 ? true : false;
 		properties.add(isOnline);
-		first += 4;
 
 		String name = null, gameAddress = null;
 		UUID identifier = null;
@@ -56,135 +54,102 @@ public class GetServerConfigurationV10 extends MumbleMessage {
 
 		if (isOnline) {
 			// Player name
-			int playerNameLength = wrapper.getInt(first);
-			first += 4;
-			name = wrapper.getString(first, playerNameLength);
+			name = wrapper.nextString(wrapper.nextInt());
 			properties.add(name);
-			first += playerNameLength;
 
 			// Player's identifier
-			int identifierLength = wrapper.getInt(first);
-			first += 4;
-			identifier = UUID.fromString(wrapper.getString(first, identifierLength));
+			identifier = UUID.fromString(wrapper.nextString(wrapper.nextInt()));
 			properties.add(identifier);
-			first += identifierLength;
 
 			// Player's game address
-			int addressLength = wrapper.getInt(first);
-			first += 4;
-			gameAddress = wrapper.getString(first, addressLength);
+			gameAddress = wrapper.nextString(wrapper.nextInt());
 			properties.add(gameAddress);
-			first += addressLength;
 
 			// Player's game port
-			gamePort = wrapper.getInt(first);
+			gamePort = wrapper.nextInt();
 			properties.add(gamePort);
-			first += 4;
 
 			// Player's administrator status
-			isAdmin = wrapper.getInt(first) == 1 ? true : false;
+			isAdmin = wrapper.nextInt() == 1 ? true : false;
 			properties.add(isAdmin);
-			first += 4;
 
 			// Player's mute status
-			isMute = wrapper.getInt(first) == 1 ? true : false;
+			isMute = wrapper.nextInt() == 1 ? true : false;
 			properties.add(isMute);
-			first += 4;
 
 			// Player's deafen status
-			isDeafen = wrapper.getInt(first) == 1 ? true : false;
+			isDeafen = wrapper.nextInt() == 1 ? true : false;
 			properties.add(isDeafen);
-			first += 4;
 
 			// Player's x coordinate
-			x = wrapper.getDouble(first);
+			x = wrapper.nextDouble();
 			properties.add(x);
-			first += 8;
 
 			// Player's y coordinate
-			y = wrapper.getDouble(first);
+			y = wrapper.nextDouble();
 			properties.add(y);
-			first += 8;
 
 			// Player's z coordinate
-			z = wrapper.getDouble(first);
+			z = wrapper.nextDouble();
 			properties.add(z);
-			first += 8;
 
 			// Player's yaw angle
-			yaw = wrapper.getDouble(first);
+			yaw = wrapper.nextDouble();
 			properties.add(yaw);
-			first += 8;
 
 			// Player's pitch angle
-			pitch = wrapper.getDouble(first);
+			pitch = wrapper.nextDouble();
 			properties.add(pitch);
-			first += 8;
 		}
 
 		FullPlayerInfo playerInfo = new FullPlayerInfo(name, isOnline, identifier, gameAddress, gamePort, isAdmin, isMute, isDeafen, x, y, z, yaw, pitch);
 		serverInfo = new SimpleServerInfo(playerInfo, vocalPort);
 
 		// Number of modifiers
-		int numberOfModifiers = wrapper.getInt(first);
+		int numberOfModifiers = wrapper.nextInt();
 		properties.add(numberOfModifiers);
-		first += 4;
 
 		for (int i = 0; i < numberOfModifiers; i++) {
 			// Modifier name
-			int modifierNameLength = wrapper.getInt(first);
-			first += 4;
-			String modifierName = wrapper.getString(first, modifierNameLength);
+			String modifierName = wrapper.nextString(wrapper.nextInt());
 			properties.add(modifierName);
-			first += modifierNameLength;
 
 			FullSoundModifierInfo modifierInfo = new FullSoundModifierInfo(modifierName);
 
 			// Number of parameters
-			int numberOfParameters = wrapper.getInt(first);
+			int numberOfParameters = wrapper.nextInt();
 			properties.add(numberOfParameters);
-			first += 4;
 
 			for (int j = 0; j < numberOfParameters; j++) {
 				// Parameter's name
-				int parameterNameLength = wrapper.getInt(first);
-				first += 4;
-				String parameterName = wrapper.getString(first, parameterNameLength);
+				String parameterName = wrapper.nextString(wrapper.nextInt());
 				properties.add(parameterName);
-				first += parameterNameLength;
 
 				// Parameter's type
-				int code = wrapper.getInt(first);
-				first += 4;
-				ParameterType<?> type = ParameterType.fromCode(code);
+				ParameterType<?> type = ParameterType.fromCode(wrapper.nextInt());
 				properties.add(type);
 
 				// Parameter's default value
-				Object defaultValue = type.getValue(wrapper.extract(first, type.size()));
+				Object defaultValue = type.getValue(wrapper.next(type.size()));
 				properties.add(defaultValue);
-				first += type.size();
 
 				// Parameter's value
-				Object parameterValue = type.getValue(wrapper.extract(first, type.size()));
+				Object parameterValue = type.getValue(wrapper.next(type.size()));
 				properties.add(parameterValue);
-				first += type.size();
 
 				// Parameter's range
-				boolean isRange = wrapper.getInt(first) == 1;
+				boolean isRange = wrapper.nextInt() == 1;
 				properties.add(isRange);
-				first += 4;
 
 				Object minValue = null, maxValue = null;
 				if (isRange) {
 					// Parameter's minimum value
-					minValue = type.getValue(wrapper.extract(first, type.size()));
+					minValue = type.getValue(wrapper.next(type.size()));
 					properties.add(minValue);
-					first += type.size();
 
 					// Parameter's maximum value
-					maxValue = type.getValue(wrapper.extract(first, type.size()));
+					maxValue = type.getValue(wrapper.next(type.size()));
 					properties.add(maxValue);
-					first += type.size();
 				}
 				modifierInfo.getParameterInfo().put(parameterName, new FullParameterInfo(parameterName, type, parameterValue, defaultValue, isRange, minValue, maxValue));
 			}
@@ -192,72 +157,54 @@ public class GetServerConfigurationV10 extends MumbleMessage {
 		}
 
 		// Number of channels
-		int numberOfChannels = wrapper.getInt(first);
+		int numberOfChannels = wrapper.nextInt();
 		properties.add(numberOfChannels);
-		first += 4;
 
 		for (int i = 0; i < numberOfChannels; i++) {
 			// Channel's name
-			int channelNameLength = wrapper.getInt(first);
-			first += 4;
-			String channelName = wrapper.getString(first, channelNameLength);
+			String channelName = wrapper.nextString(wrapper.nextInt());
 			properties.add(channelName);
-			first += channelNameLength;
 
 			// Channel's sound modifier name
-			int soundModifierNameLength = wrapper.getInt(first);
-			first += 4;
-			String modifierName = wrapper.getString(first, soundModifierNameLength);
+			String modifierName = wrapper.nextString(wrapper.nextInt());
 			properties.add(modifierName);
-			first += soundModifierNameLength;
 
 			FullSoundModifierInfo modifierInfo = new FullSoundModifierInfo(modifierName);
 
 			// Number of parameter
-			int numberOfParameters = wrapper.getInt(first);
+			int numberOfParameters = wrapper.nextInt();
 			properties.add(numberOfParameters);
-			first += 4;
 
 			for (int j = 0; j < numberOfParameters; j++) {
 				// Parameter's name
-				int parameterNameLength = wrapper.getInt(first);
-				first += 4;
-				String parameterName = wrapper.getString(first, parameterNameLength);
+				String parameterName = wrapper.nextString(wrapper.nextInt());
 				properties.add(parameterName);
-				first += parameterNameLength;
 
 				// Parameter's type
-				int code = wrapper.getInt(first);
-				first += 4;
-				ParameterType<?> type = ParameterType.fromCode(code);
+				ParameterType<?> type = ParameterType.fromCode(wrapper.nextInt());
 				properties.add(type);
 
 				// Parameter's default value
-				Object defaultValue = type.getValue(wrapper.extract(first, type.size()));
+				Object defaultValue = type.getValue(wrapper.next(type.size()));
 				properties.add(defaultValue);
-				first += type.size();
 
 				// Parameter's value
-				Object parameterValue = type.getValue(wrapper.extract(first, type.size()));
+				Object parameterValue = type.getValue(wrapper.next(type.size()));
 				properties.add(parameterValue);
-				first += type.size();
 
 				// Parameter's range
-				boolean isRange = wrapper.getInt(first) == 1;
+				boolean isRange = wrapper.nextInt() == 1;
 				properties.add(isRange);
-				first += 4;
 
 				Object minValue = null, maxValue = null;
 				if (isRange) {
 					// Parameter's minimum value
-					minValue = type.getValue(wrapper.extract(first, type.size()));
+					minValue = type.getValue(wrapper.next(type.size()));
 					properties.add(minValue);
-					first += type.size();
 
 					// Parameter's maximum value
-					maxValue = type.getValue(wrapper.extract(first, type.size()));
+					maxValue = type.getValue(wrapper.next(type.size()));
 					properties.add(maxValue);
-					first += type.size();
 				}
 				modifierInfo.getParameterInfo().put(parameterName, new FullParameterInfo(parameterName, type, parameterValue, defaultValue, isRange, minValue, maxValue));
 			}
@@ -265,32 +212,25 @@ public class GetServerConfigurationV10 extends MumbleMessage {
 			SemiFullChannelInfo channelInfo = new SemiFullChannelInfo(channelName, modifierInfo);
 
 			// Number of players
-			int numberOfChannelPlayers = wrapper.getInt(first);
+			int numberOfChannelPlayers = wrapper.nextInt();
 			properties.add(numberOfChannelPlayers);
-			first += 4;
 
 			for (int j = 0; j < numberOfChannelPlayers; j++) {
 				// Player's name
-				int playerNameLength = wrapper.getInt(first);
-				first += 4;
-				String playerName = wrapper.getString(first, playerNameLength);
+				String playerName = wrapper.nextString(wrapper.nextInt());
 				properties.add(playerName);
-				first += playerNameLength;
 
 				// Player's mute status
-				boolean playerMute = wrapper.getInt(first) == 1;
+				boolean playerMute = wrapper.nextInt() == 1;
 				properties.add(playerMute);
-				first += 4;
 
 				// Player's deafen status
-				boolean playerDeafen = wrapper.getInt(first) == 1;
+				boolean playerDeafen = wrapper.nextInt() == 1;
 				properties.add(playerDeafen);
-				first += 4;
 
 				// Player's muteBy status
-				boolean isMuteByMainPlayer = wrapper.getInt(first) == 1;
+				boolean isMuteByMainPlayer = wrapper.nextInt() == 1;
 				properties.add(isMuteByMainPlayer);
-				first += 4;
 
 				channelInfo.getPlayerInfo().put(playerName, new StatusPlayerInfo(playerName, playerMute, playerDeafen, isMuteByMainPlayer));
 			}

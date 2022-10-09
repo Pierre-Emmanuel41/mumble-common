@@ -5,6 +5,7 @@ import fr.pederobien.mumble.common.impl.Identifier;
 import fr.pederobien.mumble.common.impl.messages.MumbleMessage;
 import fr.pederobien.mumble.common.interfaces.IMumbleHeader;
 import fr.pederobien.utils.ByteWrapper;
+import fr.pederobien.utils.ReadableByteWrapper;
 
 public class SetPlayerPositionV10 extends MumbleMessage {
 	private String playerName;
@@ -24,33 +25,25 @@ public class SetPlayerPositionV10 extends MumbleMessage {
 		if (getHeader().isError())
 			return this;
 
-		int first = 0;
-		ByteWrapper wrapper = ByteWrapper.wrap(payload);
+		ReadableByteWrapper wrapper = ReadableByteWrapper.wrap(payload);
 
 		// Player name
-		int playerNameLength = wrapper.getInt(first);
-		first += 4;
-		playerName = wrapper.getString(first, playerNameLength);
-		first += playerNameLength;
+		playerName = wrapper.nextString(wrapper.nextInt());
 
 		// X position
-		x = wrapper.getDouble(first);
-		first += 8;
+		x = wrapper.nextDouble();
 
 		// Y position
-		y = wrapper.getDouble(first);
-		first += 8;
+		y = wrapper.nextDouble();
 
 		// Z position
-		z = wrapper.getDouble(first);
-		first += 8;
+		z = wrapper.nextDouble();
 
 		// Yaw position
-		yaw = wrapper.getDouble(first);
-		first += 8;
+		yaw = wrapper.nextDouble();
 
 		// Pitch position
-		pitch = wrapper.getDouble(first);
+		pitch = wrapper.nextDouble();
 
 		super.setProperties(playerName, x, y, z, yaw, pitch);
 		return this;

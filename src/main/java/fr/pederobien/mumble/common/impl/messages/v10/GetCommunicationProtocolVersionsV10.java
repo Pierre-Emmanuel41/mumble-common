@@ -8,6 +8,7 @@ import fr.pederobien.mumble.common.impl.Identifier;
 import fr.pederobien.mumble.common.impl.messages.MumbleMessage;
 import fr.pederobien.mumble.common.interfaces.IMumbleHeader;
 import fr.pederobien.utils.ByteWrapper;
+import fr.pederobien.utils.ReadableByteWrapper;
 
 public class GetCommunicationProtocolVersionsV10 extends MumbleMessage {
 	private float[] versions;
@@ -26,25 +27,22 @@ public class GetCommunicationProtocolVersionsV10 extends MumbleMessage {
 		if (getHeader().isError())
 			return this;
 
-		int first = 0;
-		ByteWrapper wrapper = ByteWrapper.wrap(payload);
 		List<Object> properties = new ArrayList<Object>();
+		ReadableByteWrapper wrapper = ReadableByteWrapper.wrap(payload);
 
 		// When it is an answer
 		if (payload.length > 0) {
 			// Number of version
-			int numberOfVersions = wrapper.getInt(first);
-			first += 4;
+			int numberOfVersions = wrapper.nextInt();
 
 			versions = new float[numberOfVersions];
+			properties.add(versions);
 
 			for (int i = 0; i < numberOfVersions; i++) {
 				// Version
-				float version = wrapper.getFloat(first);
-				versions[i] = version;
-				properties.add(versions);
-				first += 4;
+				versions[i] = wrapper.nextFloat();
 			}
+
 		}
 
 		super.setProperties(properties.toArray());

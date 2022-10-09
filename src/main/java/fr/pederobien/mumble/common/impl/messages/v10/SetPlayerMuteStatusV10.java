@@ -5,6 +5,7 @@ import fr.pederobien.mumble.common.impl.Identifier;
 import fr.pederobien.mumble.common.impl.messages.MumbleMessage;
 import fr.pederobien.mumble.common.interfaces.IMumbleHeader;
 import fr.pederobien.utils.ByteWrapper;
+import fr.pederobien.utils.ReadableByteWrapper;
 
 public class SetPlayerMuteStatusV10 extends MumbleMessage {
 	private String playerName;
@@ -24,17 +25,13 @@ public class SetPlayerMuteStatusV10 extends MumbleMessage {
 		if (getHeader().isError())
 			return this;
 
-		int first = 0;
-		ByteWrapper wrapper = ByteWrapper.wrap(payload);
+		ReadableByteWrapper wrapper = ReadableByteWrapper.wrap(payload);
 
 		// Player's name
-		int playerNameLength = wrapper.getInt(first);
-		first += 4;
-		playerName = wrapper.getString(first, playerNameLength);
-		first += playerNameLength;
+		playerName = wrapper.nextString(wrapper.nextInt());
 
 		// Player's mute status
-		isMute = wrapper.getInt(first) == 1;
+		isMute = wrapper.nextInt() == 1;
 
 		super.setProperties(playerName, isMute);
 		return this;

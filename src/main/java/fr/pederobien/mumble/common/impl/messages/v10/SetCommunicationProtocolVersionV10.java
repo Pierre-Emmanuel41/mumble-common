@@ -5,6 +5,7 @@ import fr.pederobien.mumble.common.impl.Identifier;
 import fr.pederobien.mumble.common.impl.messages.MumbleMessage;
 import fr.pederobien.mumble.common.interfaces.IMumbleHeader;
 import fr.pederobien.utils.ByteWrapper;
+import fr.pederobien.utils.ReadableByteWrapper;
 
 public class SetCommunicationProtocolVersionV10 extends MumbleMessage {
 	private float version;
@@ -23,9 +24,7 @@ public class SetCommunicationProtocolVersionV10 extends MumbleMessage {
 		if (getHeader().isError())
 			return this;
 
-		ByteWrapper wrapper = ByteWrapper.wrap(payload);
-
-		version = wrapper.getFloat(0);
+		version = ReadableByteWrapper.wrap(payload).nextFloat();
 		return this;
 	}
 

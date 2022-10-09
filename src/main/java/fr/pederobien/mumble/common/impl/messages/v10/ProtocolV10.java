@@ -35,8 +35,6 @@ public class ProtocolV10 extends Protocol {
 		register(new MessageCreator(Identifier.SET_PLAYER_GAME_ADDRESS.name(), header -> new SetPlayerGameAddressV10((IMumbleHeader) header)));
 		register(new MessageCreator(Identifier.GET_PLAYER_ADMINISTRATOR.name(), header -> new GetPlayerAdministratorStatusV10((IMumbleHeader) header)));
 		register(new MessageCreator(Identifier.SET_PLAYER_ADMINISTRATOR.name(), header -> new SetPlayerAdministratorStatusV10((IMumbleHeader) header)));
-		register(new MessageCreator(Identifier.PLAYER_SPEAK_INPUT.name(), header -> new PlayerSpeakInputV10((IMumbleHeader) header)));
-		register(new MessageCreator(Identifier.PLAYER_SPEAK_OUTPUT.name(), header -> new PlayerSpeakOutputV10((IMumbleHeader) header)));
 		register(new MessageCreator(Identifier.GET_PLAYER_MUTE.name(), header -> new GetPlayerMuteStatusV10((IMumbleHeader) header)));
 		register(new MessageCreator(Identifier.SET_PLAYER_MUTE.name(), header -> new SetPlayerMuteStatusV10((IMumbleHeader) header)));
 		register(new MessageCreator(Identifier.SET_PLAYER_MUTE_BY.name(), header -> new SetPlayerMuteByStatusV10((IMumbleHeader) header)));

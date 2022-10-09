@@ -87,16 +87,6 @@ public enum Identifier {
 	SET_PLAYER_ADMINISTRATOR,
 
 	/**
-	 * Identifier of the message to received from an audio sample from a vocal client.
-	 */
-	PLAYER_SPEAK_INPUT,
-
-	/**
-	 * Identifier of the message to send an audio sample to a specific client.
-	 */
-	PLAYER_SPEAK_OUTPUT,
-
-	/**
 	 * Identifier of the message to get the mute status of a player.
 	 */
 	GET_PLAYER_MUTE,

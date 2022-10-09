@@ -6,6 +6,7 @@ import fr.pederobien.mumble.common.impl.ParameterType;
 import fr.pederobien.mumble.common.impl.messages.MumbleMessage;
 import fr.pederobien.mumble.common.interfaces.IMumbleHeader;
 import fr.pederobien.utils.ByteWrapper;
+import fr.pederobien.utils.ReadableByteWrapper;
 
 public class SetParameterMinValueV10 extends MumbleMessage {
 	private String channelName;
@@ -27,29 +28,19 @@ public class SetParameterMinValueV10 extends MumbleMessage {
 		if (getHeader().isError())
 			return this;
 
-		int first = 0;
-		ByteWrapper wrapper = ByteWrapper.wrap(payload);
+		ReadableByteWrapper wrapper = ReadableByteWrapper.wrap(payload);
 
 		// Channel's name
-		int channelNameLength = wrapper.getInt(first);
-		first += 4;
-		channelName = wrapper.getString(first, channelNameLength);
-		first += channelNameLength;
+		channelName = wrapper.nextString(wrapper.nextInt());
 
 		// Parameter's name
-		int parameterNameLength = wrapper.getInt(first);
-		first += 4;
-		parameterName = wrapper.getString(first, parameterNameLength);
-		first += parameterNameLength;
+		parameterName = wrapper.nextString(wrapper.nextInt());
 
 		// Parameter's type
-		int code = wrapper.getInt(first);
-		first += 4;
-		parameterType = ParameterType.fromCode(code);
+		parameterType = ParameterType.fromCode(wrapper.nextInt());
 
 		// Parameter's new min value
-		newMinValue = parameterType.getValue(wrapper.extract(first, parameterType.size()));
-		first += parameterType.size();
+		newMinValue = parameterType.getValue(wrapper.next(parameterType.size()));
 
 		super.setProperties(channelName, parameterName, newMinValue);
 		return this;

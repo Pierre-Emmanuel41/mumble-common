@@ -5,6 +5,7 @@ import fr.pederobien.mumble.common.impl.Identifier;
 import fr.pederobien.mumble.common.impl.messages.MumbleMessage;
 import fr.pederobien.mumble.common.interfaces.IMumbleHeader;
 import fr.pederobien.utils.ByteWrapper;
+import fr.pederobien.utils.ReadableByteWrapper;
 
 public class KickPlayerFromChannelV10 extends MumbleMessage {
 	private String kicked, kicking;
@@ -23,20 +24,13 @@ public class KickPlayerFromChannelV10 extends MumbleMessage {
 		if (getHeader().isError())
 			return this;
 
-		int first = 0;
-		ByteWrapper wrapper = ByteWrapper.wrap(payload);
+		ReadableByteWrapper wrapper = ReadableByteWrapper.wrap(payload);
 
 		// Kicked player's name
-		int kickedPlayerNameLength = wrapper.getInt(first);
-		first += 4;
-		kicked = wrapper.getString(first, kickedPlayerNameLength);
-		first += kickedPlayerNameLength;
+		kicked = wrapper.nextString(wrapper.nextInt());
 
 		// Player kick name
-		int kickingPlayerNameLength = wrapper.getInt(first);
-		first += 4;
-		kicking = wrapper.getString(first, kickingPlayerNameLength);
-		first += kickingPlayerNameLength;
+		kicking = wrapper.nextString(wrapper.nextInt());
 
 		super.setProperties(kicked, kicking);
 		return this;

@@ -11,6 +11,7 @@ import fr.pederobien.mumble.common.impl.Identifier;
 import fr.pederobien.mumble.common.impl.messages.MumbleMessage;
 import fr.pederobien.mumble.common.interfaces.IMumbleHeader;
 import fr.pederobien.utils.ByteWrapper;
+import fr.pederobien.utils.ReadableByteWrapper;
 
 public class SetPlayerGameAddressV10 extends MumbleMessage {
 	private String playerName;
@@ -26,27 +27,19 @@ public class SetPlayerGameAddressV10 extends MumbleMessage {
 			return this;
 
 		List<Object> properties = new ArrayList<Object>();
-		int first = 0;
-		ByteWrapper wrapper = ByteWrapper.wrap(payload);
+		ReadableByteWrapper wrapper = ReadableByteWrapper.wrap(payload);
 
 		// Player's name
-		int playerNameLength = wrapper.getInt(first);
-		first += 4;
-		playerName = wrapper.getString(first, playerNameLength);
+		playerName = wrapper.nextString(wrapper.nextInt());
 		properties.add(playerName);
-		first += playerNameLength;
 
 		// Player's game address
-		int gameAddressLength = wrapper.getInt(first);
-		first += 4;
-		String address = wrapper.getString(first, gameAddressLength);
+		String address = wrapper.nextString(wrapper.nextInt());
 		properties.add(address);
-		first += gameAddressLength;
 
 		// Player's game port
-		int port = wrapper.getInt(first);
+		int port = wrapper.nextInt();
 		properties.add(port);
-		first += 4;
 
 		try {
 			gameAddress = new InetSocketAddress(InetAddress.getByName(address), port);

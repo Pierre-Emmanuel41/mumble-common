@@ -11,6 +11,7 @@ import fr.pederobien.mumble.common.impl.messages.v10.model.ParameterInfo.FullPar
 import fr.pederobien.mumble.common.impl.messages.v10.model.SoundModifierInfo.FullSoundModifierInfo;
 import fr.pederobien.mumble.common.interfaces.IMumbleHeader;
 import fr.pederobien.utils.ByteWrapper;
+import fr.pederobien.utils.ReadableByteWrapper;
 
 public class GetChannelSoundModifierV10 extends MumbleMessage {
 	private String channelName;
@@ -31,75 +32,61 @@ public class GetChannelSoundModifierV10 extends MumbleMessage {
 			return this;
 
 		List<Object> properties = new ArrayList<Object>();
-		int first = 0;
-		ByteWrapper wrapper = ByteWrapper.wrap(payload);
+		ReadableByteWrapper wrapper = ReadableByteWrapper.wrap(payload);
 
 		// Channel name
-		int channelNameLength = wrapper.getInt(first);
-		first += 4;
-		channelName = wrapper.getString(first, channelNameLength);
+		int channelNameLength = wrapper.nextInt();
+		channelName = wrapper.nextString(channelNameLength);
 		properties.add(channelName);
-		first += channelNameLength;
 
-		// When it is an answer
-		if (first < payload.length) {
+		try {
+			// When it is an answer
+
 			// Modifier name
-			int modifierNameLength = wrapper.getInt(first);
-			first += 4;
-			String modifierName = wrapper.getString(first, modifierNameLength);
+			String modifierName = wrapper.nextString(wrapper.nextInt());
 			properties.add(modifierName);
-			first += modifierNameLength;
 
 			modifierInfo = new FullSoundModifierInfo(modifierName);
 
 			// Number of parameters
-			int numberOfParameters = wrapper.getInt(first);
+			int numberOfParameters = wrapper.nextInt();
 			properties.add(numberOfParameters);
-			first += 4;
 
 			for (int j = 0; j < numberOfParameters; j++) {
 				// Parameter's name
-				int parameterNameLength = wrapper.getInt(first);
-				first += 4;
-				String parameterName = wrapper.getString(first, parameterNameLength);
+				String parameterName = wrapper.nextString(wrapper.nextInt());
 				properties.add(parameterName);
-				first += parameterNameLength;
 
 				// Parameter's type
-				int code = wrapper.getInt(first);
-				first += 4;
-				ParameterType<?> type = ParameterType.fromCode(code);
+				ParameterType<?> type = ParameterType.fromCode(wrapper.nextInt());
 				properties.add(type);
 
 				// Parameter's default value
-				Object defaultValue = type.getValue(wrapper.extract(first, type.size()));
+				Object defaultValue = type.getValue(wrapper.next(type.size()));
 				properties.add(defaultValue);
-				first += type.size();
 
 				// Parameter's value
-				Object parameterValue = type.getValue(wrapper.extract(first, type.size()));
+				Object parameterValue = type.getValue(wrapper.next(type.size()));
 				properties.add(parameterValue);
-				first += type.size();
 
 				// Parameter's range
-				boolean isRange = wrapper.getInt(first) == 1;
+				boolean isRange = wrapper.nextInt() == 1;
 				properties.add(isRange);
-				first += 4;
 
 				Object minValue = null, maxValue = null;
 				if (isRange) {
 					// Parameter's minimum value
-					minValue = type.getValue(wrapper.extract(first, type.size()));
+					minValue = type.getValue(wrapper.next(type.size()));
 					properties.add(minValue);
-					first += type.size();
 
 					// Parameter's maximum value
-					maxValue = type.getValue(wrapper.extract(first, type.size()));
+					maxValue = type.getValue(wrapper.next(type.size()));
 					properties.add(maxValue);
-					first += type.size();
 				}
 				modifierInfo.getParameterInfo().put(parameterName, new FullParameterInfo(parameterName, type, parameterValue, defaultValue, isRange, minValue, maxValue));
 			}
+		} catch (IndexOutOfBoundsException e) {
+			// When it is a request
 		}
 
 		super.setProperties(properties.toArray());

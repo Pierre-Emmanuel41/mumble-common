@@ -5,6 +5,7 @@ import fr.pederobien.mumble.common.impl.Identifier;
 import fr.pederobien.mumble.common.impl.messages.MumbleMessage;
 import fr.pederobien.mumble.common.interfaces.IMumbleHeader;
 import fr.pederobien.utils.ByteWrapper;
+import fr.pederobien.utils.ReadableByteWrapper;
 
 public class SetPlayerAdministratorStatusV10 extends MumbleMessage {
 	private String name;
@@ -24,17 +25,13 @@ public class SetPlayerAdministratorStatusV10 extends MumbleMessage {
 		if (getHeader().isError())
 			return this;
 
-		int first = 0;
-		ByteWrapper wrapper = ByteWrapper.wrap(payload);
+		ReadableByteWrapper wrapper = ReadableByteWrapper.wrap(payload);
 
 		// Player's name
-		int playerNameLength = wrapper.getInt(first);
-		first += 4;
-		name = wrapper.getString(first, playerNameLength);
-		first += playerNameLength;
+		name = wrapper.nextString(wrapper.nextInt());
 
 		// Player's administrator status
-		isAdmin = wrapper.getInt(first) == 1;
+		isAdmin = wrapper.nextInt() == 1;
 
 		super.setProperties(name, isAdmin);
 		return this;

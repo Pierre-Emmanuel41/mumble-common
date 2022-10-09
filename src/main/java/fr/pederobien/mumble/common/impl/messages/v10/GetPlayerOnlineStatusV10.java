@@ -8,6 +8,7 @@ import fr.pederobien.mumble.common.impl.Identifier;
 import fr.pederobien.mumble.common.impl.messages.MumbleMessage;
 import fr.pederobien.mumble.common.interfaces.IMumbleHeader;
 import fr.pederobien.utils.ByteWrapper;
+import fr.pederobien.utils.ReadableByteWrapper;
 
 public class GetPlayerOnlineStatusV10 extends MumbleMessage {
 	private String playerName;
@@ -28,22 +29,18 @@ public class GetPlayerOnlineStatusV10 extends MumbleMessage {
 			return this;
 
 		List<Object> properties = new ArrayList<Object>();
-		int first = 0;
-		ByteWrapper wrapper = ByteWrapper.wrap(payload);
+		ReadableByteWrapper wrapper = ReadableByteWrapper.wrap(payload);
 
 		// Player's name
-		int playerNameLength = wrapper.getInt(first);
-		first += 4;
-		playerName = wrapper.getString(first, playerNameLength);
-		properties.add(playerName);
-		first += playerNameLength;
+		properties.add(playerName = wrapper.nextString(wrapper.nextInt()));
 
-		// When it is an answer
-		if (first < payload.length) {
+		try {
+			// When it is a response
+
 			// Player's online status
-			isOnline = wrapper.getInt(first) == 1;
-			properties.add(isOnline);
-			first += 4;
+			properties.add(isOnline = wrapper.nextInt() == 1);
+		} catch (IndexOutOfBoundsException e) {
+			// When it is a request
 		}
 
 		super.setProperties(properties.toArray());
