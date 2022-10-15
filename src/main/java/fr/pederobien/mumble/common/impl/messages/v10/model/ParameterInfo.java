@@ -64,7 +64,7 @@ public class ParameterInfo {
 		 * @param max          The parameter maximum value.
 		 */
 		public FullParameterInfo(String name, ParameterType<?> type, Object value, Object defaultValue, boolean isRange, Object min, Object max) {
-			super(name, type, defaultValue);
+			super(name, type, value);
 			this.defaultValue = defaultValue;
 			this.isRange = isRange;
 			this.minValue = min;
