@@ -313,11 +313,11 @@ public class GetFullServerConfigurationV10 extends MumbleMessage {
 				// Parameter's type
 				ParameterType<?> type = (ParameterType<?>) properties[currentIndex++];
 
-				// Parameter's value
-				Object value = (Object) properties[currentIndex++];
-
 				// Parameter's default value
 				Object defaultValue = (Object) properties[currentIndex++];
+
+				// Parameter's value
+				Object value = (Object) properties[currentIndex++];
 
 				// Parameter's range
 				boolean isRange = (boolean) properties[currentIndex++];
@@ -356,11 +356,11 @@ public class GetFullServerConfigurationV10 extends MumbleMessage {
 				// Parameter's type
 				ParameterType<?> type = (ParameterType<?>) properties[currentIndex++];
 
-				// Parameter's value
-				Object value = (Object) properties[currentIndex++];
-
 				// Parameter's default value
 				Object defaultValue = (Object) properties[currentIndex++];
+
+				// Parameter's value
+				Object value = (Object) properties[currentIndex++];
 
 				// Parameter's range
 				boolean isRange = (boolean) properties[currentIndex++];
@@ -469,11 +469,11 @@ public class GetFullServerConfigurationV10 extends MumbleMessage {
 				// Parameter's type
 				wrapper.putInt(parameterInfo.getType().getCode());
 
-				// Parameter's value
-				wrapper.put(parameterInfo.getType().getBytes(parameterInfo.getValue()));
-
 				// Parameter's default value
 				wrapper.put(parameterInfo.getType().getBytes(parameterInfo.getDefaultValue()));
+
+				// Parameter's value
+				wrapper.put(parameterInfo.getType().getBytes(parameterInfo.getValue()));
 
 				// Parameter's range
 				wrapper.putInt(parameterInfo.isRange() ? 1 : 0);
@@ -508,11 +508,11 @@ public class GetFullServerConfigurationV10 extends MumbleMessage {
 				// Parameter's type
 				wrapper.putInt(parameterInfo.getType().getCode());
 
-				// Parameter's value
-				wrapper.put(parameterInfo.getType().getBytes(parameterInfo.getValue()));
-
 				// Parameter's default value
 				wrapper.put(parameterInfo.getType().getBytes(parameterInfo.getDefaultValue()));
+
+				// Parameter's value
+				wrapper.put(parameterInfo.getType().getBytes(parameterInfo.getValue()));
 
 				// Parameter's range
 				wrapper.putInt(parameterInfo.isRange() ? 1 : 0);
