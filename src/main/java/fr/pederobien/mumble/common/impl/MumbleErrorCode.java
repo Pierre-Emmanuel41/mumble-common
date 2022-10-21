@@ -65,8 +65,14 @@ public enum MumbleErrorCode implements IErrorCode {
 	// Code when there is no minimum defined for a parameter.
 	PARAMETER_WITHOUT_MIN("The parameter has no defined minimum"),
 
+	// Code when the minimum value of a parameter is strictly greater than the maximum value.
+	PARAMETER_MIN_OUT_OF_RANGE("The minimum value of a parameter cannot be strictly greater than the maximum value"),
+
 	// Code when there is no minimum defined for a parameter.
 	PARAMETER_WITHOUT_MAX("The parameter has no defined maximum"),
+
+	// Code when the maximum value of a parameter is strictly less than the minimum value.
+	PARAMETER_MAX_OUT_OF_RANGE("The maximum value of a parameter cannot be strictly less than the minimum value"),
 
 	// Code when the parameter value is out of range
 	PARAMETER_VALUE_OUT_OF_RANGE("The new parameter value is out of range"),
