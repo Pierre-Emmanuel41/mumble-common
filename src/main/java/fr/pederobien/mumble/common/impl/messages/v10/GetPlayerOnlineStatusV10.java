@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fr.pederobien.messenger.interfaces.IMessage;
-import fr.pederobien.mumble.common.impl.Identifier;
+import fr.pederobien.mumble.common.impl.MumbleIdentifier;
 import fr.pederobien.mumble.common.impl.messages.MumbleMessage;
 import fr.pederobien.mumble.common.interfaces.IMumbleHeader;
 import fr.pederobien.utils.ByteWrapper;
@@ -20,7 +20,7 @@ public class GetPlayerOnlineStatusV10 extends MumbleMessage {
 	 * @param header The message header.
 	 */
 	protected GetPlayerOnlineStatusV10(IMumbleHeader header) {
-		super(Identifier.GET_PLAYER_ONLINE_STATUS, header);
+		super(MumbleIdentifier.GET_PLAYER_ONLINE_STATUS, header);
 	}
 
 	@Override

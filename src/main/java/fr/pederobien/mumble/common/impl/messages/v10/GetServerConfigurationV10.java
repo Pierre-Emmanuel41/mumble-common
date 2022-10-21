@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.UUID;
 
 import fr.pederobien.messenger.interfaces.IMessage;
-import fr.pederobien.mumble.common.impl.Identifier;
+import fr.pederobien.mumble.common.impl.MumbleIdentifier;
 import fr.pederobien.mumble.common.impl.ParameterType;
 import fr.pederobien.mumble.common.impl.messages.MumbleMessage;
 import fr.pederobien.mumble.common.impl.messages.v10.model.ChannelInfo.SemiFullChannelInfo;
@@ -27,7 +27,7 @@ public class GetServerConfigurationV10 extends MumbleMessage {
 	 * @param header The message header.
 	 */
 	protected GetServerConfigurationV10(IMumbleHeader header) {
-		super(Identifier.GET_SERVER_CONFIGURATION, header);
+		super(MumbleIdentifier.GET_SERVER_CONFIGURATION, header);
 	}
 
 	@Override

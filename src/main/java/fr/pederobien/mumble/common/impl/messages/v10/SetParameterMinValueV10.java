@@ -1,7 +1,7 @@
 package fr.pederobien.mumble.common.impl.messages.v10;
 
 import fr.pederobien.messenger.interfaces.IMessage;
-import fr.pederobien.mumble.common.impl.Identifier;
+import fr.pederobien.mumble.common.impl.MumbleIdentifier;
 import fr.pederobien.mumble.common.impl.ParameterType;
 import fr.pederobien.mumble.common.impl.messages.MumbleMessage;
 import fr.pederobien.mumble.common.interfaces.IMumbleHeader;
@@ -20,7 +20,7 @@ public class SetParameterMinValueV10 extends MumbleMessage {
 	 * @param header The message header.
 	 */
 	protected SetParameterMinValueV10(IMumbleHeader header) {
-		super(Identifier.SET_PARAMETER_MIN_VALUE, header);
+		super(MumbleIdentifier.SET_PARAMETER_MIN_VALUE, header);
 	}
 
 	@Override

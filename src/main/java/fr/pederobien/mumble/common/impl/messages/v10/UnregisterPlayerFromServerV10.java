@@ -1,7 +1,7 @@
 package fr.pederobien.mumble.common.impl.messages.v10;
 
 import fr.pederobien.messenger.interfaces.IMessage;
-import fr.pederobien.mumble.common.impl.Identifier;
+import fr.pederobien.mumble.common.impl.MumbleIdentifier;
 import fr.pederobien.mumble.common.impl.messages.MumbleMessage;
 import fr.pederobien.mumble.common.interfaces.IMumbleHeader;
 import fr.pederobien.utils.ByteWrapper;
@@ -16,7 +16,7 @@ public class UnregisterPlayerFromServerV10 extends MumbleMessage {
 	 * @param header The message header.
 	 */
 	protected UnregisterPlayerFromServerV10(IMumbleHeader header) {
-		super(Identifier.UNREGISTER_PLAYER_FROM_SERVER, header);
+		super(MumbleIdentifier.UNREGISTER_PLAYER_FROM_SERVER, header);
 	}
 
 	@Override

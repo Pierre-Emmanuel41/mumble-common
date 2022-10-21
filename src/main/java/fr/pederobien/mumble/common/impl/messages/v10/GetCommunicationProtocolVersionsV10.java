@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fr.pederobien.messenger.interfaces.IMessage;
-import fr.pederobien.mumble.common.impl.Identifier;
+import fr.pederobien.mumble.common.impl.MumbleIdentifier;
 import fr.pederobien.mumble.common.impl.messages.MumbleMessage;
 import fr.pederobien.mumble.common.interfaces.IMumbleHeader;
 import fr.pederobien.utils.ByteWrapper;
@@ -19,7 +19,7 @@ public class GetCommunicationProtocolVersionsV10 extends MumbleMessage {
 	 * @param header The header associated to this message.
 	 */
 	protected GetCommunicationProtocolVersionsV10(IMumbleHeader header) {
-		super(Identifier.GET_CP_VERSIONS, header);
+		super(MumbleIdentifier.GET_CP_VERSIONS, header);
 	}
 
 	@Override

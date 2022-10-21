@@ -5,7 +5,7 @@ import java.util.Map;
 
 import fr.pederobien.utils.ByteWrapper;
 
-public enum Identifier {
+public enum MumbleIdentifier {
 	/**
 	 * Identifier of the message to get the complete server configuration.
 	 */
@@ -222,15 +222,15 @@ public enum Identifier {
 	UNKNOWN;
 
 	private static int codeGenerator;
-	private static Map<Integer, Identifier> identifiers;
+	private static Map<Integer, MumbleIdentifier> mumbleIdentifiers;
 	private int code;
 	private byte[] bytes;
 
-	private Identifier() {
+	private MumbleIdentifier() {
 		this(generateCode());
 	}
 
-	private Identifier(int code) {
+	private MumbleIdentifier(int code) {
 		this.code = code;
 		bytes = ByteWrapper.create().putInt(code).get();
 	}
@@ -255,9 +255,9 @@ public enum Identifier {
 	 * 
 	 * @return The identifier associated to the given code or UNKNOWN if there is no identifier associated to the given code.
 	 */
-	public static Identifier fromCode(int code) {
-		Identifier identifier = identifiers.get(code);
-		return identifier == null ? UNKNOWN : identifier;
+	public static MumbleIdentifier fromCode(int code) {
+		MumbleIdentifier mumbleIdentifier = mumbleIdentifiers.get(code);
+		return mumbleIdentifier == null ? UNKNOWN : mumbleIdentifier;
 	}
 
 	private static int generateCode() {
@@ -265,8 +265,8 @@ public enum Identifier {
 	}
 
 	static {
-		identifiers = new HashMap<Integer, Identifier>();
-		for (Identifier identifier : values())
-			identifiers.put(identifier.getCode(), identifier);
+		mumbleIdentifiers = new HashMap<Integer, MumbleIdentifier>();
+		for (MumbleIdentifier mumbleIdentifier : values())
+			mumbleIdentifiers.put(mumbleIdentifier.getCode(), mumbleIdentifier);
 	}
 }

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fr.pederobien.messenger.interfaces.IMessage;
-import fr.pederobien.mumble.common.impl.Identifier;
+import fr.pederobien.mumble.common.impl.MumbleIdentifier;
 import fr.pederobien.mumble.common.impl.ParameterType;
 import fr.pederobien.mumble.common.impl.messages.MumbleMessage;
 import fr.pederobien.mumble.common.impl.messages.v10.model.ChannelInfo.SemiFullChannelInfo;
@@ -23,7 +23,7 @@ public class RegisterChannelOnServerV10 extends MumbleMessage {
 	 * @param header The message header.
 	 */
 	protected RegisterChannelOnServerV10(IMumbleHeader header) {
-		super(Identifier.REGISTER_CHANNEL_ON_THE_SERVER, header);
+		super(MumbleIdentifier.REGISTER_CHANNEL_ON_THE_SERVER, header);
 	}
 
 	@Override

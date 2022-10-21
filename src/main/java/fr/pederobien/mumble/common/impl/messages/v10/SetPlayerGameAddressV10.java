@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fr.pederobien.messenger.interfaces.IMessage;
-import fr.pederobien.mumble.common.impl.Identifier;
+import fr.pederobien.mumble.common.impl.MumbleIdentifier;
 import fr.pederobien.mumble.common.impl.messages.MumbleMessage;
 import fr.pederobien.mumble.common.interfaces.IMumbleHeader;
 import fr.pederobien.utils.ByteWrapper;
@@ -18,7 +18,7 @@ public class SetPlayerGameAddressV10 extends MumbleMessage {
 	private InetSocketAddress gameAddress;
 
 	protected SetPlayerGameAddressV10(IMumbleHeader header) {
-		super(Identifier.SET_PLAYER_GAME_ADDRESS, header);
+		super(MumbleIdentifier.SET_PLAYER_GAME_ADDRESS, header);
 	}
 
 	@Override

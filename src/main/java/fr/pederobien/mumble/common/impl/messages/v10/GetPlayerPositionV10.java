@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fr.pederobien.messenger.interfaces.IMessage;
-import fr.pederobien.mumble.common.impl.Identifier;
+import fr.pederobien.mumble.common.impl.MumbleIdentifier;
 import fr.pederobien.mumble.common.impl.messages.MumbleMessage;
 import fr.pederobien.mumble.common.impl.messages.v10.model.PlayerInfo.CoordinatePlayerInfo;
 import fr.pederobien.mumble.common.interfaces.IMumbleHeader;
@@ -20,7 +20,7 @@ public class GetPlayerPositionV10 extends MumbleMessage {
 	 * @param header The message header.
 	 */
 	protected GetPlayerPositionV10(IMumbleHeader header) {
-		super(Identifier.GET_PLAYER_POSITION, header);
+		super(MumbleIdentifier.GET_PLAYER_POSITION, header);
 	}
 
 	@Override

@@ -27,28 +27,28 @@ public class MumbleMessageFactory {
 	 * Creates a message based on the given parameters associated to the latest version of the communication protocol.
 	 * 
 	 * 
-	 * @param identifier The identifier of the request to create.
+	 * @param mumbleIdentifier The identifier of the request to create.
 	 * @param mumbleErrorCode  The message errorCode.
 	 * @param properties The message properties.
 	 * 
 	 * @return The created message.
 	 */
-	public IMumbleMessage create(Identifier identifier, MumbleErrorCode mumbleErrorCode, Object... properties) {
-		return manager.create(identifier, mumbleErrorCode, properties);
+	public IMumbleMessage create(MumbleIdentifier mumbleIdentifier, MumbleErrorCode mumbleErrorCode, Object... properties) {
+		return manager.create(mumbleIdentifier, mumbleErrorCode, properties);
 	}
 
 	/**
 	 * Creates a message based on the given parameters associated to a specific version of the communication protocol.
 	 * 
 	 * @param version    The protocol version to use for the returned message.
-	 * @param identifier The identifier of the request to create.
+	 * @param mumbleIdentifier The identifier of the request to create.
 	 * @param mumbleErrorCode  The message errorCode.
 	 * @param properties The message properties.
 	 * 
 	 * @return A message associated to the given protocol version.
 	 */
-	public IMumbleMessage create(float version, Identifier identifier, MumbleErrorCode mumbleErrorCode, Object... properties) {
-		return manager.create(version, identifier, mumbleErrorCode, properties);
+	public IMumbleMessage create(float version, MumbleIdentifier mumbleIdentifier, MumbleErrorCode mumbleErrorCode, Object... properties) {
+		return manager.create(version, mumbleIdentifier, mumbleErrorCode, properties);
 	}
 
 	/**
@@ -94,14 +94,14 @@ public class MumbleMessageFactory {
 	 * version of the communication protocol is used to create the answer.
 	 * 
 	 * @param message    The message to answer.
-	 * @param identifier The identifier of the answer request.
+	 * @param mumbleIdentifier The identifier of the answer request.
 	 * @param mumbleErrorCode  The response ErrorCode.
 	 * @param properties The response properties.
 	 * 
 	 * @return The message associated to the answer.
 	 */
-	public IMumbleMessage answer(IMumbleMessage message, Identifier identifier, MumbleErrorCode mumbleErrorCode, Object... properties) {
-		return manager.answer(message.getHeader().getSequence(), identifier, mumbleErrorCode, properties);
+	public IMumbleMessage answer(IMumbleMessage message, MumbleIdentifier mumbleIdentifier, MumbleErrorCode mumbleErrorCode, Object... properties) {
+		return manager.answer(message.getHeader().getSequence(), mumbleIdentifier, mumbleErrorCode, properties);
 	}
 
 	/**
@@ -110,13 +110,13 @@ public class MumbleMessageFactory {
 	 * 
 	 * @param version    The protocol version to use for the returned message.
 	 * @param message    The message to answer.
-	 * @param identifier The identifier of the answer request.
+	 * @param mumbleIdentifier The identifier of the answer request.
 	 * @param mumbleErrorCode  The response ErrorCode.
 	 * @param properties The response properties.
 	 * 
 	 * @return The message associated to the answer.
 	 */
-	public IMumbleMessage answer(float version, IMumbleMessage message, Identifier identifier, MumbleErrorCode mumbleErrorCode, Object... properties) {
-		return manager.answer(version, message.getHeader().getSequence(), identifier, mumbleErrorCode, properties);
+	public IMumbleMessage answer(float version, IMumbleMessage message, MumbleIdentifier mumbleIdentifier, MumbleErrorCode mumbleErrorCode, Object... properties) {
+		return manager.answer(version, message.getHeader().getSequence(), mumbleIdentifier, mumbleErrorCode, properties);
 	}
 }

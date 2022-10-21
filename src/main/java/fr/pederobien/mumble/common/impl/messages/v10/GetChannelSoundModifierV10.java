@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fr.pederobien.messenger.interfaces.IMessage;
-import fr.pederobien.mumble.common.impl.Identifier;
+import fr.pederobien.mumble.common.impl.MumbleIdentifier;
 import fr.pederobien.mumble.common.impl.ParameterType;
 import fr.pederobien.mumble.common.impl.messages.MumbleMessage;
 import fr.pederobien.mumble.common.impl.messages.v10.model.ParameterInfo.FullParameterInfo;
@@ -23,7 +23,7 @@ public class GetChannelSoundModifierV10 extends MumbleMessage {
 	 * @param header The message header.
 	 */
 	protected GetChannelSoundModifierV10(IMumbleHeader header) {
-		super(Identifier.GET_CHANNEL_SOUND_MODIFIER_INFO, header);
+		super(MumbleIdentifier.GET_CHANNEL_SOUND_MODIFIER_INFO, header);
 	}
 
 	@Override

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fr.pederobien.messenger.interfaces.IMessage;
-import fr.pederobien.mumble.common.impl.Identifier;
+import fr.pederobien.mumble.common.impl.MumbleIdentifier;
 import fr.pederobien.mumble.common.impl.messages.MumbleMessage;
 import fr.pederobien.mumble.common.impl.messages.v10.model.PlayerInfo.StatusPlayerInfo;
 import fr.pederobien.mumble.common.interfaces.IMumbleHeader;
@@ -21,7 +21,7 @@ public class AddPlayerToChannelV10 extends MumbleMessage {
 	 * @param header The message header.
 	 */
 	protected AddPlayerToChannelV10(IMumbleHeader header) {
-		super(Identifier.ADD_PLAYER_TO_CHANNEL, header);
+		super(MumbleIdentifier.ADD_PLAYER_TO_CHANNEL, header);
 	}
 
 	@Override

@@ -2,14 +2,14 @@ package fr.pederobien.mumble.common.interfaces;
 
 import fr.pederobien.messenger.interfaces.IHeader;
 import fr.pederobien.mumble.common.impl.MumbleErrorCode;
-import fr.pederobien.mumble.common.impl.Identifier;
+import fr.pederobien.mumble.common.impl.MumbleIdentifier;
 
 public interface IMumbleHeader extends IHeader {
 
 	/**
 	 * @return The mumble identifier of this message.
 	 */
-	Identifier getIdentifier();
+	MumbleIdentifier getIdentifier();
 
 	/**
 	 * @return The header error code.

@@ -15,7 +15,7 @@ public class MumbleHeader extends Header implements IMumbleHeader {
 	 * +12: The error code.
 	 */
 	public static final int HEADER_LENGH = 16;
-	private Identifier identifier;
+	private MumbleIdentifier mumbleIdentifier;
 	private MumbleErrorCode mumbleErrorCode;
 
 	/**
@@ -26,20 +26,20 @@ public class MumbleHeader extends Header implements IMumbleHeader {
 	 */
 	public MumbleHeader(float version) {
 		super(version);
-		identifier = Identifier.UNKNOWN;
+		mumbleIdentifier = MumbleIdentifier.UNKNOWN;
 		mumbleErrorCode = MumbleErrorCode.NONE;
 	}
 
 	@Override
 	public void setProperties(Object... properties) {
 		super.setProperties(properties);
-		identifier = (Identifier) properties[0];
+		mumbleIdentifier = (MumbleIdentifier) properties[0];
 		mumbleErrorCode = (MumbleErrorCode) properties[1];
 	}
 
 	@Override
 	protected byte[] generateProperties() {
-		return ByteWrapper.create().put(identifier.getBytes()).put(mumbleErrorCode.getBytes()).get();
+		return ByteWrapper.create().put(mumbleIdentifier.getBytes()).put(mumbleErrorCode.getBytes()).get();
 	}
 
 	@Override
@@ -48,17 +48,17 @@ public class MumbleHeader extends Header implements IMumbleHeader {
 		ByteWrapper wrapper = ByteWrapper.wrap(buffer);
 
 		// +8: Identifier
-		identifier = Identifier.fromCode(wrapper.getInt(MumbleMessage.IDENTIFIER_INDEX - MumbleMessage.BEGIN_WORD.length));
+		mumbleIdentifier = MumbleIdentifier.fromCode(wrapper.getInt(MumbleMessage.IDENTIFIER_INDEX - MumbleMessage.BEGIN_WORD.length));
 
 		// +12: ErrorCode
 		mumbleErrorCode = MumbleErrorCode.fromCode(wrapper.getInt(MumbleMessage.ERROR_CODE_INDEX - MumbleMessage.BEGIN_WORD.length));
-		super.setProperties(identifier, mumbleErrorCode);
+		super.setProperties(mumbleIdentifier, mumbleErrorCode);
 		return this;
 	}
 
 	@Override
-	public Identifier getIdentifier() {
-		return identifier;
+	public MumbleIdentifier getIdentifier() {
+		return mumbleIdentifier;
 	}
 
 	@Override

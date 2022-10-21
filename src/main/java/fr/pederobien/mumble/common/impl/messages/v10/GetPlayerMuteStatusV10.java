@@ -1,7 +1,7 @@
 package fr.pederobien.mumble.common.impl.messages.v10;
 
 import fr.pederobien.messenger.interfaces.IMessage;
-import fr.pederobien.mumble.common.impl.Identifier;
+import fr.pederobien.mumble.common.impl.MumbleIdentifier;
 import fr.pederobien.mumble.common.impl.messages.MumbleMessage;
 import fr.pederobien.mumble.common.interfaces.IMumbleHeader;
 import fr.pederobien.utils.ByteWrapper;
@@ -17,7 +17,7 @@ public class GetPlayerMuteStatusV10 extends MumbleMessage {
 	 * @param header The message header.
 	 */
 	protected GetPlayerMuteStatusV10(IMumbleHeader header) {
-		super(Identifier.GET_PLAYER_MUTE, header);
+		super(MumbleIdentifier.GET_PLAYER_MUTE, header);
 	}
 
 	@Override

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fr.pederobien.messenger.interfaces.IMessage;
-import fr.pederobien.mumble.common.impl.Identifier;
+import fr.pederobien.mumble.common.impl.MumbleIdentifier;
 import fr.pederobien.mumble.common.impl.ParameterType;
 import fr.pederobien.mumble.common.impl.messages.MumbleMessage;
 import fr.pederobien.mumble.common.impl.messages.v10.model.ChannelInfo.FullChannelInfo;
@@ -25,7 +25,7 @@ public class GetChannelInfoV10 extends MumbleMessage {
 	 * @param header The message header.
 	 */
 	protected GetChannelInfoV10(IMumbleHeader header) {
-		super(Identifier.GET_CHANNEL_INFO, header);
+		super(MumbleIdentifier.GET_CHANNEL_INFO, header);
 	}
 
 	@Override

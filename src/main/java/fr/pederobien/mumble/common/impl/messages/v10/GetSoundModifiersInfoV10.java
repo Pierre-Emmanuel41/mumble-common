@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fr.pederobien.messenger.interfaces.IMessage;
-import fr.pederobien.mumble.common.impl.Identifier;
+import fr.pederobien.mumble.common.impl.MumbleIdentifier;
 import fr.pederobien.mumble.common.impl.ParameterType;
 import fr.pederobien.mumble.common.impl.messages.MumbleMessage;
 import fr.pederobien.mumble.common.impl.messages.v10.model.ParameterInfo.FullParameterInfo;
@@ -22,7 +22,7 @@ public class GetSoundModifiersInfoV10 extends MumbleMessage {
 	 * @param header The message header.
 	 */
 	protected GetSoundModifiersInfoV10(IMumbleHeader header) {
-		super(Identifier.GET_SOUND_MODIFIERS_INFO, header);
+		super(MumbleIdentifier.GET_SOUND_MODIFIERS_INFO, header);
 		soundModifiers = new ArrayList<FullSoundModifierInfo>();
 	}
 

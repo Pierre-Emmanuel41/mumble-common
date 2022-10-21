@@ -31,18 +31,18 @@ public class MumbleProtocolManager {
 	/**
 	 * Create a message based on the given parameters associated to the latest version of the communication protocol.
 	 * 
-	 * @param identifier The identifier of the request to create.
+	 * @param mumbleIdentifier The identifier of the request to create.
 	 * @param mumbleErrorCode  The message errorCode.
 	 * @param properties The message properties.
 	 * 
 	 * @return The created message.
 	 */
-	public IMumbleMessage create(Identifier identifier, MumbleErrorCode mumbleErrorCode, Object... properties) {
-		IMumbleMessage message = (IMumbleMessage) protocol.get(identifier.name());
+	public IMumbleMessage create(MumbleIdentifier mumbleIdentifier, MumbleErrorCode mumbleErrorCode, Object... properties) {
+		IMumbleMessage message = (IMumbleMessage) protocol.get(mumbleIdentifier.name());
 		if (message == null)
 			return null;
 
-		message.getHeader().setProperties(identifier, mumbleErrorCode);
+		message.getHeader().setProperties(mumbleIdentifier, mumbleErrorCode);
 		message.setProperties(properties);
 		return message;
 	}
@@ -51,22 +51,22 @@ public class MumbleProtocolManager {
 	 * Create a message based on the given parameters associated to a specific version of the communication protocol.
 	 * 
 	 * @param version    The protocol version to use for the returned message.
-	 * @param identifier The identifier of the request to create.
+	 * @param mumbleIdentifier The identifier of the request to create.
 	 * @param mumbleErrorCode  The message errorCode.
 	 * @param properties The message properties.
 	 * 
 	 * @return A message associated to the given protocol version.
 	 */
-	public IMumbleMessage create(float version, Identifier identifier, MumbleErrorCode mumbleErrorCode, Object... properties) {
+	public IMumbleMessage create(float version, MumbleIdentifier mumbleIdentifier, MumbleErrorCode mumbleErrorCode, Object... properties) {
 		Optional<IProtocol> optProtocol = manager.getProtocol(version);
 		if (!optProtocol.isPresent())
 			return null;
 
-		IMumbleMessage message = (IMumbleMessage) optProtocol.get().get(identifier.name());
+		IMumbleMessage message = (IMumbleMessage) optProtocol.get().get(mumbleIdentifier.name());
 		if (message == null)
 			return null;
 
-		message.getHeader().setProperties(identifier, mumbleErrorCode);
+		message.getHeader().setProperties(mumbleIdentifier, mumbleErrorCode);
 		message.setProperties(properties);
 		return message;
 	}
@@ -107,19 +107,19 @@ public class MumbleProtocolManager {
 	 * version of the communication protocol is used to create the returned message.
 	 * 
 	 * @param sequence   The sequence number of the answer request.
-	 * @param identifier The identifier of the request to create.
+	 * @param mumbleIdentifier The identifier of the request to create.
 	 * @param mumbleErrorCode  The response ErrorCode.
 	 * @param properties The response properties.
 	 * 
 	 * @return The message associated to the answer.
 	 */
-	public IMumbleMessage answer(int sequence, Identifier identifier, MumbleErrorCode mumbleErrorCode, Object... properties) {
-		IMumbleMessage message = (IMumbleMessage) protocol.get(identifier.name());
+	public IMumbleMessage answer(int sequence, MumbleIdentifier mumbleIdentifier, MumbleErrorCode mumbleErrorCode, Object... properties) {
+		IMumbleMessage message = (IMumbleMessage) protocol.get(mumbleIdentifier.name());
 		if (message == null)
 			return null;
 
 		message.getHeader().setSequence(sequence);
-		message.getHeader().setProperties(identifier, mumbleErrorCode);
+		message.getHeader().setProperties(mumbleIdentifier, mumbleErrorCode);
 		message.setProperties(properties);
 		return message;
 	}
@@ -130,23 +130,23 @@ public class MumbleProtocolManager {
 	 * 
 	 * @param version    The protocol version to use for the returned message.
 	 * @param sequence   The sequence number of the answer request.
-	 * @param identifier The identifier of the request to create.
+	 * @param mumbleIdentifier The identifier of the request to create.
 	 * @param mumbleErrorCode  The response ErrorCode.
 	 * @param properties The response properties.
 	 * 
 	 * @return The message associated to the answer.
 	 */
-	public IMumbleMessage answer(float version, int sequence, Identifier identifier, MumbleErrorCode mumbleErrorCode, Object... properties) {
+	public IMumbleMessage answer(float version, int sequence, MumbleIdentifier mumbleIdentifier, MumbleErrorCode mumbleErrorCode, Object... properties) {
 		Optional<IProtocol> optProtocol = manager.getProtocol(version);
 		if (!optProtocol.isPresent())
 			return null;
 
-		IMumbleMessage message = (IMumbleMessage) optProtocol.get().get(identifier.name());
+		IMumbleMessage message = (IMumbleMessage) optProtocol.get().get(mumbleIdentifier.name());
 		if (message == null)
 			return null;
 
 		message.getHeader().setSequence(sequence);
-		message.getHeader().setProperties(identifier, mumbleErrorCode);
+		message.getHeader().setProperties(mumbleIdentifier, mumbleErrorCode);
 		message.setProperties(properties);
 		return message;
 	}

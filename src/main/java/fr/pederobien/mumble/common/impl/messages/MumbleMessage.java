@@ -1,7 +1,7 @@
 package fr.pederobien.mumble.common.impl.messages;
 
 import fr.pederobien.messenger.impl.Message;
-import fr.pederobien.mumble.common.impl.Identifier;
+import fr.pederobien.mumble.common.impl.MumbleIdentifier;
 import fr.pederobien.mumble.common.interfaces.IMumbleHeader;
 import fr.pederobien.mumble.common.interfaces.IMumbleMessage;
 
@@ -26,11 +26,11 @@ public abstract class MumbleMessage extends Message implements IMumbleMessage {
 	 * Creates a mumble message represented by a name and a mumble header. The message name is used for storage only but is never used
 	 * during the bytes generation.
 	 * 
-	 * @param identifier The message identifier.
+	 * @param mumbleIdentifier The message identifier.
 	 * @param header     The message header.
 	 */
-	protected MumbleMessage(Identifier identifier, IMumbleHeader header) {
-		super(identifier.name(), header);
+	protected MumbleMessage(MumbleIdentifier mumbleIdentifier, IMumbleHeader header) {
+		super(mumbleIdentifier.name(), header);
 	}
 
 	@Override
